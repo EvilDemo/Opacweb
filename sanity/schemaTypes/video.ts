@@ -28,6 +28,7 @@ export default defineType({
       name: "animatedCoverImage",
       title: "Animated Cover Image",
       type: "image",
+
       description: "Video cover image GIF",
       options: {
         hotspot: true,
