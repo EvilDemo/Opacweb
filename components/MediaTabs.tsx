@@ -57,8 +57,10 @@ export function MediaTabs({ pictures, videos, music, radio }: MediaTabsProps) {
       <TabsContent value="pictures" className="mt-6">
         {pictures.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-gray-500">No pictures available yet.</p>
-            <p className="text-sm text-gray-400 mt-2">Check back soon!</p>
+            <p className="body-text text-muted">No pictures available yet.</p>
+            <p className="body-text-sm text-muted-foreground mt-2">
+              Check back soon!
+            </p>
           </div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
@@ -80,7 +82,9 @@ export function MediaTabs({ pictures, videos, music, radio }: MediaTabsProps) {
                   </div>
                 </div>
                 <CardHeader className="px-3">
-                  <CardTitle className="text-sm">{project.title}</CardTitle>
+                  <CardTitle className="body-text-sm">
+                    {project.title}
+                  </CardTitle>
                   <CardDescription className="text-xs">
                     {project.description}
                   </CardDescription>
@@ -95,8 +99,8 @@ export function MediaTabs({ pictures, videos, music, radio }: MediaTabsProps) {
       <TabsContent value="videos" className="mt-6">
         {videos.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-gray-500">No videos available yet.</p>
-            <p className="text-sm text-gray-400 mt-2">
+            <p className="body-text text-muted">No videos available yet.</p>
+            <p className="body-text-sm text-muted-foreground mt-2">
               Add some videos through the Sanity Studio!
             </p>
           </div>
@@ -183,7 +187,9 @@ export function MediaTabs({ pictures, videos, music, radio }: MediaTabsProps) {
                     </div>
                   </div>
                   <CardHeader className="px-3">
-                    <CardTitle className="text-sm">{video.title}</CardTitle>
+                    <CardTitle className="body-text-sm">
+                      {video.title}
+                    </CardTitle>
                     <CardDescription className="text-xs">
                       {video.description}
                     </CardDescription>
@@ -215,8 +221,10 @@ export function MediaTabs({ pictures, videos, music, radio }: MediaTabsProps) {
       <TabsContent value="by-us" className="mt-6">
         {music.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-gray-500">No music tracks available yet.</p>
-            <p className="text-sm text-gray-400 mt-2">
+            <p className="body-text text-muted">
+              No music tracks available yet.
+            </p>
+            <p className="body-text-sm text-muted-foreground mt-2">
               Add some tracks through the Sanity Studio!
             </p>
           </div>
@@ -244,7 +252,7 @@ export function MediaTabs({ pictures, videos, music, radio }: MediaTabsProps) {
                   </div>
                 </div>
                 <CardHeader className="px-3">
-                  <CardTitle className="text-sm flex items-center gap-2">
+                  <CardTitle className="body-text-sm flex items-center gap-2">
                     <MusicIcon className="h-4 w-4 text-green-500" />
                     {track.title}
                   </CardTitle>
@@ -277,8 +285,8 @@ export function MediaTabs({ pictures, videos, music, radio }: MediaTabsProps) {
       <TabsContent value="radio" className="mt-6">
         {radio.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-gray-500">No radio available yet.</p>
-            <p className="text-sm text-gray-400 mt-2">
+            <p className="body-text text-muted">No radio available yet.</p>
+            <p className="body-text-sm text-muted-foreground mt-2">
               Add some radio through the Sanity Studio!
             </p>
           </div>
@@ -306,7 +314,7 @@ export function MediaTabs({ pictures, videos, music, radio }: MediaTabsProps) {
                   </div>
                 </div>
                 <CardHeader className="px-3">
-                  <CardTitle className="text-sm flex items-center gap-2">
+                  <CardTitle className="body-text-sm flex items-center gap-2">
                     <RadioIcon className="h-4 w-4 text-green-500" />
                     {playlist.title}
                   </CardTitle>

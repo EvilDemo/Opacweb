@@ -1,16 +1,17 @@
 import type { Metadata } from "next";
-import { Press_Start_2P } from "next/font/google";
+import { Geist } from "next/font/google";
 import "./globals.css";
 
 //Importing Components
 import Footer from "@/components/Footer";
 import { Navbar } from "@/components/Navbar";
+import Staging from "@/components/Staging";
 
 //Importing Font
-const pressStart = Press_Start_2P({
-  variable: "--font-press-start",
+const geist = Geist({
+  variable: "--font-geist",
   subsets: ["latin"],
-  weight: "400",
+  weight: ["300", "400", "500", "600", "900"], // Only load weights used in Figma design
 });
 
 export const metadata: Metadata = {
@@ -25,7 +26,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body className={`${pressStart.variable} antialiased`}>
+      <body className={`${geist.variable} antialiased`}>
+        <Staging />
         <Navbar />
         <main>{children}</main>
         <Footer />

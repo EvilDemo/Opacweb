@@ -1,127 +1,287 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
+@variant dark (&:is(.dark *));
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+@theme {
+  /* Typography */
+  --font-sans: var(--font-geist);
   --font-mono: var(--font-geist-mono);
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
-  --color-ring: var(--ring);
-  --color-input: var(--input);
-  --color-border: var(--border);
-  --color-destructive: var(--destructive);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-accent: var(--accent);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-muted: var(--muted);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-popover: var(--popover);
-  --color-card-foreground: var(--card-foreground);
-  --color-card: var(--card);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+
+  /* Custom font sizes */
+  --text-xs: 12px; /* paragraph-mini-regular */
+  --text-sm: 14px; /* text-small-normal */
+  --text-base: 20px; /* paragraph-small-regular */
+  --text-lg: 20px; /* paragraph-regular */
+  --text-xl: 39px; /* heading-4 */
+  --text-2xl: 49px; /* heading-3 */
+  --text-3xl: 61px; /* heading-2 */
+  --text-4xl: 76px; /* heading-1 */
+
+  /* Override Tailwind's default line heights to match Figma */
+  --line-height-tight: 1;
+  --line-height-snug: 1.2;
+  --line-height-normal: 1.5;
+
+  /* Override Tailwind's default font weights to match Figma */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+
+  /* Letter Spacing - From Figma */
+  --letter-spacing-tight: -0.76px; /* heading-1 */
+  --letter-spacing-snug: -0.61px; /* heading-2 */
+  --letter-spacing-normal: -0.98px; /* heading-3 */
+  --letter-spacing-wide: -0.78px; /* heading-4 */
+
+  /* Colors - Define as CSS custom properties for Tailwind v4 */
+  --color-background: var(--black);
+  --color-foreground: var(--white);
+  --color-card: var(--black);
+  --color-card-foreground: var(--white);
+  --color-popover: var(--black);
+  --color-popover-foreground: var(--white);
+  --color-primary: var(--white);
+  --color-primary-foreground: var(--black);
+  --color-secondary: var(--neutral-100);
+  --color-secondary-foreground: var(--black);
+  --color-muted: var(--neutral-100);
+  --color-muted-foreground: var(--neutral-500);
+  --color-accent: var(--neutral-200);
+  --color-accent-foreground: var(--black);
+  --color-destructive: #ef4444;
+  --color-border: var(--neutral-200);
+  --color-input: var(--neutral-200);
+  --color-ring: var(--neutral-300);
 }
 
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  /* Border Radius - From Figma */
+  --radius: 0.5rem; /* 8px - matches Figma rounded-8 */
+  --radius-sm: 0.25rem; /* 4px - matches Figma rounded-4 */
+  --radius-full: 9999px; /* matches Figma Infinite */
+
+  /* Core Colors - Based on Figma Design System */
+  --white: #ffffff;
+  --black: #000000;
+
+  /* Neutral Palette - Direct from Figma */
+  --neutral-50: #fafafa;
+  --neutral-100: #f5f5f5;
+  --neutral-200: #e5e5e5;
+  --neutral-300: #d4d4d4;
+  --neutral-500: #737373;
+  --neutral-900: #171717;
+
+  /* Semantic Colors - Mapped to Figma palette (shadcn standard naming) */
+  --background: var(--black);
+  --foreground: var(--white);
+  --card: var(--black);
+  --card-foreground: var(--white);
+  --popover: var(--black);
+  --popover-foreground: var(--white);
+  --primary: var(--white);
+  --primary-foreground: var(--black);
+  --secondary: var(--neutral-100);
+  --secondary-foreground: var(--black);
+  --muted: var(--neutral-100);
+  --muted-foreground: var(--neutral-500);
+  --accent: var(--neutral-200);
+  --accent-foreground: var(--black);
+  --destructive: #ef4444; /* Red for errors */
+  --border: var(--neutral-200);
+  --input: var(--neutral-200);
+  --ring: var(--neutral-300);
 }
 
 .dark {
-  --background: oklch(0 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  /* Dark mode uses the same neutral palette but inverted semantic mapping */
+  --background: var(--black);
+  --foreground: var(--white);
+  --card: var(--neutral-900);
+  --card-foreground: var(--white);
+  --popover: var(--neutral-900);
+  --popover-foreground: var(--white);
+  --primary: var(--white);
+  --primary-foreground: var(--black);
+  --secondary: var(--neutral-200);
+  --secondary-foreground: var(--black);
+  --muted: var(--neutral-200);
+  --muted-foreground: var(--neutral-500);
+  --accent: var(--neutral-300);
+  --accent-foreground: var(--black);
+  --destructive: #ef4444;
+  --border: var(--neutral-200);
+  --input: var(--neutral-200);
+  --ring: var(--neutral-300);
 }
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-neutral-200 outline-neutral-300/50;
+  }
+  html {
+    scroll-behavior: smooth;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-black text-white;
+    font-family: var(--font-geist), system-ui, sans-serif;
+    cursor: url("/custom-cursor-32.png") 0 0, auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Hide scrollbar for webkit browsers */
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  html {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
   }
 }
 
-body {
-  font-family: var(--font-press-start), system-ui, sans-serif;
-  cursor: url("/custom-cursor-32.png") 0 0, auto;
+@layer utilities {
+  /* Typography System - Based on Figma Design Tokens */
+
+  /* Headings - Responsive Typography System */
+  h1,
+  .heading-1 {
+    @apply text-2xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-semibold text-white;
+    line-height: var(--line-height-tight);
+    letter-spacing: var(--letter-spacing-tight);
+  }
+
+  h2,
+  .heading-2 {
+    @apply text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-semibold text-white;
+    line-height: var(--line-height-tight);
+    letter-spacing: var(--letter-spacing-snug);
+  }
+
+  h3,
+  .heading-3 {
+    @apply text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-semibold text-white;
+    line-height: var(--line-height-snug);
+    letter-spacing: var(--letter-spacing-normal);
+  }
+
+  h4,
+  .heading-4 {
+    @apply text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl font-semibold text-white;
+    line-height: var(--line-height-snug);
+    letter-spacing: var(--letter-spacing-wide);
+  }
+
+  /* Body Text - Using Tailwind utilities with custom properties */
+  p,
+  .body-text,
+  .paragraph-regular {
+    @apply text-lg font-normal text-white;
+    line-height: var(--line-height-normal);
+  }
+
+  .body-text-lg {
+    @apply text-lg font-normal text-white;
+    line-height: var(--line-height-normal);
+  }
+
+  .body-text-sm,
+  .paragraph-small-regular {
+    @apply text-base font-normal text-white;
+    line-height: var(--line-height-normal);
+  }
+
+  .paragraph-small-medium {
+    @apply text-sm font-medium text-white;
+    line-height: var(--line-height-normal);
+  }
+
+  .paragraph-mini-regular {
+    @apply text-xs font-normal text-white;
+    line-height: var(--line-height-normal);
+  }
+
+  /* Small Text - Using Tailwind utilities */
+  .text-small-normal {
+    @apply text-sm font-normal text-white;
+    line-height: var(--line-height-normal);
+  }
+
+  .text-small-link {
+    @apply text-sm font-normal underline text-white;
+    line-height: var(--line-height-normal);
+  }
+
+  /* Color Variants - Based on Figma neutral palette */
+  .text-muted {
+    @apply text-neutral-500;
+  }
+
+  .text-accent {
+    @apply text-neutral-300;
+  }
+
+  .text-primary {
+    @apply text-white;
+  }
+
+  .text-secondary {
+    @apply text-neutral-500;
+  }
+
+  /* Spacing Utilities - Based on Figma 4px base unit */
+  .spacing-1 {
+    @apply p-1;
+  } /* 4px */
+  .spacing-1-5 {
+    @apply p-1.5;
+  } /* 6px */
+  .spacing-2 {
+    @apply p-2;
+  } /* 8px */
+  .spacing-2-5 {
+    @apply p-2.5;
+  } /* 10px */
+  .spacing-3 {
+    @apply p-3;
+  } /* 12px */
+  .spacing-4 {
+    @apply p-4;
+  } /* 16px */
+  .spacing-6 {
+    @apply p-6;
+  } /* 24px */
+  .spacing-8 {
+    @apply p-8;
+  } /* 32px */
+  .spacing-9 {
+    @apply p-9;
+  } /* 36px */
+  .spacing-16 {
+    @apply p-16;
+  } /* 64px */
+  .spacing-20 {
+    @apply p-20;
+  } /* 80px */
+
+  /* Page Padding - From Figma */
+  .padding-global {
+    @apply px-16; /* 64px */
+  }
+
+  .padding-section-large {
+    @apply py-28; /* 112px */
+  }
+
+  /* Grid Background Utility */
+  .bg-grid-white\/\[0\.02\] {
+    background-image: radial-gradient(
+      circle,
+      rgba(255, 255, 255, 0.02) 1px,
+      transparent 1px
+    );
+  }
 }

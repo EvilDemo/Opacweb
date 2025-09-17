@@ -117,7 +117,7 @@ export default function ContactForm() {
 
   if (isSubmitted) {
     return (
-      <div className="w-full mx-auto p-6">
+      <div className="w-full mx-auto spacing-6">
         <div className="text-center space-y-4">
           <div className="w-16 h-16 mx-auto bg-green-500/20 rounded-full flex items-center justify-center">
             <svg
@@ -134,10 +134,8 @@ export default function ContactForm() {
               />
             </svg>
           </div>
-          <h3 className="text-xl font-semibold text-white">
-            Message Sent Successfully!
-          </h3>
-          <p className="text-white/70">
+          <h3 className="heading-5 text-white">Message Sent Successfully!</h3>
+          <p className="body-text text-white/70">
             Thank you for contacting us. We&apos;ll get back to you soon.
           </p>
           <Button
@@ -152,7 +150,7 @@ export default function ContactForm() {
     );
   } else {
     return (
-      <div className="w-full mx-auto p-6">
+      <div className="w-full mx-auto spacing-6">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
             {/* Error message display */}
@@ -172,7 +170,7 @@ export default function ContactForm() {
                       d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                     />
                   </svg>
-                  <p className="text-red-500 text-sm font-medium">{error}</p>
+                  <p className="text-red-500 font-medium">{error}</p>
                 </div>
               </div>
             )}
@@ -193,13 +191,13 @@ export default function ContactForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-white/80">
-                    Name <span className="text-red-500 text-xs">*</span>
+                    Name <span className="text-red-500">*</span>
                   </FormLabel>
                   <FormControl>
                     <Input
                       placeholder="Enter your name"
                       {...field}
-                      className="text-white dark:bg-black/20  dark:hover:bg-black/30 dark:focus:text-black dark:focus:bg-white dark:placeholder:text-white/50 transition-colors placeholder:text-xs"
+                      className="text-white dark:bg-black/20  dark:hover:bg-black/30 dark:focus:text-black dark:focus:bg-white dark:placeholder:text-white/50 transition-colors placeholder:text-sm"
                     />
                   </FormControl>
                   <FormMessage />
@@ -213,7 +211,7 @@ export default function ContactForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-white/80">
-                    Email <span className="text-red-500 text-xs">*</span>
+                    Email <span className="text-red-500">*</span>
                   </FormLabel>
                   <FormControl>
                     <Input
@@ -255,7 +253,7 @@ export default function ContactForm() {
               name="message"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-white/80">
+                  <FormLabel className="text-white/80 ">
                     Message <span className="text-red-500 text-xs">*</span>
                   </FormLabel>
                   <FormControl>
@@ -271,14 +269,9 @@ export default function ContactForm() {
               )}
             />
 
-            <p className="text-[10px] text-white/40 text-left"> * required</p>
+            <p className="text-xs text-white/40 text-left"> * required</p>
 
-            <Button
-              type="submit"
-              variant="outline"
-              className="w-full"
-              disabled={isSubmitting}
-            >
+            <Button type="submit" variant="default" disabled={isSubmitting}>
               {isSubmitting ? "Sending..." : "Submit"}
             </Button>
           </form>

@@ -9,9 +9,9 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   return (
     <main>
-      <div className="h-[80vh] container mx-auto grid grid-cols-2 place-items-center gap-10">
+      <div className="h-[80vh] container mx-auto padding-global grid grid-cols-2 place-items-center gap-10">
         <div className="flex flex-col gap-5">
-          <p className="text-xl font-bold">
+          <p className="body-text-lg font-bold">
             Feel free to reach us using any of the following methods:
           </p>
           <ul className="flex flex-col gap-2">

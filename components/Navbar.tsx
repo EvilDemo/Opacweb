@@ -25,12 +25,22 @@ const Logo = ({ className = "" }: { className?: string }) => (
   <Image
     src="/logo.png"
     alt="OPAC Logo"
-    width={130}
-    height={100}
+    width={125}
+    height={62}
     className={`object-contain w-auto h-auto  ${className}`}
     priority
   />
 );
+
+const AnimatedNavLink = ({ item }: { item: NavItem }) => {
+  return (
+    <Link href={item.href} className="block">
+      <Button variant="secondary" className="">
+        {item.label}
+      </Button>
+    </Link>
+  );
+};
 
 const NavigationLinks = ({
   items,
@@ -40,16 +50,10 @@ const NavigationLinks = ({
   className?: string;
 }) => (
   <div
-    className={`hidden lg:flex items-center justify-start space-x-8 ${className}`}
+    className={`hidden lg:flex items-center justify-start space-x-2.5 ${className}`}
   >
     {items.map((item) => (
-      <Link
-        key={item.label}
-        href={item.href}
-        className="text-white text-sm hover:text-gray-300 transition-colors hover:scale-105 hover:underline hover:underline-offset-4 hover:decoration-gray-300 whitespace-nowrap"
-      >
-        {item.label}
-      </Link>
+      <AnimatedNavLink key={item.label} item={item} />
     ))}
   </div>
 );
@@ -63,7 +67,7 @@ const Cart = ({ className = "" }: { className?: string }) => {
       className={`hidden lg:flex items-center space-x-2 text-white ${className}`}
     >
       <Image src="/cart.svg" alt="Cart" width={20} height={20} />
-      <span className="text-white text-sm">CART</span>
+      <span className="text-white body-text-sm">CART</span>
     </div>
   );
 };
@@ -98,13 +102,13 @@ const MobileMenu = ({ setIsOpen }: { setIsOpen: (open: boolean) => void }) => {
       <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
       <div className="flex flex-col h-full">
         {/* Mobile navigation */}
-        <nav className="flex-1 mt-10 px-4 py-6">
+        <nav className="flex-1 mt-10 padding-global py-6">
           <div className="space-y-4">
             {visibleItems.map((item) => (
               <Link
                 key={item.label}
                 href={item.href}
-                className="flex items-center gap-1 text-white text-lg hover:text-gray-300 transition-colors py-2 "
+                className="flex items-center gap-1 text-white body-text-lg hover:text-gray-300 transition-colors py-2 "
                 onClick={() => setIsOpen(false)}
               >
                 <Image
@@ -121,10 +125,10 @@ const MobileMenu = ({ setIsOpen }: { setIsOpen: (open: boolean) => void }) => {
 
         {/* Mobile cart - only show when shop is enabled */}
         {isShopEnabled() && (
-          <div className="border-t border-white-50 py-6 px-4">
+          <div className="border-t border-white-50 py-6 padding-global">
             <div className="flex items-center space-x-2 text-white">
               <Image src="/cart.svg" alt="Cart" width={24} height={24} />
-              <span className="text-lg">CART</span>
+              <span className="body-text-lg">CART</span>
             </div>
           </div>
         )}
@@ -139,8 +143,8 @@ export function Navbar() {
   const visibleItems = getVisibleNavItems();
 
   return (
-    <nav className="sticky top-0 left-0 right-0 z-50 h-[10vh]">
-      <div className="mx-auto px-4 py-4 sm:px-6 lg:px-8">
+    <nav className="sticky top-0 left-0 right-0 z-50 h-auto mix-blend-difference ">
+      <div className="mx-auto padding-global py-4">
         <div className="grid grid-cols-2 lg:grid-cols-[1fr_0.5fr_1fr] items-center ">
           {/* Left side - Navigation items (hidden on mobile) */}
           <NavigationLinks items={visibleItems} className="" />

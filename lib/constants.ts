@@ -6,25 +6,25 @@ export const SHOP_CONFIG = {
   // Shop-related navigation items
   NAV_ITEMS: [
     {
-      label: "SHOP",
-      href: "/shop",
-      icon: "/menu-shop.gif",
-      requiresShop: true,
-    },
-    {
-      label: "MEDIA",
+      label: "Media",
       href: "/media",
       icon: "/menu-media.gif",
       requiresShop: false,
     },
     {
-      label: "ABOUT US",
+      label: "Radio",
+      href: "/radio",
+      icon: "/menu-radio.gif",
+      requiresShop: false,
+    },
+    {
+      label: "About Us",
       href: "/about",
       icon: "/menu-about.gif",
       requiresShop: false,
     },
     {
-      label: "CONTACT",
+      label: "Contact",
       href: "/contact",
       icon: "/menu-contact.gif",
       requiresShop: false,

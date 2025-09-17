@@ -51,7 +51,7 @@ export default function MediaPage() {
   }
 
   return (
-    <div className="container mx-auto min-h-screen px-4 py-8">
+    <div className="container mx-auto min-h-screen padding-global py-8">
       <MediaTabs
         pictures={pictures}
         videos={videos}
