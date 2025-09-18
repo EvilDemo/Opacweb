@@ -28,7 +28,7 @@ export default function CTASection({
         <div className="flex flex-row items-stretch">
           <div className="flex h-full items-center justify-center">
             <Button
-              variant="outline"
+              variant="secondary"
               size="lg"
               onClick={onButtonClick}
               className="paragraph-small-medium"

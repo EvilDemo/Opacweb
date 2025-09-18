@@ -197,7 +197,7 @@ export function MediaTabs({ pictures, videos, music, radio }: MediaTabsProps) {
                   <CardContent className="px-3 pt-0">
                     <Button
                       asChild
-                      variant="outline"
+                      variant="secondary"
                       className="w-full text-xs h-8"
                     >
                       <a

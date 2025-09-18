@@ -140,7 +140,7 @@ export default function ContactForm() {
           </p>
           <Button
             onClick={() => setIsSubmitted(false)}
-            variant="outline"
+            variant="secondary"
             className="mt-4"
           >
             Send Another Message

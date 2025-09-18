@@ -91,13 +91,14 @@ function PrincipleItem({ principle, index }: PrincipleItemProps) {
       }
     );
 
-    if (ref.current) {
-      observer.observe(ref.current);
+    const currentRef = ref.current;
+    if (currentRef) {
+      observer.observe(currentRef);
     }
 
     return () => {
-      if (ref.current) {
-        observer.unobserve(ref.current);
+      if (currentRef) {
+        observer.unobserve(currentRef);
       }
     };
   }, []);
@@ -178,6 +179,45 @@ export function PrinciplesSection({
     offset: ["start start", "end end"],
   });
 
+
+  // Create individual useTransform calls for each principle (up to 6 principles)
+  const principle0Opacity = useTransform(scrollYProgress, [0, 0.025, 0.142, 0.167], [0, 1, 1, 0]);
+  const principle0Scale = useTransform(scrollYProgress, [0, 0.025, 0.142, 0.167], [0.9, 1, 1, 0.9]);
+  const progress0 = useTransform(scrollYProgress, [0, 0.025, 0.142, 0.167], [0, 1, 1, 0]);
+
+  const principle1Opacity = useTransform(scrollYProgress, [0.167, 0.192, 0.309, 0.334], [0, 1, 1, 0]);
+  const principle1Scale = useTransform(scrollYProgress, [0.167, 0.192, 0.309, 0.334], [0.9, 1, 1, 0.9]);
+  const progress1 = useTransform(scrollYProgress, [0.167, 0.192, 0.309, 0.334], [0, 1, 1, 0]);
+
+  const principle2Opacity = useTransform(scrollYProgress, [0.334, 0.359, 0.476, 0.5], [0, 1, 1, 0]);
+  const principle2Scale = useTransform(scrollYProgress, [0.334, 0.359, 0.476, 0.5], [0.9, 1, 1, 0.9]);
+  const progress2 = useTransform(scrollYProgress, [0.334, 0.359, 0.476, 0.5], [0, 1, 1, 0]);
+
+  const principle3Opacity = useTransform(scrollYProgress, [0.5, 0.525, 0.642, 0.667], [0, 1, 1, 0]);
+  const principle3Scale = useTransform(scrollYProgress, [0.5, 0.525, 0.642, 0.667], [0.9, 1, 1, 0.9]);
+  const progress3 = useTransform(scrollYProgress, [0.5, 0.525, 0.642, 0.667], [0, 1, 1, 0]);
+
+  const principle4Opacity = useTransform(scrollYProgress, [0.667, 0.692, 0.809, 0.834], [0, 1, 1, 0]);
+  const principle4Scale = useTransform(scrollYProgress, [0.667, 0.692, 0.809, 0.834], [0.9, 1, 1, 0.9]);
+  const progress4 = useTransform(scrollYProgress, [0.667, 0.692, 0.809, 0.834], [0, 1, 1, 0]);
+
+  const principle5Opacity = useTransform(scrollYProgress, [0.834, 0.859, 0.976, 1], [0, 1, 1, 0]);
+  const principle5Scale = useTransform(scrollYProgress, [0.834, 0.859, 0.976, 1], [0.9, 1, 1, 0.9]);
+  const progress5 = useTransform(scrollYProgress, [0.834, 0.859, 0.976, 1], [0, 1, 1, 0]);
+
+  const principleAnimations = [
+    { opacity: principle0Opacity, scale: principle0Scale },
+    { opacity: principle1Opacity, scale: principle1Scale },
+    { opacity: principle2Opacity, scale: principle2Scale },
+    { opacity: principle3Opacity, scale: principle3Scale },
+    { opacity: principle4Opacity, scale: principle4Scale },
+    { opacity: principle5Opacity, scale: principle5Scale },
+  ];
+
+  const progressAnimations = [
+    progress0, progress1, progress2, progress3, progress4, progress5,
+  ];
+
   return (
     <section
       ref={sectionRef}
@@ -220,32 +260,15 @@ export function PrinciplesSection({
                 <div className="relative flex items-center gap-1">
                   {/* Animated current principle number */}
                   <div className="relative">
-                    {principles.map((_, index) => {
-                      const sectionSize = 1 / principles.length;
-                      const start = index * sectionSize;
-                      const end = (index + 1) * sectionSize;
-
-                      const opacity = useTransform(
-                        scrollYProgress,
-                        [
-                          start,
-                          start + sectionSize * 0.15,
-                          end - sectionSize * 0.15,
-                          end,
-                        ],
-                        [0, 1, 1, 0]
-                      );
-
-                      return (
-                        <motion.span
-                          key={index}
-                          className="tabular-nums absolute left-0"
-                          style={{ opacity }}
-                        >
-                          {String(index + 1).padStart(2, "0")}
-                        </motion.span>
-                      );
-                    })}
+                    {principles.map((_, index) => (
+                      <motion.span
+                        key={index}
+                        className="tabular-nums absolute left-0"
+                        style={{ opacity: progressAnimations[index] }}
+                      >
+                        {String(index + 1).padStart(2, "0")}
+                      </motion.span>
+                    ))}
                     {/* Invisible placeholder to maintain width */}
                     <span className="tabular-nums opacity-0">00</span>
                   </div>
@@ -260,38 +283,15 @@ export function PrinciplesSection({
 
             {/* Right Column - Dynamic Principle Content */}
             <main className="lg:col-span-8 flex-1 lg:h-full flex items-center justify-center relative order-2 lg:order-none min-h-[60vh] lg:min-h-0">
-              {principles.map((principle, index) => {
-                // Each principle gets more scroll space to hang longer
-                const sectionSize = 1 / principles.length;
-                const start = index * sectionSize;
-                const end = (index + 1) * sectionSize;
-
-                // Shorter transition periods, longer hold time
-                const fadeInEnd = start + sectionSize * 0.15; // 15% for fade in
-                const fadeOutStart = end - sectionSize * 0.15; // 15% for fade out
-
-                const opacity = useTransform(
-                  scrollYProgress,
-                  [start, fadeInEnd, fadeOutStart, end],
-                  [0, 1, 1, 0]
-                );
-
-                const scale = useTransform(
-                  scrollYProgress,
-                  [start, fadeInEnd, fadeOutStart, end],
-                  [0.9, 1, 1, 0.9]
-                );
-
-                return (
-                  <motion.div
-                    key={principle.id}
-                    className="absolute inset-0 flex items-center justify-center lg:p-0"
-                    style={{ opacity, scale }}
-                  >
-                    <PrincipleItem principle={principle} index={index} />
-                  </motion.div>
-                );
-              })}
+              {principles.map((principle, index) => (
+                <motion.div
+                  key={principle.id}
+                  className="absolute inset-0 flex items-center justify-center lg:p-0"
+                  style={principleAnimations[index]}
+                >
+                  <PrincipleItem principle={principle} index={index} />
+                </motion.div>
+              ))}
             </main>
           </div>
         </div>

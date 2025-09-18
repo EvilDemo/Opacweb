@@ -33,15 +33,33 @@ export const AboutManifestoSection = ({
     offset: ["start start", "end end"],
   });
 
-  // Helper function to create scroll-driven styles
-  const getScrollStyles = (index: number) => {
-    const start = 0.25 + index * 0.08; // Delayed start for overlap compensation
-    const end = start + 0.12; // Animation duration
-    return {
-      opacity: useTransform(scrollYProgress, [start, end, 1], [0, 1, 1]),
-      y: useTransform(scrollYProgress, [start, end], [300, 0]),
-    };
-  };
+  // Create individual useTransform calls for each text block
+  const opacity0 = useTransform(scrollYProgress, [0.25, 0.37, 1], [0, 1, 1]);
+  const y0 = useTransform(scrollYProgress, [0.25, 0.37], [300, 0]);
+  
+  const opacity1 = useTransform(scrollYProgress, [0.33, 0.45, 1], [0, 1, 1]);
+  const y1 = useTransform(scrollYProgress, [0.33, 0.45], [300, 0]);
+  
+  const opacity2 = useTransform(scrollYProgress, [0.41, 0.53, 1], [0, 1, 1]);
+  const y2 = useTransform(scrollYProgress, [0.41, 0.53], [300, 0]);
+  
+  const opacity3 = useTransform(scrollYProgress, [0.49, 0.61, 1], [0, 1, 1]);
+  const y3 = useTransform(scrollYProgress, [0.49, 0.61], [300, 0]);
+  
+  const opacity4 = useTransform(scrollYProgress, [0.57, 0.69, 1], [0, 1, 1]);
+  const y4 = useTransform(scrollYProgress, [0.57, 0.69], [300, 0]);
+  
+  const opacity5 = useTransform(scrollYProgress, [0.65, 0.77, 1], [0, 1, 1]);
+  const y5 = useTransform(scrollYProgress, [0.65, 0.77], [300, 0]);
+
+  const scrollStyles = [
+    { opacity: opacity0, y: y0 },
+    { opacity: opacity1, y: y1 },
+    { opacity: opacity2, y: y2 },
+    { opacity: opacity3, y: y3 },
+    { opacity: opacity4, y: y4 },
+    { opacity: opacity5, y: y5 },
+  ];
 
   // Get unique groups from textBlocks
   const uniqueGroups = [
@@ -59,13 +77,13 @@ export const AboutManifestoSection = ({
           <div key={groupIndex}>
             {textBlocks
               .filter((block) => block.group === groupIndex)
-              .map((block, blockIndex) => {
+              .map((block) => {
                 const globalIndex = textBlocks.findIndex((b) => b === block);
                 return (
                   <motion.p
                     key={globalIndex}
                     className="heading-4 text-white"
-                    style={getScrollStyles(globalIndex)}
+                    style={scrollStyles[globalIndex]}
                   >
                     {block.text}
                   </motion.p>

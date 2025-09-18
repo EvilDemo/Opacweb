@@ -23,8 +23,8 @@ export default function NotFound() {
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
           <Link href="/">
             <Button
-              variant="outline"
-              className="w-full sm:w-auto bg-transparent border-white text-white hover:bg-white hover:text-black transition-all duration-300 px-8 py-3"
+              variant="secondary"
+              className="w-full sm:w-auto px-8 py-3"
             >
               Go Home
             </Button>
