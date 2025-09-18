@@ -36,19 +36,19 @@ export const AboutManifestoSection = ({
   // Create individual useTransform calls for each text block
   const opacity0 = useTransform(scrollYProgress, [0.25, 0.37, 1], [0, 1, 1]);
   const y0 = useTransform(scrollYProgress, [0.25, 0.37], [300, 0]);
-  
+
   const opacity1 = useTransform(scrollYProgress, [0.33, 0.45, 1], [0, 1, 1]);
   const y1 = useTransform(scrollYProgress, [0.33, 0.45], [300, 0]);
-  
+
   const opacity2 = useTransform(scrollYProgress, [0.41, 0.53, 1], [0, 1, 1]);
   const y2 = useTransform(scrollYProgress, [0.41, 0.53], [300, 0]);
-  
+
   const opacity3 = useTransform(scrollYProgress, [0.49, 0.61, 1], [0, 1, 1]);
   const y3 = useTransform(scrollYProgress, [0.49, 0.61], [300, 0]);
-  
+
   const opacity4 = useTransform(scrollYProgress, [0.57, 0.69, 1], [0, 1, 1]);
   const y4 = useTransform(scrollYProgress, [0.57, 0.69], [300, 0]);
-  
+
   const opacity5 = useTransform(scrollYProgress, [0.65, 0.77, 1], [0, 1, 1]);
   const y5 = useTransform(scrollYProgress, [0.65, 0.77], [300, 0]);
 
