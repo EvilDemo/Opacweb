@@ -1,63 +1,62 @@
-"use client";
+import type { Metadata } from "next";
+import { MediaPageContent } from "@/components/MediaPageContent";
 
-import { useEffect, useState } from "react";
-import {
-  getPictures,
-  getVideos,
-  getMusic,
-  getRadio,
-  type Pictures,
-  type Video,
-  type Music,
-  type Radio,
-} from "@/lib/mediaData";
-import { MediaTabs } from "@/components/MediaTabs";
-import { LoadingSpinner } from "@/components/LoadingSpinner";
+export const metadata: Metadata = {
+  title: "Opac Media | Music, Videos & Pictures",
+  description:
+    "Explore Opac's creative output - discover our music releases, video content, and photography. Experience our artistic vision across multiple mediums.",
+  keywords: [
+    "opac media",
+    "music",
+    "videos",
+    "pictures",
+    "creative content",
+    "multimedia",
+    "artistic expression",
+    "portugal music",
+  ],
+  authors: [{ name: "Opac" }],
+  creator: "Opac",
+  publisher: "Opac",
+  openGraph: {
+    title: "Opac Media | Music, Videos & Pictures",
+    description:
+      "Explore Opac's creative output across music, video, and photography. Experience our artistic vision.",
+    url: "https://weareopac.com/media",
+    siteName: "Opac",
+    images: [
+      {
+        url: "/og-media.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Opac Media - Music, Videos & Pictures",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Opac Media | Music, Videos & Pictures",
+    description: "Explore Opac's creative output across multiple mediums.",
+    images: ["/twitter-media.jpg"],
+  },
+  alternates: {
+    canonical: "https://weareopac.com/media",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+};
 
 export default function MediaPage() {
-  const [pictures, setPictures] = useState<Pictures[]>([]);
-  const [videos, setVideos] = useState<Video[]>([]);
-  const [music, setMusic] = useState<Music[]>([]);
-  const [radio, setRadio] = useState<Radio[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const [picturesData, videosData, musicData, radioData] =
-          await Promise.all([
-            getPictures(),
-            getVideos(),
-            getMusic(),
-            getRadio(),
-          ]);
-
-        setPictures(picturesData);
-        setVideos(videosData);
-        setMusic(musicData);
-        setRadio(radioData);
-      } catch (error) {
-        console.error("Error fetching media data:", error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchData();
-  }, []);
-
-  if (loading) {
-    return <LoadingSpinner />;
-  }
-
-  return (
-    <div className="container mx-auto min-h-screen padding-global py-8">
-      <MediaTabs
-        pictures={pictures}
-        videos={videos}
-        music={music}
-        radio={radio}
-      />
-    </div>
-  );
+  return <MediaPageContent />;
 }

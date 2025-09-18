@@ -41,7 +41,7 @@ export default function Footer() {
                 key={item.href}
                 variant="link"
                 asChild
-                className="paragraph-regular text-white hover:opacity-80 transition-opacity px-4 py-2"
+                className=" text-white hover:opacity-80 transition-opacity px-4 py-2"
               >
                 <Link href={item.href}>{item.label}</Link>
               </Button>
@@ -50,9 +50,11 @@ export default function Footer() {
         </div>
 
         {/* Right Column - Subscribe Section */}
-        <div className="content-stretch flex flex-col gap-4 items-start justify-start relative shrink-0 w-96">
+        <div className="content-stretch flex flex-col gap-4 items-start justify-start relative shrink-0 w-6/12 ">
           <div className="w-full">
-            <h2 className="heading-4">Subscribe</h2>
+            <h2 className="heading-4 text-white mix-blend-difference">
+              Subscribe
+            </h2>
           </div>
 
           {/* Form Actions */}
@@ -62,19 +64,16 @@ export default function Footer() {
               <Input
                 type="email"
                 placeholder="Enter your email"
-                className="basis-0 bg-white grow min-h-9 min-w-px relative rounded-lg shrink-0 text-black placeholder:text-neutral-500"
+                className="basis-0 grow min-h-9 min-w-px relative shrink-0 "
               />
-              <Button
-                variant="default"
-                className="bg-white text-black hover:bg-white/90 min-h-9 px-4 py-2 rounded-lg"
-              >
+              <Button variant="default" className=" hover:bg-white/90 ">
                 Subscribe
               </Button>
             </div>
 
             {/* Privacy Policy Text */}
             <div className="w-full">
-              <p className="paragraph-mini-regular">
+              <p className="paragraph-mini-regular ">
                 <span>By subscribing you agree to with our </span>
                 <span className="underline">Privacy Policy.</span>
               </p>

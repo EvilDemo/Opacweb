@@ -1,5 +1,16 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "404 - Page Not Found | Opac",
+  description:
+    "The page you're looking for doesn't exist or has been moved. Return to Opac's homepage or contact us for assistance.",
+  robots: {
+    index: false,
+    follow: true,
+  },
+};
 
 export default function NotFound() {
   return (
@@ -22,10 +33,7 @@ export default function NotFound() {
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
           <Link href="/">
-            <Button
-              variant="secondary"
-              className="w-full sm:w-auto px-8 py-3"
-            >
+            <Button variant="secondary" className="w-full sm:w-auto px-8 py-3">
               Go Home
             </Button>
           </Link>

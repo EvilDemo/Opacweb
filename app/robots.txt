@@ -1,0 +1,29 @@
+# Robots.txt for Opac Website
+# Allow all search engines to crawl the entire site except admin areas
+
+User-agent: *
+Allow: /
+
+# Disallow admin/studio areas (Sanity CMS)
+Disallow: /studio/
+Disallow: /admin/
+
+# Disallow any temporary or development files
+Disallow: /_next/
+Disallow: /api/
+
+# Allow access to important static assets
+Allow: /*.css$
+Allow: /*.js$
+Allow: /*.png$
+Allow: /*.jpg$
+Allow: /*.jpeg$
+Allow: /*.gif$
+Allow: /*.svg$
+Allow: /*.webp$
+
+# Sitemap location
+Sitemap: https://weareopac.com/sitemap.xml
+
+# Crawl delay (optional - be respectful to servers)
+# Crawl-delay: 1

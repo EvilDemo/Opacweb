@@ -17,7 +17,7 @@ const buttonVariants = cva(
           "paragraph-small-medium border border-white rounded-full py-1 px-2 stroke-white text-white hover:text-gray-300 hover:scale-105  whitespace-nowrap h-8 bg-transparent hover:bg-transparent shadow-xs",
         ghost:
           "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
-        link: "text-primary underline-offset-4 ",
+        link: "text-primary underline-offset-4 hover:underline ",
       },
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",
@@ -70,7 +70,7 @@ function Button({
       {...props}
     >
       <span
-        className={`block transition-all duration-300 ease-in-out group-hover:-translate-y-[150%] group-hover:opacity-0 group-hover:blur-sm group-hover:skew-x-12  `}
+        className={`flex items-center justify-center whitespace-nowrap transition-all duration-300 ease-in-out group-hover:-translate-y-[150%] group-hover:opacity-0 group-hover:blur-sm group-hover:skew-x-12  `}
       >
         {children}
       </span>
@@ -80,8 +80,6 @@ function Button({
             ? "group-hover:bg-white mix-blend-difference group-hover:text-black group-hover:border-white group-hover:border"
             : variant === "default"
             ? "group-hover:bg-black group-hover:text-white group-hover:border-black group-hover:border"
-            : variant === "link"
-            ? "group-hover:underline group-hover:underline-offset-4"
             : ""
         }`}
       >

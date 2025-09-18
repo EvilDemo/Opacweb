@@ -51,7 +51,7 @@
   --color-accent-foreground: var(--black);
   --color-destructive: #ef4444;
   --color-border: var(--neutral-200);
-  --color-input: var(--neutral-200);
+  --color-input: var(--white);
   --color-ring: var(--neutral-300);
 }
 
@@ -90,7 +90,7 @@
   --accent-foreground: var(--black);
   --destructive: #ef4444; /* Red for errors */
   --border: var(--neutral-200);
-  --input: var(--neutral-200);
+  --input: var(--white);
   --ring: var(--neutral-300);
 }
 
@@ -112,7 +112,7 @@
   --accent-foreground: var(--black);
   --destructive: #ef4444;
   --border: var(--neutral-200);
-  --input: var(--neutral-200);
+  --input: var(--white);
   --ring: var(--neutral-300);
 }
 
