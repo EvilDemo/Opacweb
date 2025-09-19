@@ -59,7 +59,7 @@ interface MediaCardProps {
 export function MediaCard({ item }: MediaCardProps) {
   // Common card classes for responsive design
   const cardClasses =
-    "overflow-hidden hover:shadow-lg transition-shadow pt-0 pb-0 w-full flex flex-col";
+    "overflow-hidden hover:shadow-lg hover:-translate-y-1 hover:border-neutral-600 transition-all duration-300 ease-in-out pt-0 pb-0 w-full flex flex-col cursor-pointer";
   const headerClasses = "px-3 flex-1 flex flex-col min-h-0";
   const titleClasses = "body-text-md !font-medium  line-clamp-1 leading-tight";
   const descriptionClasses =

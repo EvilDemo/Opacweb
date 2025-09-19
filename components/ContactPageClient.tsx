@@ -9,7 +9,6 @@ import {
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
@@ -111,8 +110,8 @@ export default function ContactPageClient() {
                     <h3 className="text-white heading-2">Artists</h3>
                   </div>
                   <CardDescription className="text-neutral-300 paragraph-small-regular">
-                    Submit your work for consideration. We're always looking for
-                    unique voices that resonate with our philosophy.
+                    Submit your work for consideration. We&apos;re always
+                    looking for unique voices that resonate with our philosophy.
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">

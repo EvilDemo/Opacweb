@@ -28,7 +28,7 @@ const transformMusic = (music: Music[]): MediaItem[] =>
 export function MediaTabs({ pictures, videos, music }: MediaTabsProps) {
   return (
     <Tabs defaultValue="pictures" className="w-full">
-      <div className="sticky top-[6rem] z-40 bg-black pb-6">
+      <div className="sticky top-[6rem] z-40  pb-6">
         <TabsList className="grid w-full grid-cols-3 h-auto gap-2">
           <TabsTrigger value="pictures" className="flex items-center gap-2">
             <ImageIcon className="h-4 w-4" />

@@ -42,6 +42,13 @@ export interface Radio {
 
 export async function getPictures(): Promise<Pictures[]> {
   try {
+    // Skip Sanity calls during build if no project ID is configured
+    if (
+      !process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ||
+      process.env.NEXT_PUBLIC_SANITY_PROJECT_ID === "dummy-project-id"
+    ) {
+      return [];
+    }
     return await sanityClient.fetch(picturesQuery);
   } catch (error) {
     console.error("Error fetching pictures:", error);
@@ -51,6 +58,13 @@ export async function getPictures(): Promise<Pictures[]> {
 
 export async function getVideos(): Promise<Video[]> {
   try {
+    // Skip Sanity calls during build if no project ID is configured
+    if (
+      !process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ||
+      process.env.NEXT_PUBLIC_SANITY_PROJECT_ID === "dummy-project-id"
+    ) {
+      return [];
+    }
     return await sanityClient.fetch(videosQuery);
   } catch (error) {
     console.error("Error fetching videos:", error);
@@ -60,6 +74,13 @@ export async function getVideos(): Promise<Video[]> {
 
 export async function getMusic(): Promise<Music[]> {
   try {
+    // Skip Sanity calls during build if no project ID is configured
+    if (
+      !process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ||
+      process.env.NEXT_PUBLIC_SANITY_PROJECT_ID === "dummy-project-id"
+    ) {
+      return [];
+    }
     return await sanityClient.fetch(musicQuery);
   } catch (error) {
     console.error("Error fetching music:", error);
@@ -69,6 +90,13 @@ export async function getMusic(): Promise<Music[]> {
 
 export async function getRadio(): Promise<Radio[]> {
   try {
+    // Skip Sanity calls during build if no project ID is configured
+    if (
+      !process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ||
+      process.env.NEXT_PUBLIC_SANITY_PROJECT_ID === "dummy-project-id"
+    ) {
+      return [];
+    }
     return await sanityClient.fetch(radioQuery);
   } catch (error) {
     console.error("Error fetching radio:", error);
@@ -78,6 +106,13 @@ export async function getRadio(): Promise<Radio[]> {
 
 export async function getSinglePicture(id: string): Promise<Pictures | null> {
   try {
+    // Skip Sanity calls during build if no project ID is configured
+    if (
+      !process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ||
+      process.env.NEXT_PUBLIC_SANITY_PROJECT_ID === "dummy-project-id"
+    ) {
+      return null;
+    }
     return await sanityClient.fetch(singlePictureQuery, { id });
   } catch (error) {
     console.error("Error fetching single picture:", error);
