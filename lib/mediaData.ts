@@ -1,6 +1,7 @@
 import {
   sanityClient,
   picturesQuery,
+  singlePictureQuery,
   videosQuery,
   musicQuery,
   radioQuery,
@@ -72,5 +73,14 @@ export async function getRadio(): Promise<Radio[]> {
   } catch (error) {
     console.error("Error fetching radio:", error);
     return [];
+  }
+}
+
+export async function getSinglePicture(id: string): Promise<Pictures | null> {
+  try {
+    return await sanityClient.fetch(singlePictureQuery, { id });
+  } catch (error) {
+    console.error("Error fetching single picture:", error);
+    return null;
   }
 }

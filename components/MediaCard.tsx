@@ -12,8 +12,10 @@ import {
   ExternalLink,
   Music as MusicIcon,
   Radio as RadioIcon,
+  Images,
 } from "lucide-react";
 import NextImage from "next/image";
+import Link from "next/link";
 
 // Base interface for all media items
 interface BaseMediaItem {
@@ -57,7 +59,7 @@ interface MediaCardProps {
 export function MediaCard({ item }: MediaCardProps) {
   // Common card classes for responsive design
   const cardClasses =
-    "overflow-hidden hover:shadow-lg transition-shadow pt-0 w-full flex flex-col";
+    "overflow-hidden hover:shadow-lg transition-shadow pt-0 pb-0 w-full flex flex-col";
   const headerClasses = "px-3 flex-1 flex flex-col min-h-0";
   const titleClasses = "body-text-md !font-medium  line-clamp-1 leading-tight";
   const descriptionClasses =
@@ -182,6 +184,21 @@ export function MediaCard({ item }: MediaCardProps) {
   // Render action button based on media type
   const renderAction = () => {
     switch (item.type) {
+      case "picture":
+        return (
+          <CardContent className={contentClasses}>
+            <Link
+              href={`/media/pictures/${item._id}`}
+              aria-label={`View gallery for ${item.title}`}
+            >
+              <Button variant="secondary" size="sm" className="w-full">
+                <Images className="mr-2 h-3 w-3" />
+                View Gallery
+              </Button>
+            </Link>
+          </CardContent>
+        );
+
       case "video":
         return (
           <CardContent className={contentClasses}>
@@ -190,6 +207,7 @@ export function MediaCard({ item }: MediaCardProps) {
               target="_blank"
               rel="noopener noreferrer"
               className="block"
+              aria-label={`Watch ${item.title} video on external platform`}
             >
               <Button variant="secondary" size="sm" className="w-full">
                 Watch Video
@@ -207,6 +225,7 @@ export function MediaCard({ item }: MediaCardProps) {
               target="_blank"
               rel="noopener noreferrer"
               className="block"
+              aria-label={`Listen to ${item.title} on Spotify`}
             >
               <Button variant="secondary" size="sm" className="w-full">
                 Listen on Spotify
@@ -224,6 +243,7 @@ export function MediaCard({ item }: MediaCardProps) {
               target="_blank"
               rel="noopener noreferrer"
               className="block"
+              aria-label={`Open ${item.title} playlist on Spotify`}
             >
               <Button variant="default" size="sm" className="w-full">
                 Open Playlist
@@ -233,9 +253,8 @@ export function MediaCard({ item }: MediaCardProps) {
           </CardContent>
         );
 
-      case "picture":
       default:
-        return null; // Pictures don't have action buttons
+        return null;
     }
   };
 

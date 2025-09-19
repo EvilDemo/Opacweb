@@ -17,44 +17,55 @@ export function urlFor(source: SanityImageSource) {
   return builder.image(source);
 }
 
-// GROQ queries for fetching content
+// GROQ queries for fetching content with optimized URLs
 export const picturesQuery = `
-  *[_type == "pictures"] {
+  *[_type == "pictures"] | order(_createdAt desc) {
+    _id,
+    title,
+    description,
+    "thumbnailUrl": thumbnail.asset->url + "?auto=format&w=400&q=80",
+    "gallery": gallery[].asset->url
+  }
+`;
+
+// Query for a single picture post - keep original URLs for flexibility
+export const singlePictureQuery = `
+  *[_type == "pictures" && _id == $id][0] {
     _id,
     title,
     description,
     "thumbnailUrl": thumbnail.asset->url,
-    gallery
+    "gallery": gallery[].asset->url
   }
 `;
 
 export const videosQuery = `
-  *[_type == "video"] {
+  *[_type == "video"] | order(_createdAt desc) {
     _id,
     title,
     description,
     "videoUrl": videoUrl,
-    "coverImageUrl": coverImage.asset->url,
-    "animatedCoverImageUrl": animatedCoverImage.asset->url
+    "coverImageUrl": coverImage.asset->url + "?auto=format&w=400&q=85",
+    "animatedCoverImageUrl": animatedCoverImage.asset->url + "?auto=format&w=400&q=85"
   }
 `;
 
 export const musicQuery = `
-  *[_type == "music"] {
+  *[_type == "music"] | order(_createdAt desc) {
     _id,
     title,
     description,
     spotifyUrl,
-    "coverImageUrl": coverImage.asset->url
+    "coverImageUrl": coverImage.asset->url + "?auto=format&w=400&q=85"
   }
 `;
 
 export const radioQuery = `
-  *[_type == "radio"] {
+  *[_type == "radio"] | order(_createdAt desc) {
     _id,
     title,
     description,
     spotifyUrl,
-    "coverImageUrl": coverImage.asset->url
+    "coverImageUrl": coverImage.asset->url + "?auto=format&w=400&q=85"
   }
 `;

@@ -45,7 +45,7 @@ export function MediaPageContent() {
   }
 
   return (
-    <div className="min-h-[calc(100vh-6rem)] px-4 sm:px-8 md:px-12 lg:px-16 py-8">
+    <div className="min-h-[calc(100vh-6rem)] px-4 sm:px-8 md:px-12 lg:px-16 pt-8">
       <MediaTabs pictures={pictures} videos={videos} music={music} />
     </div>
   );

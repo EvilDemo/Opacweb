@@ -190,7 +190,7 @@
 
   .body-text-sm,
   .paragraph-small-regular {
-    @apply text-base font-normal text-white;
+    @apply text-sm font-normal text-white;
     line-height: var(--line-height-normal);
   }
 
@@ -267,9 +267,9 @@
     @apply p-20;
   } /* 80px */
 
-  /* Page Padding - From Figma - Responsive */
+  /* Page Padding - From Figma */
   .padding-global {
-    @apply px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16; /* 16px mobile -> 64px desktop */
+    @apply px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16; /* Responsive: 16px mobile -> 64px desktop */
   }
 
   .padding-section-large {
