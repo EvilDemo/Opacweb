@@ -7,12 +7,13 @@ export function WaveUtility() {
       height="100%"
       viewBox="0 0 800 200"
       className="w-full h-full opacity-85"
-      preserveAspectRatio="none"
+      preserveAspectRatio="xMidYMid meet"
     >
       <motion.path
         d="M0 100 L133 60 L266 140 L400 40 L533 130 L666 80 L800 100"
         stroke="currentColor"
-        strokeWidth="5"
+        strokeWidth="4"
+        className="[stroke-width:3] sm:[stroke-width:4] md:[stroke-width:5] lg:[stroke-width:6]"
         fill="none"
         strokeLinecap="square"
         strokeLinejoin="miter"
@@ -26,7 +27,8 @@ export function WaveUtility() {
       <motion.path
         d="M0 100 L100 70 L200 130 L300 50 L400 120 L500 85 L600 135 L700 65 L800 100"
         stroke="currentColor"
-        strokeWidth="2"
+        strokeWidth="1.5"
+        className="[stroke-width:1.5] sm:[stroke-width:2] md:[stroke-width:2.5] lg:[stroke-width:3]"
         fill="none"
         strokeLinecap="square"
         strokeLinejoin="miter"
@@ -44,17 +46,18 @@ export function WaveUtility() {
             key={i}
             cx={x}
             cy={
-              i % 2 === 0
-                ? i === 2
-                  ? 40
-                  : 60
+              i === 0
+                ? 60 // x=133, y=60
                 : i === 1
-                ? 140
+                ? 140 // x=266, y=140
+                : i === 2
+                ? 40 // x=400, y=40
                 : i === 3
-                ? 130
-                : 80
+                ? 130 // x=533, y=130
+                : 80 // x=666, y=80 (last circle)
             }
-            r="6"
+            r="5"
+            className="[r:4] sm:[r:5] md:[r:6] lg:[r:7]"
             fill="currentColor"
             animate={{
               scale: [0.6, 1.4, 0.6],
@@ -97,8 +100,9 @@ export function WaveUtility() {
                 ? 63
                 : 118
             }
-            width="4"
-            height="4"
+            width="3"
+            height="3"
+            className="[width:2.5] [height:2.5] sm:[width:3] sm:[height:3] md:[width:4] md:[height:4] lg:[width:5] lg:[height:5]"
             fill="currentColor"
             animate={{
               scaleY: [0.5, 1.5, 0.5],

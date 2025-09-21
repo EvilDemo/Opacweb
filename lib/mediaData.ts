@@ -38,6 +38,7 @@ export interface Radio {
   description: string;
   spotifyUrl: string;
   coverImageUrl?: string;
+  _createdAt: string;
 }
 
 export async function getPictures(): Promise<Pictures[]> {

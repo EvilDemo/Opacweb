@@ -12,6 +12,198 @@ interface PictureGalleryContentProps {
   picture: Pictures;
 }
 
+// Create a smaller version of LoadingSpinner for cards
+const CardLoadingSpinner = () => (
+  <div className="flex items-center justify-center">
+    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-neutral-400"></div>
+  </div>
+);
+
+// Individual card loading state component
+const ImageCardSkeleton = () => (
+  <div className="break-inside-avoid mb-4 rounded-lg overflow-hidden animate-pulse">
+    <div
+      className="bg-neutral-200 dark:bg-neutral-800 w-full flex items-center justify-center"
+      style={{ minHeight: "200px", aspectRatio: "3/4" }}
+    >
+      <CardLoadingSpinner />
+    </div>
+  </div>
+);
+
+// Individual image card component with loading states
+const ImageCard = ({
+  imageUrl,
+  index,
+  imageCount,
+  pictureTitle,
+  onImageClick,
+  delay = 0,
+}: {
+  imageUrl: string;
+  index: number;
+  imageCount: number;
+  pictureTitle: string;
+  onImageClick: (index: number) => void;
+  delay?: number;
+}) => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
+  const [shouldShow, setShouldShow] = useState(false);
+  const [imageDimensions, setImageDimensions] = useState<{
+    width: number;
+    height: number;
+  } | null>(null);
+  const [isInView, setIsInView] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  // Pre-load image dimensions to prevent content shift
+  useEffect(() => {
+    const img = new Image();
+    img.onload = () => {
+      setImageDimensions({
+        width: img.naturalWidth,
+        height: img.naturalHeight,
+      });
+    };
+    img.onerror = () => {
+      setHasError(true);
+      setIsLoading(false);
+    };
+
+    const optimizedUrl = imageUrl.includes("?")
+      ? imageUrl + "&w=800&q=85"
+      : imageUrl + "?auto=format&w=800&q=85";
+
+    img.src = optimizedUrl;
+  }, [imageUrl]);
+
+  // Intersection Observer for viewport-based loading
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsInView(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "100px" } // Start loading 100px before entering viewport
+    );
+
+    if (cardRef.current) observer.observe(cardRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  // Stagger the appearance of cards
+  useEffect(() => {
+    if (imageDimensions && isInView) {
+      const timer = setTimeout(() => {
+        setShouldShow(true);
+      }, delay);
+      return () => clearTimeout(timer);
+    }
+  }, [delay, imageDimensions, isInView]);
+
+  const optimizedUrl = imageUrl.includes("?")
+    ? imageUrl + "&w=800&q=85"
+    : imageUrl + "?auto=format&w=800&q=85";
+
+  const handleImageLoad = () => {
+    setIsLoading(false);
+    setHasError(false);
+  };
+
+  const handleImageError = () => {
+    setIsLoading(false);
+    setHasError(true);
+  };
+
+  // Calculate aspect ratio for container
+  const aspectRatio = imageDimensions
+    ? imageDimensions.width / imageDimensions.height
+    : 0.75; // Default 3:4 ratio
+
+  if (!shouldShow || !imageDimensions) {
+    return (
+      <div
+        ref={cardRef}
+        className="break-inside-avoid mb-4 rounded-lg overflow-hidden animate-pulse"
+      >
+        <div
+          className="bg-neutral-200 dark:bg-neutral-800 w-full flex items-center justify-center"
+          style={{
+            aspectRatio: imageDimensions ? aspectRatio : "3/4",
+            minHeight: "150px",
+          }}
+        >
+          <CardLoadingSpinner />
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div
+      ref={cardRef}
+      role="button"
+      tabIndex={0}
+      className="break-inside-avoid mb-4 rounded-lg overflow-hidden cursor-pointer transition-all duration-300 ease-out hover:opacity-90 hover:scale-[1.02] hover:shadow-lg focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black focus:outline-none group"
+      style={{
+        opacity: shouldShow ? 1 : 0,
+        transform: shouldShow ? "translateY(0)" : "translateY(20px)",
+        transition: "opacity 0.6s ease-out, transform 0.6s ease-out",
+      }}
+      onClick={() => onImageClick(index)}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onImageClick(index);
+        }
+      }}
+      aria-label={`View image ${index + 1} of ${imageCount}: ${pictureTitle}`}
+    >
+      {/* Container with exact aspect ratio to prevent shift */}
+      <div className="relative w-full" style={{ aspectRatio }}>
+        {/* Loading state overlay */}
+        {isLoading && (
+          <div className="absolute inset-0 bg-neutral-100 dark:bg-neutral-900 flex items-center justify-center z-10 rounded-lg">
+            <CardLoadingSpinner />
+          </div>
+        )}
+
+        {/* Error state */}
+        {hasError && !isLoading && (
+          <div className="absolute inset-0 bg-neutral-100 dark:bg-neutral-900 flex items-center justify-center text-neutral-500 rounded-lg">
+            <div className="text-center">
+              <div className="w-8 h-8 mx-auto mb-2 opacity-50">⚠</div>
+              <p className="text-xs">Failed to load</p>
+            </div>
+          </div>
+        )}
+
+        {/* Actual image */}
+        <NextImage
+          src={optimizedUrl}
+          alt={`${pictureTitle} - Image ${index + 1} of ${imageCount}`}
+          fill
+          className={`
+            object-cover transition-all duration-500 rounded-lg
+            ${isLoading ? "opacity-0" : "opacity-100"}
+            group-hover:scale-105
+          `}
+          sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+          onLoad={handleImageLoad}
+          onError={handleImageError}
+          quality={85}
+        />
+
+        {/* Overlay for better interaction feedback */}
+        <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity duration-200 rounded-lg" />
+      </div>
+    </div>
+  );
+};
+
 export default function PictureGalleryContent({
   picture,
 }: PictureGalleryContentProps) {
@@ -23,14 +215,23 @@ export default function PictureGalleryContent({
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
   const [isButtonSticky, setIsButtonSticky] = useState(false);
+  const [isGalleryLoaded, setIsGalleryLoaded] = useState(false);
   const sentinelRef = useRef<HTMLDivElement>(null);
 
-  // Combine thumbnail and gallery images
+  // Use only gallery images (exclude thumbnail to avoid duplication)
   const allImages = useMemo(() => {
-    return [picture.thumbnailUrl, ...(picture.gallery || [])].filter(Boolean);
-  }, [picture.thumbnailUrl, picture.gallery]);
+    return (picture.gallery || []).filter(Boolean);
+  }, [picture.gallery]);
 
   const imageCount = allImages.length;
+
+  // Initialize gallery loading
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsGalleryLoaded(true);
+    }, 300); // Slightly longer delay for better UX
+    return () => clearTimeout(timer);
+  }, []);
 
   const openLightbox = useCallback((index: number) => {
     setSelectedImageIndex(index);
@@ -222,46 +423,36 @@ export default function PictureGalleryContent({
         </div>
 
         <h2 className="sr-only">Picture Gallery</h2>
-        <div
-          className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4"
-          role="grid"
-          aria-label={`${picture.title} image gallery`}
-        >
-          {allImages.map((imageUrl, index) => {
-            // Add optimization parameters for gallery preview
-            const optimizedUrl = imageUrl.includes("?")
-              ? imageUrl + "&w=800&q=85"
-              : imageUrl + "?auto=format&w=800&q=85";
 
-            return (
-              <div
+        {/* Show loading state initially */}
+        {!isGalleryLoaded ? (
+          <div className="flex items-center justify-center min-h-[400px]">
+            <LoadingSpinner />
+          </div>
+        ) : (
+          <div
+            className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4"
+            style={{
+              columnFill: "balance",
+              orphans: 1,
+              widows: 1,
+            }}
+            role="grid"
+            aria-label={`${picture.title} image gallery`}
+          >
+            {allImages.map((imageUrl, index) => (
+              <ImageCard
                 key={index}
-                role="gridcell"
-                className="break-inside-avoid mb-4 bg-muted rounded-lg overflow-hidden cursor-pointer hover:opacity-80 hover:scale-[1.02] transition-all duration-200 focus-within:ring-2 focus-within:ring-white focus-within:ring-offset-2 focus-within:ring-offset-black"
-                onClick={() => openLightbox(index)}
-              >
-                <button
-                  className="w-full focus:outline-none"
-                  aria-label={`View image ${index + 1} of ${imageCount}: ${
-                    picture.title
-                  }`}
-                  onClick={() => openLightbox(index)}
-                >
-                  <NextImage
-                    src={optimizedUrl}
-                    alt={`${picture.title} - Image ${
-                      index + 1
-                    } of ${imageCount}`}
-                    width={800}
-                    height={0}
-                    className="w-full h-auto"
-                    sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                  />
-                </button>
-              </div>
-            );
-          })}
-        </div>
+                imageUrl={imageUrl}
+                index={index}
+                imageCount={imageCount}
+                pictureTitle={picture.title}
+                onImageClick={openLightbox}
+                delay={index * 30} // Reduced delay for smoother experience
+              />
+            ))}
+          </div>
+        )}
       </main>
 
       {/* Lightbox Modal */}

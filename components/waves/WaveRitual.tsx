@@ -7,12 +7,13 @@ export function WaveRitual() {
       height="100%"
       viewBox="0 0 800 200"
       className="w-full h-full opacity-75"
-      preserveAspectRatio="none"
+      preserveAspectRatio="xMidYMid meet"
     >
       <motion.path
         d="M0 100 Q67 60 134 100 Q200 140 267 100 Q334 60 400 100 Q467 140 534 100 Q600 60 667 100 Q734 140 800 100"
         stroke="currentColor"
-        strokeWidth="4"
+        strokeWidth="3"
+        className="[stroke-width:2.5] sm:[stroke-width:3] md:[stroke-width:4] lg:[stroke-width:5]"
         fill="none"
         strokeLinecap="round"
         animate={{
@@ -31,7 +32,8 @@ export function WaveRitual() {
       <motion.path
         d="M0 100 Q100 70 200 100 Q300 130 400 100 Q500 70 600 100 Q700 130 800 100"
         stroke="currentColor"
-        strokeWidth="2"
+        strokeWidth="1.5"
+        className="[stroke-width:1.5] sm:[stroke-width:2] md:[stroke-width:2.5] lg:[stroke-width:3]"
         fill="none"
         strokeLinecap="round"
         animate={{
@@ -55,7 +57,8 @@ export function WaveRitual() {
             key={i}
             cx={x}
             cy="100"
-            r="5"
+            r="4"
+            className="[r:3] sm:[r:4] md:[r:5] lg:[r:6]"
             fill="currentColor"
             animate={{
               cy: [100, 65, 135, 100],
@@ -77,7 +80,8 @@ export function WaveRitual() {
             key={i}
             cx={x}
             cy="100"
-            r="3"
+            r="2.5"
+            className="[r:2] sm:[r:2.5] md:[r:3] lg:[r:3.5]"
             fill="currentColor"
             animate={{
               cy: [100, 80, 120, 100],

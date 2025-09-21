@@ -179,31 +179,102 @@ export function PrinciplesSection({
     offset: ["start start", "end end"],
   });
 
-
   // Create individual useTransform calls for each principle (up to 6 principles)
-  const principle0Opacity = useTransform(scrollYProgress, [0, 0.025, 0.142, 0.167], [0, 1, 1, 0]);
-  const principle0Scale = useTransform(scrollYProgress, [0, 0.025, 0.142, 0.167], [0.9, 1, 1, 0.9]);
-  const progress0 = useTransform(scrollYProgress, [0, 0.025, 0.142, 0.167], [0, 1, 1, 0]);
+  const principle0Opacity = useTransform(
+    scrollYProgress,
+    [0, 0.025, 0.142, 0.167],
+    [0, 1, 1, 0]
+  );
+  const principle0Scale = useTransform(
+    scrollYProgress,
+    [0, 0.025, 0.142, 0.167],
+    [0.9, 1, 1, 0.9]
+  );
+  const progress0 = useTransform(
+    scrollYProgress,
+    [0, 0.025, 0.142, 0.167],
+    [0, 1, 1, 0]
+  );
 
-  const principle1Opacity = useTransform(scrollYProgress, [0.167, 0.192, 0.309, 0.334], [0, 1, 1, 0]);
-  const principle1Scale = useTransform(scrollYProgress, [0.167, 0.192, 0.309, 0.334], [0.9, 1, 1, 0.9]);
-  const progress1 = useTransform(scrollYProgress, [0.167, 0.192, 0.309, 0.334], [0, 1, 1, 0]);
+  const principle1Opacity = useTransform(
+    scrollYProgress,
+    [0.167, 0.192, 0.309, 0.334],
+    [0, 1, 1, 0]
+  );
+  const principle1Scale = useTransform(
+    scrollYProgress,
+    [0.167, 0.192, 0.309, 0.334],
+    [0.9, 1, 1, 0.9]
+  );
+  const progress1 = useTransform(
+    scrollYProgress,
+    [0.167, 0.192, 0.309, 0.334],
+    [0, 1, 1, 0]
+  );
 
-  const principle2Opacity = useTransform(scrollYProgress, [0.334, 0.359, 0.476, 0.5], [0, 1, 1, 0]);
-  const principle2Scale = useTransform(scrollYProgress, [0.334, 0.359, 0.476, 0.5], [0.9, 1, 1, 0.9]);
-  const progress2 = useTransform(scrollYProgress, [0.334, 0.359, 0.476, 0.5], [0, 1, 1, 0]);
+  const principle2Opacity = useTransform(
+    scrollYProgress,
+    [0.334, 0.359, 0.476, 0.5],
+    [0, 1, 1, 0]
+  );
+  const principle2Scale = useTransform(
+    scrollYProgress,
+    [0.334, 0.359, 0.476, 0.5],
+    [0.9, 1, 1, 0.9]
+  );
+  const progress2 = useTransform(
+    scrollYProgress,
+    [0.334, 0.359, 0.476, 0.5],
+    [0, 1, 1, 0]
+  );
 
-  const principle3Opacity = useTransform(scrollYProgress, [0.5, 0.525, 0.642, 0.667], [0, 1, 1, 0]);
-  const principle3Scale = useTransform(scrollYProgress, [0.5, 0.525, 0.642, 0.667], [0.9, 1, 1, 0.9]);
-  const progress3 = useTransform(scrollYProgress, [0.5, 0.525, 0.642, 0.667], [0, 1, 1, 0]);
+  const principle3Opacity = useTransform(
+    scrollYProgress,
+    [0.5, 0.525, 0.642, 0.667],
+    [0, 1, 1, 0]
+  );
+  const principle3Scale = useTransform(
+    scrollYProgress,
+    [0.5, 0.525, 0.642, 0.667],
+    [0.9, 1, 1, 0.9]
+  );
+  const progress3 = useTransform(
+    scrollYProgress,
+    [0.5, 0.525, 0.642, 0.667],
+    [0, 1, 1, 0]
+  );
 
-  const principle4Opacity = useTransform(scrollYProgress, [0.667, 0.692, 0.809, 0.834], [0, 1, 1, 0]);
-  const principle4Scale = useTransform(scrollYProgress, [0.667, 0.692, 0.809, 0.834], [0.9, 1, 1, 0.9]);
-  const progress4 = useTransform(scrollYProgress, [0.667, 0.692, 0.809, 0.834], [0, 1, 1, 0]);
+  const principle4Opacity = useTransform(
+    scrollYProgress,
+    [0.667, 0.692, 0.809, 0.834],
+    [0, 1, 1, 0]
+  );
+  const principle4Scale = useTransform(
+    scrollYProgress,
+    [0.667, 0.692, 0.809, 0.834],
+    [0.9, 1, 1, 0.9]
+  );
+  const progress4 = useTransform(
+    scrollYProgress,
+    [0.667, 0.692, 0.809, 0.834],
+    [0, 1, 1, 0]
+  );
 
-  const principle5Opacity = useTransform(scrollYProgress, [0.834, 0.859, 0.976, 1], [0, 1, 1, 0]);
-  const principle5Scale = useTransform(scrollYProgress, [0.834, 0.859, 0.976, 1], [0.9, 1, 1, 0.9]);
-  const progress5 = useTransform(scrollYProgress, [0.834, 0.859, 0.976, 1], [0, 1, 1, 0]);
+  const principle5Opacity = useTransform(
+    scrollYProgress,
+    [0.834, 0.859, 0.976, 1],
+    [0, 1, 1, 0]
+  );
+  const principle5Scale = useTransform(
+    scrollYProgress,
+    [0.834, 0.859, 0.976, 1],
+    [0.9, 1, 1, 0.9]
+  );
+  const progress5 = useTransform(
+    scrollYProgress,
+    [0.834, 0.859, 0.976, 1],
+    [0, 1, 1, 0]
+  );
 
   const principleAnimations = [
     { opacity: principle0Opacity, scale: principle0Scale },
@@ -215,7 +286,12 @@ export function PrinciplesSection({
   ];
 
   const progressAnimations = [
-    progress0, progress1, progress2, progress3, progress4, progress5,
+    progress0,
+    progress1,
+    progress2,
+    progress3,
+    progress4,
+    progress5,
   ];
 
   return (
@@ -226,36 +302,82 @@ export function PrinciplesSection({
       <div className="sticky top-0 h-screen flex items-center">
         <div className="w-full">
           <div className="flex flex-col lg:grid lg:grid-cols-12 gap-6 lg:gap-16 h-full lg:items-center">
-            {/* Left Column - Static Header */}
+            {/* Left Column - Animated Header */}
             <motion.header
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 1.5, ease: [0.25, 0.1, 0.25, 1] }}
               className="lg:col-span-4 flex flex-col justify-center order-1 lg:order-none h-full"
+              style={{
+                opacity: useTransform(
+                  scrollYProgress,
+                  [0, 0.02, 0.98, 1],
+                  [0, 1, 1, 0]
+                ),
+                y: useTransform(
+                  scrollYProgress,
+                  [0, 0.02, 0.98, 1],
+                  [50, 0, 0, -50]
+                ),
+                scale: useTransform(
+                  scrollYProgress,
+                  [0, 0.02, 0.98, 1],
+                  [0.9, 1, 1, 0.9]
+                ),
+              }}
             >
               <motion.p
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 1, delay: 0.5 }}
                 className="text-small-normal uppercase tracking-wide text-muted md:mb-1 lg:mb-2"
+                style={{
+                  opacity: useTransform(
+                    scrollYProgress,
+                    [0, 0.01, 0.99, 1],
+                    [0, 1, 1, 0]
+                  ),
+                  x: useTransform(
+                    scrollYProgress,
+                    [0, 0.01, 0.99, 1],
+                    [-20, 0, 0, -20]
+                  ),
+                }}
               >
                 {subtitle}
               </motion.p>
               <motion.h1
-                initial={{ opacity: 0, x: -30 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 1.2, delay: 0.7 }}
                 className="heading-4"
+                style={{
+                  opacity: useTransform(
+                    scrollYProgress,
+                    [0, 0.015, 0.985, 1],
+                    [0, 1, 1, 0]
+                  ),
+                  x: useTransform(
+                    scrollYProgress,
+                    [0, 0.015, 0.985, 1],
+                    [-30, 0, 0, -30]
+                  ),
+                  scale: useTransform(
+                    scrollYProgress,
+                    [0, 0.015, 0.985, 1],
+                    [0.95, 1, 1, 0.95]
+                  ),
+                }}
               >
                 {title}
               </motion.h1>
 
               {/* Progress indicator */}
               <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 1, delay: 1.2 }}
-                className="text-small-normal text-muted"
+                className="text-small-normal text-muted mt-6"
+                style={{
+                  opacity: useTransform(
+                    scrollYProgress,
+                    [0, 0.025, 0.975, 1],
+                    [0, 1, 1, 0]
+                  ),
+                  y: useTransform(
+                    scrollYProgress,
+                    [0, 0.025, 0.975, 1],
+                    [20, 0, 0, -20]
+                  ),
+                }}
               >
                 <div className="relative flex items-center gap-1">
                   {/* Animated current principle number */}

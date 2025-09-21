@@ -66,6 +66,7 @@ export const radioQuery = `
     title,
     description,
     spotifyUrl,
-    "coverImageUrl": coverImage.asset->url + "?auto=format&w=400&q=85"
+    "coverImageUrl": coverImage.asset->url + "?auto=format&w=400&q=85",
+    _createdAt
   }
 `;
