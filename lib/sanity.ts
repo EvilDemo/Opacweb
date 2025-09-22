@@ -23,7 +23,7 @@ export const picturesQuery = `
     _id,
     title,
     description,
-    "thumbnailUrl": thumbnail.asset->url + "?auto=format&w=400&q=80",
+    "thumbnailUrl": thumbnail.asset->url + "?auto=format&w=400&q=85",
     "gallery": gallery[].asset->url
   }
 `;
@@ -61,12 +61,12 @@ export const musicQuery = `
 `;
 
 export const radioQuery = `
-  *[_type == "radio"] | order(_createdAt desc) {
+  *[_type == "radio"] | order(_updatedAt desc) {
     _id,
     title,
     description,
     spotifyUrl,
     "coverImageUrl": coverImage.asset->url + "?auto=format&w=400&q=85",
-    _createdAt
+    _updatedAt
   }
 `;

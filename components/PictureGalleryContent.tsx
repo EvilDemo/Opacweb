@@ -19,18 +19,6 @@ const CardLoadingSpinner = () => (
   </div>
 );
 
-// Individual card loading state component
-const ImageCardSkeleton = () => (
-  <div className="break-inside-avoid mb-4 rounded-lg overflow-hidden animate-pulse">
-    <div
-      className="bg-neutral-200 dark:bg-neutral-800 w-full flex items-center justify-center"
-      style={{ minHeight: "200px", aspectRatio: "3/4" }}
-    >
-      <CardLoadingSpinner />
-    </div>
-  </div>
-);
-
 // Individual image card component with loading states
 const ImageCard = ({
   imageUrl,

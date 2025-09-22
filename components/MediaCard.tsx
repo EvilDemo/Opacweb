@@ -50,7 +50,7 @@ interface RadioItem extends BaseMediaItem {
   type: "radio";
   coverImageUrl?: string;
   spotifyUrl: string;
-  _createdAt: string;
+  _updatedAt: string;
 }
 
 // Union type for all media items

@@ -1,81 +1,11 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import {
-  motion,
-  useScroll,
-  useTransform,
-  useInView,
-  AnimatePresence,
-} from "motion/react";
+import { motion, useScroll, useTransform, AnimatePresence } from "motion/react";
 import { getRadio, type Radio } from "@/lib/mediaData";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { MediaCard, type RadioItem } from "@/components/MediaCard";
-import { Radio as RadioIcon, User, ChevronDown } from "lucide-react";
-
-// Placeholder data for demo purposes - this will be replaced with real data
-const placeholderPlaylists: RadioItem[] = [
-  {
-    _id: "1",
-    type: "radio",
-    title: "Locked In",
-    description:
-      "A carefully curated playlist for designers. Hit play to discover some new sounds...",
-    coverImageUrl: "https://via.placeholder.com/96x96/00d4aa/ffffff?text=LI",
-    spotifyUrl: "#",
-    _createdAt: "2024-01-15T10:00:00Z",
-  },
-  {
-    _id: "2",
-    type: "radio",
-    title: "Contrast",
-    description:
-      "A carefully curated playlist for designers. Hit play to discover some new sounds...",
-    coverImageUrl: "https://via.placeholder.com/96x96/ec4899/ffffff?text=C",
-    spotifyUrl: "#",
-    _createdAt: "2024-01-10T14:30:00Z",
-  },
-  {
-    _id: "3",
-    type: "radio",
-    title: "Brain Food",
-    description:
-      "A carefully curated playlist for designers. Hit play to discover some new sounds...",
-    coverImageUrl: "https://via.placeholder.com/96x96/facc15/000000?text=BF",
-    spotifyUrl: "#",
-    _createdAt: "2024-01-20T09:15:00Z",
-  },
-  {
-    _id: "4",
-    type: "radio",
-    title: "Into the Frame",
-    description:
-      "A carefully curated playlist for designers. Hit play to discover some new sounds...",
-    coverImageUrl: "https://via.placeholder.com/96x96/4ade80/000000?text=IF",
-    spotifyUrl: "#",
-    _createdAt: "2024-01-05T16:45:00Z",
-  },
-  {
-    _id: "5",
-    type: "radio",
-    title: "Pixels",
-    description:
-      "A carefully curated playlist for designers. Hit play to discover some new sounds...",
-    coverImageUrl: "https://via.placeholder.com/96x96/22d3ee/000000?text=P",
-    spotifyUrl: "#",
-    _createdAt: "2024-01-25T11:20:00Z",
-  },
-  {
-    _id: "6",
-    type: "radio",
-    title: "Deadline",
-    description:
-      "A carefully curated playlist for designers. Hit play to discover some new sounds...",
-    coverImageUrl: "https://via.placeholder.com/96x96/000000/facc15?text=D",
-    spotifyUrl: "#",
-    _createdAt: "2024-01-12T13:10:00Z",
-  },
-];
+import { Radio as RadioIcon } from "lucide-react";
 
 // Helper function to transform Radio data to RadioItem
 const transformRadioToRadioItem = (radio: Radio[]): RadioItem[] => {
@@ -129,17 +59,11 @@ export function RadioPageContent() {
     );
   }
 
-  // Use real data if available, otherwise use placeholder, and sort by publish date (newest first)
-  const displayData: RadioItem[] =
-    radio.length > 0
-      ? transformRadioToRadioItem(radio).sort(
-          (a, b) =>
-            new Date(b._createdAt).getTime() - new Date(a._createdAt).getTime()
-        )
-      : placeholderPlaylists.sort(
-          (a, b) =>
-            new Date(b._createdAt).getTime() - new Date(a._createdAt).getTime()
-        );
+  // Sort by updated date (newest first)
+  const displayData: RadioItem[] = transformRadioToRadioItem(radio).sort(
+    (a, b) =>
+      new Date(b._updatedAt).getTime() - new Date(a._updatedAt).getTime()
+  );
 
   if (!isClient) {
     return (
@@ -174,7 +98,6 @@ function RadioScrollContent({
   const scrollRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLDivElement>(null);
   const cardsRef = useRef<HTMLDivElement>(null);
-  const progressRef = useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll({
     target: scrollRef,
@@ -187,7 +110,6 @@ function RadioScrollContent({
   const titleY = useTransform(scrollYProgress, [0, 0.3], ["0%", "-20%"]);
   const titleOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
   const cardsScale = useTransform(scrollYProgress, [0, 0.5], [1, 0.95]);
-  const progressWidth = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
 
   return (
     <>
@@ -200,7 +122,7 @@ function RadioScrollContent({
             {/* Fixed Title Section */}
             <motion.div
               ref={titleRef}
-              className="flex-shrink-0 px-4 sm:px-8 md:px-12 lg:px-16 mr-8 max-w-[35vw]"
+              className="flex-shrink-0 padding-global mr-8 max-w-[40vw]"
               style={{ y: titleY, opacity: titleOpacity }}
             >
               <motion.div
@@ -209,21 +131,14 @@ function RadioScrollContent({
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, ease: "easeOut" }}
               >
-                <div className="flex items-center gap-3 mb-2">
-                  <motion.div
-                    initial={{ scale: 0, rotate: -180 }}
-                    animate={{ scale: 1, rotate: 0 }}
-                    transition={{ delay: 0.3, duration: 0.6, ease: "easeOut" }}
-                  >
-                    <RadioIcon className="h-8 w-8 text-green-500" />
-                  </motion.div>
+                <div className="flex items-start gap-3 mb-2">
                   <motion.h1
-                    className="heading-1"
+                    className="heading-4 !leading-[1]"
                     initial={{ opacity: 0, x: -30 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.5, duration: 0.8, ease: "easeOut" }}
                   >
-                    Where silence becomes frequency
+                    What can’t be seen must be heard.
                   </motion.h1>
                 </div>
               </motion.div>
@@ -305,7 +220,7 @@ function RadioScrollContent({
                 whileHover={{ scale: 1.05 }}
               >
                 <p className="text-xs sm:text-sm text-muted-foreground">
-                  Using placeholder data for demo
+                  No radio content available
                 </p>
               </motion.div>
             )}
