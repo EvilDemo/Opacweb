@@ -57,8 +57,7 @@ export function MediaCard({ item, index = 0 }: MediaCardProps) {
   const cascadingDelay = index * 0.1;
 
   // Common card classes for responsive design
-  const cardClasses =
-    "overflow-hidden hover:shadow-lg hover:-translate-y-1 hover:border-neutral-600 transition-all duration-300 ease-in-out hover:duration-150 pt-0 pb-0 w-full flex flex-col";
+  const cardClasses = "w-full flex flex-col";
   const headerClasses = "flex-1 flex flex-col min-h-0 pt-3 ";
   const titleClasses = "body-text-md !font-medium  line-clamp-1 leading-tight";
   const descriptionClasses =
@@ -141,7 +140,7 @@ export function MediaCard({ item, index = 0 }: MediaCardProps) {
             className={`${titleClasses} flex items-center gap-2`}
             title={item.title}
           >
-            <MusicIcon className="h-4 w-4 text-green-500 flex-shrink-0" />
+            <MusicIcon className="h-4 w-4 flex-shrink-0" />
             <span>{item.title}</span>
           </CardTitle>
         );
@@ -226,8 +225,8 @@ export function MediaCard({ item, index = 0 }: MediaCardProps) {
         delay: cascadingDelay,
       }}
     >
-      <Card className={cardClasses}>
-        <div className="aspect-square bg-muted overflow-hidden -m-6 mb-0 rounded-t-xl">
+      <Card variant="media" background="media" className={cardClasses}>
+        <div className="aspect-square overflow-hidden -m-6 mb-0 rounded-t-xl">
           {renderImage()}
         </div>
         <CardHeader className={headerClasses}>

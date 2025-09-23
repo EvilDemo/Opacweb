@@ -37,7 +37,7 @@ export function ContactCard({
       transition={{ duration: 0.8, delay, ease: "easeOut" }}
     >
       {/* we can add a background color here of bg-neutral-900 */}
-      <Card className=" border-neutral-800 hover:bg-neutral-800 hover:-translate-y-1 transition-all duration-300 ease-in-out">
+      <Card variant="contact">
         <CardHeader>
           <div className="flex items-center gap-4">
             <div

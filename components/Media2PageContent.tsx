@@ -248,7 +248,7 @@ function Media2ScrollContent({
                 {displayData.map((item, index) => (
                   <motion.div
                     key={item._id}
-                    className="flex-shrink-0 w-72 sm:w-80"
+                    className="flex-shrink-0 w-72 sm:w-110"
                     initial={{ opacity: 0, y: 100, scale: 0.8 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     transition={{

@@ -45,7 +45,7 @@ export default function ContactCTA() {
                 className="group"
                 aria-label="Follow OPAC on Instagram @opac.label"
               >
-                <Card className="bg-black border-neutral-800 group-hover:bg-neutral-900 group-hover:border-neutral-600 group-hover:-translate-y-1 transition-all duration-300 ease-in-out cursor-pointer">
+                <Card variant="contactCTA">
                   <CardContent className="p-6 text-center">
                     <div className="w-12 h-12 bg-neutral-700 rounded-lg mx-auto mb-4 flex items-center justify-center group-hover:bg-neutral-600 transition-colors duration-300">
                       <Instagram className="w-6 h-6 text-white" />
@@ -76,7 +76,7 @@ export default function ContactCTA() {
                 className="group"
                 aria-label="Subscribe to OPAC Label on YouTube"
               >
-                <Card className="bg-black border-neutral-800 group-hover:bg-neutral-900 group-hover:border-neutral-600 group-hover:-translate-y-1 transition-all duration-300 ease-in-out cursor-pointer">
+                <Card variant="contactCTA">
                   <CardContent className="p-6 text-center">
                     <div className="w-12 h-12 bg-neutral-700 rounded-lg mx-auto mb-4 flex items-center justify-center group-hover:bg-neutral-600 transition-colors duration-300">
                       <Youtube className="w-6 h-6 text-white" />
@@ -105,7 +105,7 @@ export default function ContactCTA() {
                 className="group"
                 aria-label="Listen to OPAC on Spotify"
               >
-                <Card className="bg-black border-neutral-800 group-hover:bg-neutral-900 group-hover:border-neutral-600 group-hover:-translate-y-1 transition-all duration-300 ease-in-out cursor-pointer">
+                <Card variant="contactCTA">
                   <CardContent className="p-6 text-center">
                     <div className="w-12 h-12 bg-neutral-700 rounded-lg mx-auto mb-4 flex items-center justify-center group-hover:bg-neutral-600 transition-colors duration-300">
                       <Music className="w-6 h-6 text-white" />
@@ -134,7 +134,7 @@ export default function ContactCTA() {
                 className="group"
                 aria-label="Listen to OPAC Label on SoundCloud"
               >
-                <Card className="bg-black border-neutral-800 group-hover:bg-neutral-900 group-hover:border-neutral-600 group-hover:-translate-y-1 transition-all duration-300 ease-in-out cursor-pointer">
+                <Card variant="contactCTA">
                   <CardContent className="p-6 text-center">
                     <div className="w-12 h-12 bg-neutral-700 rounded-lg mx-auto mb-4 flex items-center justify-center group-hover:bg-neutral-600 transition-colors duration-300">
                       <CloudRain className="w-6 h-6 text-white" />

@@ -1,20 +1,53 @@
 import * as React from "react";
 import { motion, HTMLMotionProps } from "motion/react";
+import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "@/lib/utils";
+
+const cardVariants = cva(
+  "bg-gradient-to-br from-neutral-900 to-black text-white flex flex-col rounded-2xl border border-neutral-800 py-4 px-4 shadow-sm overflow-hidden group relative hover:shadow-lg hover:-translate-y-1 hover:border-neutral-600 hover:bg-neutral-800 transition-all duration-300 ease-in-out",
+  {
+    variants: {
+      variant: {
+        default: "",
+        media: "overflow-hidden",
+        radio: "relative w-full",
+        contact: "border-neutral-800",
+        contactCTA: "bg-black border-neutral-800 cursor-pointer",
+      },
+      size: {
+        default: "",
+        large: "h-96",
+      },
+      background: {
+        default: "",
+
+        gradient: "bg-gradient-to-br from-neutral-900 to-black",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+      background: "gradient",
+    },
+  }
+);
 
 function Card({
   className,
   children,
+  variant,
+  size,
+  background,
   ...props
-}: HTMLMotionProps<"div"> & { children?: React.ReactNode }) {
+}: HTMLMotionProps<"div"> &
+  VariantProps<typeof cardVariants> & {
+    children?: React.ReactNode;
+  }) {
   return (
     <motion.div
       data-slot="card"
-      className={cn(
-        "bg-gradient-to-br from-neutral-900 to-black text-white flex flex-col rounded-2xl border border-neutral-800 py-4 px-4 shadow-sm overflow-hidden group relative",
-        className
-      )}
+      className={cn(cardVariants({ variant, size, background }), className)}
       whileHover={{
         scale: 1.02,
         rotateY: 2,
@@ -36,12 +69,24 @@ function Card({
         animate={{ scale: 1, opacity: 0.1 }}
         transition={{ delay: 0.2, duration: 0.8 }}
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-2xl" />
+        {/* Color overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/25 to-emerald-400/25 rounded-2xl" />
       </motion.div>
 
       {/* Decorative Elements */}
-      <div className="absolute -top-4 -right-4 w-16 h-16 rounded-full bg-white/10 blur-xl"></div>
-      <div className="absolute -bottom-8 -left-8 w-24 h-24 rounded-full bg-white/5 blur-2xl"></div>
+      {background === "media" ? (
+        // Media-specific highlight positioning (bottom-focused)
+        <>
+          <div className="absolute bottom-1/4 -right-4 w-16 h-16 rounded-full bg-white/10 blur-xl"></div>
+          <div className="absolute bottom-4 -left-4 w-20 h-20 rounded-full bg-white/8 blur-2xl"></div>
+        </>
+      ) : (
+        // Standard highlight positioning
+        <>
+          <div className="absolute -top-4 -right-4 w-16 h-16 rounded-full bg-white/10 blur-xl"></div>
+          <div className="absolute -bottom-8 -left-8 w-24 h-24 rounded-full bg-white/5 blur-2xl"></div>
+        </>
+      )}
 
       {/* Content */}
       <div className="relative z-10">{children}</div>

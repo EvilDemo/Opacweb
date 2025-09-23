@@ -148,7 +148,7 @@
 
   /* Display Text - For special cases like AboutHeroSection */
   .display-text {
-    @apply text-[98px] md:text-[115px] lg:text-[140px] xl:text-[150px] 2xl:text-[190px] font-bold text-white;
+    @apply text-7xl md:text-8xl lg:text-9xl xl:text-[120px] 2xl:text-[152px] font-bold text-white;
     line-height: var(--line-height-tight);
     letter-spacing: var(--letter-spacing-tight);
   }

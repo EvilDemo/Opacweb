@@ -34,7 +34,7 @@ export default function HeroSection() {
         {/* Right Column - 3D Sphere Video */}
         <div className="flex items-center justify-center flex-shrink-0 lg:ml-auto lg:-mt-32 order-1 lg:order-2">
           <motion.div
-            className="relative w-[280px] h-[280px] md:w-[400px] md:h-[400px] lg:w-[561px] lg:h-[561px] overflow-hidden rounded-full"
+            className="relative w-[280px] h-[280px] md:w-[400px] md:h-[400px] lg:w-[500px] lg:h-[500px] xl:w-[600px] xl:h-[600px] overflow-hidden rounded-full"
             initial={{ opacity: 0, scale: 0.8, rotateY: -30 }}
             animate={{ opacity: 1, scale: 1, rotateY: 0 }}
             transition={{ duration: 1.2, ease: "easeOut", delay: 0.3 }}
@@ -45,7 +45,7 @@ export default function HeroSection() {
               loop
               muted
               playsInline
-              className="w-[400px] h-[400px] md:w-[600px] md:h-[600px] lg:w-[800px] lg:h-[800px] object-cover absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+              className="w-[320px] h-[320px] md:w-[480px] md:h-[480px] lg:w-[600px] lg:h-[600px] xl:w-[700px] xl:h-[700px] object-cover absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
             />
           </motion.div>
         </div>

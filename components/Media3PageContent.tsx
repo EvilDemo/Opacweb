@@ -12,6 +12,7 @@ import {
 } from "@/lib/mediaData";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card } from "@/components/ui/card";
 import {
   User,
   ExternalLink,
@@ -148,106 +149,81 @@ function RadioStyleCard({
         ease: "easeOut",
         delay: cascadingDelay,
       }}
-      className="relative w-full h-96 rounded-2xl p-6 text-white bg-gradient-to-br from-neutral-900 to-black border border-neutral-800 overflow-hidden group touch-manipulation"
-      whileHover={{
-        scale: 1.02,
-        rotateY: 2,
-        rotateX: 1,
-        transition: {
-          type: "spring",
-          stiffness: 300,
-          damping: 30,
-          duration: 0.15,
-        },
-      }}
-      style={{ transformStyle: "preserve-3d" }}
     >
-      {/* Animated Background Pattern */}
-      <motion.div
-        className="absolute inset-0 opacity-10"
-        initial={{ scale: 0.8, opacity: 0 }}
-        animate={{ scale: 1, opacity: 0.1 }}
-        transition={{ delay: 0.2, duration: 0.8 }}
-      >
-        <div className="absolute inset-0 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-2xl" />
-      </motion.div>
+      <Card variant="radio" size="large">
+        {/* Cover Image */}
+        <motion.div
+          className="flex justify-center mb-4"
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ delay: 0.3, duration: 0.6 }}
+          whileHover={{ scale: 1.05, transition: { duration: 0.15 } }}
+        >
+          {coverImageUrl ? (
+            <motion.div
+              className="w-24 h-24 rounded-2xl overflow-hidden"
+              whileHover={{ rotate: 5 }}
+              transition={{ duration: 0.15 }}
+            >
+              <Image
+                src={coverImageUrl}
+                alt={`${item.title} cover`}
+                width={96}
+                height={96}
+                className="w-full h-full object-cover"
+              />
+            </motion.div>
+          ) : (
+            <motion.div
+              className="w-24 h-24 rounded-2xl bg-muted flex items-center justify-center"
+              whileHover={{ rotate: 5 }}
+              transition={{ duration: 0.15 }}
+            >
+              {getMediaIcon()}
+            </motion.div>
+          )}
+        </motion.div>
 
-      {/* Cover Image */}
-      <motion.div
-        className="flex justify-center mb-4"
-        initial={{ scale: 0.8, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ delay: 0.3, duration: 0.6 }}
-        whileHover={{ scale: 1.05, transition: { duration: 0.15 } }}
-      >
-        {coverImageUrl ? (
-          <motion.div
-            className="w-24 h-24 rounded-2xl overflow-hidden"
-            whileHover={{ rotate: 5 }}
+        {/* Content */}
+        <motion.div
+          className="flex-1 flex flex-col space-y-3"
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.4, duration: 0.6 }}
+        >
+          <motion.h3
+            className="text-xl font-bold text-center"
+            whileHover={{ scale: 1.02 }}
             transition={{ duration: 0.15 }}
           >
-            <Image
-              src={coverImageUrl}
-              alt={`${item.title} cover`}
-              width={96}
-              height={96}
-              className="w-full h-full object-cover"
-            />
-          </motion.div>
-        ) : (
-          <motion.div
-            className="w-24 h-24 rounded-2xl bg-muted flex items-center justify-center"
-            whileHover={{ rotate: 5 }}
-            transition={{ duration: 0.15 }}
+            {item.title}
+          </motion.h3>
+
+          <motion.p
+            className="text-sm opacity-70 leading-relaxed line-clamp-3 text-center flex-1"
+            initial={{ x: -10, opacity: 0 }}
+            animate={{ x: 0, opacity: 0.7 }}
+            transition={{ delay: 0.2, duration: 0.4 }}
           >
-            {getMediaIcon()}
-          </motion.div>
-        )}
-      </motion.div>
+            {item.description}
+          </motion.p>
+        </motion.div>
 
-      {/* Content */}
-      <motion.div
-        className="space-y-3"
-        initial={{ y: 20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.4, duration: 0.6 }}
-      >
-        <motion.h3
-          className="text-xl font-bold"
-          whileHover={{ scale: 1.02 }}
-          transition={{ duration: 0.15 }}
+        {/* Action Button */}
+        <motion.div
+          className="flex justify-center mt-4"
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{
+            delay: 0.7,
+            duration: 0.5,
+            type: "spring",
+            stiffness: 200,
+          }}
         >
-          {item.title}
-        </motion.h3>
-
-        <motion.p
-          className="text-sm opacity-70 leading-relaxed line-clamp-3"
-          initial={{ x: -10, opacity: 0 }}
-          animate={{ x: 0, opacity: 0.7 }}
-          transition={{ delay: 0.2, duration: 0.4 }}
-        >
-          {item.description}
-        </motion.p>
-      </motion.div>
-
-      {/* Action Button */}
-      <motion.div
-        className="absolute bottom-6 left-6 right-6"
-        initial={{ scale: 0, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{
-          delay: 0.7,
-          duration: 0.5,
-          type: "spring",
-          stiffness: 200,
-        }}
-      >
-        {getActionButton()}
-      </motion.div>
-
-      {/* Decorative Elements */}
-      <div className="absolute -top-4 -right-4 w-16 h-16 rounded-full bg-white/10 blur-xl"></div>
-      <div className="absolute -bottom-8 -left-8 w-24 h-24 rounded-full bg-white/5 blur-2xl"></div>
+          {getActionButton()}
+        </motion.div>
+      </Card>
     </motion.div>
   );
 }
