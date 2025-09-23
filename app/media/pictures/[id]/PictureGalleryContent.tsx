@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import NextImage from "next/image";
+import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, X, ChevronLeft, ChevronRight } from "lucide-react";
@@ -166,7 +166,7 @@ export default function PictureGalleryContent({
                 }`}
                 onClick={() => openLightbox(index)}
               >
-                <NextImage
+                <Image
                   src={imageUrl}
                   alt={`${picture.title} - Image ${index + 1} of ${imageCount}`}
                   width={400}
@@ -237,7 +237,7 @@ export default function PictureGalleryContent({
 
             {/* Main Image */}
             <div className="flex items-center justify-center h-full">
-              <NextImage
+              <Image
                 src={allImages[selectedImageIndex]}
                 alt={`${picture.title} - Image ${
                   selectedImageIndex + 1

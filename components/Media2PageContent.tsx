@@ -2,32 +2,65 @@
 
 import { useEffect, useState, useRef } from "react";
 import { motion, useScroll, useTransform, AnimatePresence } from "motion/react";
-import { getRadio, type Radio } from "@/lib/mediaData";
+import {
+  getPictures,
+  getVideos,
+  getMusic,
+  type Pictures,
+  type Video,
+  type Music,
+} from "@/lib/mediaData";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
-import { RadioCard } from "@/components/RadioCard";
+import { MediaCard, type MediaItem } from "@/components/MediaCard";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Image as ImageIcon,
+  Video as VideoIcon,
+  Music as MusicIcon,
+} from "lucide-react";
 
-export function RadioPageContent() {
-  const [radio, setRadio] = useState<Radio[]>([]);
+// Helper functions to transform data to MediaCard format
+const transformPictures = (pictures: Pictures[]): MediaItem[] =>
+  pictures.map((item) => ({ ...item, type: "picture" as const }));
+
+const transformVideos = (videos: Video[]): MediaItem[] =>
+  videos.map((item) => ({ ...item, type: "video" as const }));
+
+const transformMusic = (music: Music[]): MediaItem[] =>
+  music.map((item) => ({ ...item, type: "music" as const }));
+
+export function Media2PageContent() {
+  const [pictures, setPictures] = useState<Pictures[]>([]);
+  const [videos, setVideos] = useState<Video[]>([]);
+  const [music, setMusic] = useState<Music[]>([]);
   const [loading, setLoading] = useState(true);
   const [isClient, setIsClient] = useState(false);
+  const [activeTab, setActiveTab] = useState("pictures");
 
   useEffect(() => {
     setIsClient(true);
   }, []);
 
   useEffect(() => {
-    async function fetchRadioData() {
+    async function fetchData() {
       try {
-        const radioData = await getRadio();
-        setRadio(radioData);
+        const [picturesData, videosData, musicData] = await Promise.all([
+          getPictures(),
+          getVideos(),
+          getMusic(),
+        ]);
+
+        setPictures(picturesData);
+        setVideos(videosData);
+        setMusic(musicData);
       } catch (error) {
-        console.error("Error fetching radio data:", error);
+        console.error("Error fetching media data:", error);
       } finally {
         setLoading(false);
       }
     }
 
-    fetchRadioData();
+    fetchData();
   }, []);
 
   if (loading) {
@@ -50,12 +83,6 @@ export function RadioPageContent() {
     );
   }
 
-  // Sort by updated date (newest first)
-  const displayData: Radio[] = radio.sort(
-    (a, b) =>
-      new Date(b._updatedAt).getTime() - new Date(a._updatedAt).getTime()
-  );
-
   if (!isClient) {
     return (
       <motion.div
@@ -75,16 +102,71 @@ export function RadioPageContent() {
     );
   }
 
-  return <RadioScrollContent displayData={displayData} radio={radio} />;
+  return (
+    <div className="min-h-[calc(100vh-6rem)]">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        {/* Tab Navigation */}
+        <div className="sticky top-[6rem] z-40 bg-background/95 backdrop-blur-sm">
+          <div className="px-4 sm:px-8 md:px-12 lg:px-16 py-4">
+            <TabsList className="grid w-full grid-cols-3 h-auto gap-2">
+              <TabsTrigger value="pictures" className="flex items-center gap-2">
+                <ImageIcon className="h-4 w-4" />
+                Pictures
+              </TabsTrigger>
+              <TabsTrigger value="videos" className="flex items-center gap-2">
+                <VideoIcon className="h-4 w-4" />
+                Videos
+              </TabsTrigger>
+              <TabsTrigger value="by-us" className="flex items-center gap-2">
+                <MusicIcon className="h-4 w-4" />
+                By Us
+              </TabsTrigger>
+            </TabsList>
+          </div>
+        </div>
+
+        {/* Content based on active tab */}
+        <TabsContent value="pictures" className="mt-0">
+          <Media2ScrollContent
+            data={transformPictures(pictures)}
+            title="What can't be seen must be heard."
+            emptyMessage="No pictures available yet."
+          />
+        </TabsContent>
+
+        <TabsContent value="videos" className="mt-0">
+          <Media2ScrollContent
+            data={transformVideos(videos).filter(
+              (item) =>
+                item.type === "video" &&
+                (item.coverImageUrl || item.animatedCoverImageUrl)
+            )}
+            title="What can't be seen must be heard."
+            emptyMessage="No videos available yet."
+          />
+        </TabsContent>
+
+        <TabsContent value="by-us" className="mt-0">
+          <Media2ScrollContent
+            data={transformMusic(music)}
+            title="What can't be seen must be heard."
+            emptyMessage="No music tracks available yet."
+          />
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
 }
 
 // Separate component for scroll content that only renders on client
-function RadioScrollContent({
-  displayData,
-  radio,
+function Media2ScrollContent({
+  data,
+  title,
+  emptyMessage,
 }: {
-  displayData: Radio[];
-  radio: Radio[];
+  data: MediaItem[];
+  title: string;
+  emptyMessage: string;
 }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLDivElement>(null);
@@ -102,10 +184,29 @@ function RadioScrollContent({
   const titleOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
   const cardsScale = useTransform(scrollYProgress, [0, 0.5], [1, 0.95]);
 
+  // Sort by updated date (newest first)
+  const displayData = data.sort(
+    (a, b) =>
+      new Date(b._updatedAt).getTime() - new Date(a._updatedAt).getTime()
+  );
+
+  if (displayData.length === 0) {
+    return (
+      <div className="flex items-center justify-center h-[calc(100vh-12rem)] px-4 sm:px-8 md:px-12 lg:px-16">
+        <div className="text-center">
+          <p className="body-text text-muted-foreground">{emptyMessage}</p>
+          <p className="body-text-sm text-muted-foreground mt-2">
+            Check back soon!
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       <motion.div className="h-[500vh]" ref={scrollRef}>
-        <div className="h-[calc(100vh-6rem)] overflow-hidden sticky top-24">
+        <div className="h-[calc(100vh-12rem)] overflow-hidden sticky top-[12rem]">
           <motion.div
             className="flex items-center h-full"
             style={{ x, scale: cardsScale }}
@@ -129,16 +230,16 @@ function RadioScrollContent({
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.5, duration: 0.8, ease: "easeOut" }}
                   >
-                    What can’t be seen must be heard.
+                    {title}
                   </motion.h1>
                 </div>
               </motion.div>
             </motion.div>
 
-            {/* Playlist Cards */}
+            {/* Media Cards */}
             <motion.div
               ref={cardsRef}
-              className="flex gap-4 sm:gap-6 md:gap-0 pl-4 sm:pl-8"
+              className="flex gap-4 sm:gap-6 md:gap-8 pl-4 sm:pl-8"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.8, duration: 0.6 }}
@@ -147,7 +248,7 @@ function RadioScrollContent({
                 {displayData.map((item, index) => (
                   <motion.div
                     key={item._id}
-                    className="flex-shrink-0 w-72 sm:w-[400px]"
+                    className="flex-shrink-0 w-72 sm:w-80"
                     initial={{ opacity: 0, y: 100, scale: 0.8 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     transition={{
@@ -162,15 +263,7 @@ function RadioScrollContent({
                       transition: { duration: 0.2 },
                     }}
                   >
-                    <RadioCard
-                      _id={item._id}
-                      title={item.title}
-                      description={item.description}
-                      coverImageUrl={item.coverImageUrl}
-                      spotifyUrl={item.spotifyUrl}
-                      _updatedAt={item._updatedAt}
-                      index={index}
-                    />
+                    <MediaCard item={item} />
                   </motion.div>
                 ))}
               </AnimatePresence>
@@ -206,24 +299,6 @@ function RadioScrollContent({
               </div>
             </motion.div>
           </motion.div>
-
-          {/* Empty State */}
-          <AnimatePresence>
-            {radio.length === 0 && (
-              <motion.div
-                className="absolute bottom-4 right-4 sm:bottom-8 sm:right-8 bg-background/90 backdrop-blur-sm rounded-lg p-3 sm:p-4 border border-border z-20"
-                initial={{ opacity: 0, scale: 0.8, x: 20 }}
-                animate={{ opacity: 1, scale: 1, x: 0 }}
-                exit={{ opacity: 0, scale: 0.8, x: 20 }}
-                transition={{ delay: 1.5, duration: 0.5 }}
-                whileHover={{ scale: 1.05 }}
-              >
-                <p className="text-xs sm:text-sm text-muted-foreground">
-                  No radio content available
-                </p>
-              </motion.div>
-            )}
-          </AnimatePresence>
         </div>
       </motion.div>
     </>

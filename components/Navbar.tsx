@@ -143,7 +143,7 @@ export function Navbar() {
   const visibleItems = getVisibleNavItems();
 
   return (
-    <nav className="sticky top-0 left-0 right-0 z-50 h-auto mix-blend-difference ">
+    <nav className="sticky top-0 left-0 right-0 z-50 h-auto bg-background ">
       <div className="mx-auto padding-global py-4">
         <div className="grid grid-cols-2 lg:grid-cols-[1fr_0.5fr_1fr] items-center ">
           {/* Left side - Navigation items (hidden on mobile) */}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
-import NextImage from "next/image";
+import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, X, ChevronLeft, ChevronRight } from "lucide-react";
@@ -47,7 +47,7 @@ const ImageCard = ({
 
   // Pre-load image dimensions to prevent content shift
   useEffect(() => {
-    const img = new Image();
+    const img = new window.Image();
     img.onload = () => {
       setImageDimensions({
         width: img.naturalWidth,
@@ -170,7 +170,7 @@ const ImageCard = ({
         )}
 
         {/* Actual image */}
-        <NextImage
+        <Image
           src={optimizedUrl}
           alt={`${pictureTitle} - Image ${index + 1} of ${imageCount}`}
           fill
@@ -524,7 +524,7 @@ export default function PictureGalleryContent({
                 </div>
               )}
 
-              <NextImage
+              <Image
                 src={(() => {
                   const imageUrl = allImages[selectedImageIndex];
                   // For lightbox, always use high quality regardless of existing params

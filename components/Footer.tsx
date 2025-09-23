@@ -11,7 +11,7 @@ export default function Footer() {
 
   return (
     <div
-      className="bg-cover bg-no-repeat box-border flex flex-col gap-8 md:gap-20 items-start justify-start padding-global py-8 relative w-full min-h-fits"
+      className="bg-cover bg-no-repeat box-border flex flex-col gap-8 md:gap-20 items-start justify-start padding-global py-8 relative w-full min-h-fits mt-30"
       style={{
         backgroundImage: "url('/esferagigante.gif')",
         backgroundPosition: "center -250px",

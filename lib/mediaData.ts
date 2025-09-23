@@ -13,6 +13,7 @@ export interface Pictures {
   description: string;
   thumbnailUrl: string;
   gallery?: string[];
+  _updatedAt: string;
 }
 
 export interface Video {
@@ -22,6 +23,7 @@ export interface Video {
   videoUrl: string;
   coverImageUrl?: string;
   animatedCoverImageUrl?: string;
+  _updatedAt: string;
 }
 
 export interface Music {
@@ -30,6 +32,7 @@ export interface Music {
   description: string;
   spotifyUrl: string;
   coverImageUrl?: string;
+  _updatedAt: string;
 }
 
 export interface Radio {

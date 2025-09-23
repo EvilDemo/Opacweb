@@ -56,8 +56,8 @@ export function MediaTabs({ pictures, videos, music }: MediaTabsProps) {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-            {transformPictures(pictures).map((item) => (
-              <MediaCard key={item._id} item={item} />
+            {transformPictures(pictures).map((item, index) => (
+              <MediaCard key={item._id} item={item} index={index} />
             ))}
           </div>
         )}
@@ -80,8 +80,8 @@ export function MediaTabs({ pictures, videos, music }: MediaTabsProps) {
                   item.type === "video" &&
                   (item.coverImageUrl || item.animatedCoverImageUrl)
               ) // Only render if we have at least one image
-              .map((item) => (
-                <MediaCard key={item._id} item={item} />
+              .map((item, index) => (
+                <MediaCard key={item._id} item={item} index={index} />
               ))}
           </div>
         )}
@@ -100,8 +100,8 @@ export function MediaTabs({ pictures, videos, music }: MediaTabsProps) {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-            {transformMusic(music).map((item) => (
-              <MediaCard key={item._id} item={item} />
+            {transformMusic(music).map((item, index) => (
+              <MediaCard key={item._id} item={item} index={index} />
             ))}
           </div>
         )}

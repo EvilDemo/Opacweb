@@ -4,12 +4,7 @@ import { useState } from "react";
 import { X } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import Form from "@/components/Form";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-} from "@/components/ui/card";
+import { ContactCard } from "@/components/ContactCard";
 import { Button } from "@/components/ui/button";
 
 export default function ContactPageClient() {
@@ -44,10 +39,10 @@ export default function ContactPageClient() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
           >
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4 justify-center h-full">
               <motion.h1
                 id="contact-heading"
-                className="heading-2"
+                className="heading-3 !leading-[1]"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
@@ -93,181 +88,48 @@ export default function ContactPageClient() {
           >
             <h2 className="sr-only">Contact Categories</h2>
             {/* Artists Section */}
-            <motion.div
-              initial={{ opacity: 0, y: 40, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
-            >
-              <Card className="bg-neutral-900 border-neutral-800 hover:bg-neutral-800 hover:-translate-y-1 transition-all duration-300 ease-in-out">
-                <CardHeader>
-                  <div className="flex items-center gap-4">
-                    <div
-                      className="w-8 h-8 rounded-full border-2 border-white flex items-center justify-center"
-                      aria-hidden="true"
-                    >
-                      <div className="w-3 h-3 bg-white rounded-full"></div>
-                    </div>
-                    <h3 className="text-white heading-2">Artists</h3>
-                  </div>
-                  <CardDescription className="text-neutral-300 paragraph-small-regular">
-                    Submit your work for consideration. We&apos;re always
-                    looking for unique voices that resonate with our philosophy.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div
-                    className="flex flex-wrap gap-2"
-                    role="list"
-                    aria-label="Artist submission categories"
-                  >
-                    <span
-                      className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary text-secondary-foreground"
-                      role="listitem"
-                    >
-                      Music Submissions
-                    </span>
-                    <span
-                      className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary text-secondary-foreground"
-                      role="listitem"
-                    >
-                      Visual Art
-                    </span>
-                    <span
-                      className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary text-secondary-foreground"
-                      role="listitem"
-                    >
-                      Collaborations
-                    </span>
-                  </div>
-                  <Button
-                    className="w-full hover:scale-101"
-                    onClick={() => handleButtonClick("Submit Work")}
-                    aria-describedby="artists-description"
-                    variant="secondary"
-                  >
-                    Submit Work
-                  </Button>
-                </CardContent>
-              </Card>
-            </motion.div>
+            <ContactCard
+              icon={<div className="w-3 h-3 bg-white rounded-full"></div>}
+              title="Artists"
+              description="Submit your work for consideration. We're always looking for unique voices that resonate with our philosophy."
+              pills={["Music Submissions", "Visual Art", "Collaborations"]}
+              buttonText="Submit Work"
+              onButtonClick={() => handleButtonClick("Submit Work")}
+              ariaLabel="Artist submission categories"
+              delay={0.5}
+            />
 
             {/* Partners Section */}
-            <motion.div
-              initial={{ opacity: 0, y: 40, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.7, ease: "easeOut" }}
-            >
-              <Card className="bg-neutral-900 border-neutral-800 hover:bg-neutral-800 hover:-translate-y-1 transition-all duration-300 ease-in-out">
-                <CardHeader>
-                  <div className="flex items-center gap-4">
-                    <div
-                      className="w-8 h-8 rounded border-2 border-white flex items-center justify-center"
-                      aria-hidden="true"
-                    >
-                      <div className="w-4 h-1 bg-white rounded"></div>
-                    </div>
-                    <h3 className="text-white heading-4">Partners</h3>
-                  </div>
-                  <CardDescription className="text-neutral-300 paragraph-small-regular">
-                    Brands, sponsors, and collaborators interested in working
-                    with OPAC on creative projects and initiatives.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div
-                    className="flex flex-wrap gap-2"
-                    role="list"
-                    aria-label="Partnership categories"
-                  >
-                    <span
-                      className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary text-secondary-foreground"
-                      role="listitem"
-                    >
-                      Brand Partnerships
-                    </span>
-                    <span
-                      className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary text-secondary-foreground"
-                      role="listitem"
-                    >
-                      Event Collaborations
-                    </span>
-                    <span
-                      className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary text-secondary-foreground"
-                      role="listitem"
-                    >
-                      Sponsorship
-                    </span>
-                  </div>
-                  <Button
-                    className="w-full hover:scale-101"
-                    onClick={() => handleButtonClick("Partner With Us")}
-                    aria-describedby="partners-description"
-                    variant="secondary"
-                  >
-                    Partner With Us
-                  </Button>
-                </CardContent>
-              </Card>
-            </motion.div>
+            <ContactCard
+              icon={<div className="w-4 h-1 bg-white rounded"></div>}
+              title="Partners"
+              description="Brands, sponsors, and collaborators interested in working with OPAC on creative projects and initiatives."
+              pills={[
+                "Brand Partnerships",
+                "Event Collaborations",
+                "Sponsorship",
+              ]}
+              buttonText="Partner With Us"
+              onButtonClick={() => handleButtonClick("Partner With Us")}
+              ariaLabel="Partnership categories"
+              delay={0.7}
+            />
 
             {/* Press Section */}
-            <motion.div
-              initial={{ opacity: 0, y: 40, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.9, ease: "easeOut" }}
-            >
-              <Card className="bg-neutral-900 border-neutral-800 hover:bg-neutral-800 hover:-translate-y-1 transition-all duration-300 ease-in-out">
-                <CardHeader>
-                  <div className="flex items-center gap-4">
-                    <div
-                      className="w-8 h-8 rounded border-2 border-white flex items-center justify-center"
-                      aria-hidden="true"
-                    >
-                      <div className="w-4 h-0.5 bg-white"></div>
-                    </div>
-                    <h3 className="text-white heading-4">Press</h3>
-                  </div>
-                  <CardDescription className="text-neutral-300 paragraph-small-regular">
-                    Media inquiries, interview requests, and press kit access
-                    for journalists and content creators.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div
-                    className="flex flex-wrap gap-2"
-                    role="list"
-                    aria-label="Press inquiry categories"
-                  >
-                    <span
-                      className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary text-secondary-foreground"
-                      role="listitem"
-                    >
-                      Media Inquiries
-                    </span>
-                    <span
-                      className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary text-secondary-foreground"
-                      role="listitem"
-                    >
-                      Interview Requests
-                    </span>
-                    <span
-                      className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary text-secondary-foreground"
-                      role="listitem"
-                    >
-                      Press Materials
-                    </span>
-                  </div>
-                  <Button
-                    onClick={() => handleButtonClick("Media Inquiry")}
-                    aria-describedby="press-description"
-                    variant="secondary"
-                    className="w-full hover:scale-101"
-                  >
-                    Media Inquiry
-                  </Button>
-                </CardContent>
-              </Card>
-            </motion.div>
+            <ContactCard
+              icon={<div className="w-4 h-0.5 bg-white"></div>}
+              title="Press"
+              description="Media inquiries, interview requests, and press kit access for journalists and content creators."
+              pills={[
+                "Media Inquiries",
+                "Interview Requests",
+                "Press Materials",
+              ]}
+              buttonText="Media Inquiry"
+              onButtonClick={() => handleButtonClick("Media Inquiry")}
+              ariaLabel="Press inquiry categories"
+              delay={0.9}
+            />
           </motion.div>
         </div>
       </motion.section>
@@ -275,19 +137,10 @@ export default function ContactPageClient() {
       {/* Form Overlay */}
       <AnimatePresence mode="wait">
         {isOverlayOpen && (
-          <motion.div
-            className="fixed inset-0 z-50 flex"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="form-title"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
-          >
-            {/* Backdrop */}
+          <>
+            {/* Backdrop - covers entire screen immediately */}
             <motion.div
-              className="flex-1 bg-black/50 backdrop-blur-sm"
+              className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm"
               onClick={handleCloseOverlay}
               aria-label="Close form"
               initial={{ opacity: 0 }}
@@ -296,9 +149,12 @@ export default function ContactPageClient() {
               transition={{ duration: 0.3, ease: "easeOut" }}
             />
 
-            {/* Form Panel */}
+            {/* Form Panel - slides in from right */}
             <motion.div
-              className="w-full lg:w-1/2 xl:w-2/5 bg-black border-l border-neutral-800 p-8 overflow-y-auto"
+              className="fixed top-0 right-0 h-full w-full lg:w-1/2 xl:w-2/5 bg-black border-l border-neutral-800 p-8 overflow-y-auto z-50"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="form-title"
               initial={{ opacity: 0, x: "100%" }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: "100%" }}
@@ -310,7 +166,7 @@ export default function ContactPageClient() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: 0.2, ease: "easeOut" }}
               >
-                <h2 id="form-title" className="heading-2 text-white">
+                <h2 id="form-title" className="heading-3 text-white">
                   {formType}
                 </h2>
                 <Button
@@ -331,7 +187,7 @@ export default function ContactPageClient() {
                 <Form />
               </motion.div>
             </motion.div>
-          </motion.div>
+          </>
         )}
       </AnimatePresence>
     </main>
