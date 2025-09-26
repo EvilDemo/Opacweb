@@ -290,14 +290,15 @@
     @apply py-28; /* 112px */
   }
 
-/* Radio page horizontal scroll responsive behavior. we are using variables to set the transform on lg up.*/
-.radio-horizontal-scroll {
-  --horizontal-transform: 0%;
-  transform: translateX(var(--horizontal-transform));
-}
-
-@media (max-width: 1023px) {
+  /* Radio page horizontal scroll responsive behavior. we are using variables to set the transform on lg up.*/
   .radio-horizontal-scroll {
-    transform: none !important;
+    --horizontal-transform: 0%;
+    transform: translateX(var(--horizontal-transform));
+  }
+
+  @media (max-width: 1023px) {
+    .radio-horizontal-scroll {
+      transform: none !important;
+    }
   }
 }
