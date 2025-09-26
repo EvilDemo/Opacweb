@@ -75,155 +75,104 @@ export function RadioPageContent() {
     );
   }
 
-  return <RadioScrollContent displayData={displayData} radio={radio} />;
+  return <RadioScrollContent displayData={displayData} />;
 }
 
 // Separate component for scroll content that only renders on client
-function RadioScrollContent({
-  displayData,
-  radio,
-}: {
-  displayData: Radio[];
-  radio: Radio[];
-}) {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const titleRef = useRef<HTMLDivElement>(null);
-  const cardsRef = useRef<HTMLDivElement>(null);
+function RadioScrollContent({ displayData }: { displayData: Radio[] }) {
+  const horizontalScrollRef = useRef<HTMLDivElement>(null);
 
-  const { scrollYProgress } = useScroll({
-    target: scrollRef,
+  const { scrollYProgress: horizontalScrollProgress } = useScroll({
+    target: horizontalScrollRef,
     offset: ["start start", "end start"],
   });
 
-  const x = useTransform(scrollYProgress, [0, 1], ["0%", "-100%"]);
-
-  // Enhanced scroll-based animations
-  const titleY = useTransform(scrollYProgress, [0, 0.3], ["0%", "-20%"]);
-  const titleOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
-  const cardsScale = useTransform(scrollYProgress, [0, 0.5], [1, 0.95]);
+  const horizontalTransform = useTransform(
+    horizontalScrollProgress,
+    [0, 0.7],
+    ["0%", "-100%"]
+  );
 
   return (
     <>
-      <motion.div className="h-[500vh]" ref={scrollRef}>
-        <div className="h-[calc(100vh-6rem)] overflow-hidden sticky top-24">
-          <motion.div
-            className="flex items-center h-full"
-            style={{ x, scale: cardsScale }}
-          >
-            {/* Fixed Title Section */}
-            <motion.div
-              ref={titleRef}
-              className="flex-shrink-0 padding-global mr-8 max-w-[40vw]"
-              style={{ y: titleY, opacity: titleOpacity }}
-            >
+      <motion.div className="h-auto lg:h-[600vh]" ref={horizontalScrollRef}>
+        <div className="sticky top-0 lg:h-[100vh] -mt-[6rem]">
+          <div className="h-full flex items-center pt-[6rem] pb-20">
+            <motion.div className="overflow-hidden h-full">
               <motion.div
-                className="flex items-start gap-4"
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
+                className="flex flex-col lg:flex-row items-center w-full h-full radio-horizontal-scroll"
+                style={
+                  {
+                    "--horizontal-transform": horizontalTransform,
+                  } as React.CSSProperties
+                }
               >
-                <div className="flex items-start gap-3 mb-2">
-                  <motion.h1
-                    className="heading-4 !leading-[1]"
-                    initial={{ opacity: 0, x: -30 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.5, duration: 0.8, ease: "easeOut" }}
-                  >
-                    What can’t be seen must be heard.
-                  </motion.h1>
-                </div>
-              </motion.div>
-            </motion.div>
-
-            {/* Playlist Cards */}
-            <motion.div
-              ref={cardsRef}
-              className="flex gap-4 sm:gap-6 md:gap-0 pl-4 sm:pl-8"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.8, duration: 0.6 }}
-            >
-              <AnimatePresence>
-                {displayData.map((item, index) => (
+                {/* Fixed Title Section */}
+                <div className="flex-shrink-0 padding-global w-full lg:max-w-[40vw]">
                   <motion.div
-                    key={item._id}
-                    className="flex-shrink-0 w-72 sm:w-[400px]"
-                    initial={{ opacity: 0, y: 100, scale: 0.8 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    transition={{
-                      delay: 1 + index * 0.1,
-                      duration: 0.6,
-                      ease: "easeOut",
-                      type: "spring",
-                      stiffness: 100,
-                    }}
-                    whileHover={{
-                      y: -10,
-                      transition: { duration: 0.2 },
-                    }}
+                    initial={{ opacity: 0, y: 50 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, ease: "easeOut" }}
                   >
-                    <RadioCard
-                      _id={item._id}
-                      title={item.title}
-                      description={item.description}
-                      coverImageUrl={item.coverImageUrl}
-                      spotifyUrl={item.spotifyUrl}
-                      _updatedAt={item._updatedAt}
-                      index={index}
-                    />
+                    <div>
+                      <motion.h1
+                        className="heading-4 !leading-[1]"
+                        initial={{ opacity: 0, x: -30 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{
+                          delay: 0.5,
+                          duration: 0.8,
+                          ease: "easeOut",
+                        }}
+                      >
+                        What can&apos;t be seen must be heard.
+                      </motion.h1>
+                    </div>
                   </motion.div>
-                ))}
-              </AnimatePresence>
-            </motion.div>
-          </motion.div>
+                </div>
 
-          {/* Scroll Indicator for Mobile */}
-          <motion.div
-            className="absolute bottom-4 left-1/2 transform -translate-x-1/2 sm:hidden z-20"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 2, duration: 0.6 }}
-          >
-            <motion.div
-              className="bg-background/90 backdrop-blur-sm rounded-full px-4 py-2 border border-border"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <div className="text-xs text-muted-foreground flex items-center gap-2">
-                <span>Scroll to explore</span>
+                {/* Playlist Cards */}
                 <motion.div
-                  className="w-2 h-2 rounded-full bg-green-500"
-                  animate={{
-                    scale: [1, 1.2, 1],
-                    opacity: [1, 0.7, 1],
-                  }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
-                />
-              </div>
-            </motion.div>
-          </motion.div>
-
-          {/* Empty State */}
-          <AnimatePresence>
-            {radio.length === 0 && (
-              <motion.div
-                className="absolute bottom-4 right-4 sm:bottom-8 sm:right-8 bg-background/90 backdrop-blur-sm rounded-lg p-3 sm:p-4 border border-border z-20"
-                initial={{ opacity: 0, scale: 0.8, x: 20 }}
-                animate={{ opacity: 1, scale: 1, x: 0 }}
-                exit={{ opacity: 0, scale: 0.8, x: 20 }}
-                transition={{ delay: 1.5, duration: 0.5 }}
-                whileHover={{ scale: 1.05 }}
-              >
-                <p className="text-xs sm:text-sm text-muted-foreground">
-                  No radio content available
-                </p>
+                  className="pb-20 pt-10 padding-global grid grid-cols-1 md:grid-cols-2 md:pt-36 lg:flex lg:flex-row lg:flex-nowrap lg:pt-0 lg:pb-0 gap-0 md:gap-12 md:gap-y-34 lg:gap-12"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.8, duration: 0.6 }}
+                >
+                  <AnimatePresence>
+                    {displayData.map((item, index) => (
+                      <motion.div
+                        key={item._id}
+                        className="lg:flex-shrink-0 lg:w-80"
+                        initial={{ opacity: 0, y: 100, scale: 0.8 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        transition={{
+                          delay: 1 + index * 0.1,
+                          duration: 0.6,
+                          ease: "easeOut",
+                          type: "spring",
+                          stiffness: 100,
+                        }}
+                        whileHover={{
+                          y: -10,
+                          transition: { duration: 0.2 },
+                        }}
+                      >
+                        <RadioCard
+                          _id={item._id}
+                          title={item.title}
+                          description={item.description}
+                          coverImageUrl={item.coverImageUrl}
+                          spotifyUrl={item.spotifyUrl}
+                          _updatedAt={item._updatedAt}
+                          index={index}
+                        />
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
+                </motion.div>
               </motion.div>
-            )}
-          </AnimatePresence>
+            </motion.div>
+          </div>
         </div>
       </motion.div>
     </>

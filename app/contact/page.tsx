@@ -58,36 +58,8 @@ export const metadata: Metadata = {
 };
 
 export default function ContactPage() {
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "ContactPage",
-    name: "Contact Opac",
-    description:
-      "Get in touch with Opac for collaborations, artist submissions, partnerships, and media inquiries.",
-    url: "https://weareopac.com/contact",
-    mainEntity: {
-      "@type": "Organization",
-      name: "Opac",
-      contactPoint: [
-        {
-          "@type": "ContactPoint",
-          telephone: "+351915006659",
-          contactType: "customer service",
-          areaServed: "PT",
-          availableLanguage: ["English", "Portuguese"],
-        },
-      ],
-      email: "weareopac@gmail.com",
-      url: "https://weareopac.com",
-    },
-  };
-
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
       <ContactPageClient />
       <ContactCTA />
     </>

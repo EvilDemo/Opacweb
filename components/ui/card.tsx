@@ -21,8 +21,8 @@ const cardVariants = cva(
       },
       background: {
         default: "",
-
         gradient: "bg-gradient-to-br from-neutral-900 to-black",
+        media: "bg-gradient-to-br from-neutral-900 to-black",
       },
     },
     defaultVariants: {

@@ -45,7 +45,7 @@ export default function HeroSection() {
               loop
               muted
               playsInline
-              className="w-[320px] h-[320px] md:w-[480px] md:h-[480px] lg:w-[600px] lg:h-[600px] xl:w-[700px] xl:h-[700px] object-cover absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+              className="w-[320px] h-[320px] md:w-[480px] md:h-[480px] lg:w-[600px] lg:h-[600px] xl:w-[650px] xl:h-[650px] object-cover absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
             />
           </motion.div>
         </div>

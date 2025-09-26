@@ -177,7 +177,7 @@
 
   h4,
   .heading-4 {
-    @apply text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-semibold text-white;
+    @apply text-xl sm:text-2xl md:text-3xl xl:text-4xl font-semibold text-white;
     line-height: var(--line-height-snug);
     letter-spacing: var(--letter-spacing-wide);
   }
@@ -290,44 +290,14 @@
     @apply py-28; /* 112px */
   }
 
-  /* Grid Background Utility */
-  .bg-grid-white\/\[0\.02\] {
-    background-image: radial-gradient(
-      circle,
-      rgba(255, 255, 255, 0.02) 1px,
-      transparent 1px
-    );
-  }
+/* Radio page horizontal scroll responsive behavior. we are using variables to set the transform on lg up.*/
+.radio-horizontal-scroll {
+  --horizontal-transform: 0%;
+  transform: translateX(var(--horizontal-transform));
+}
 
-  /* Amazing Tab Bar Utilities */
-  .tab-bar-glow {
-    box-shadow: 0 0 8px rgba(255, 255, 255, 0.1),
-      0 0 16px rgba(255, 255, 255, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  }
-
-  .tab-bar-backdrop {
-    backdrop-filter: blur(16px) saturate(180%);
-    background: rgba(0, 0, 0, 0.8);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-  }
-
-  .tab-active-glow {
-    background: linear-gradient(
-      135deg,
-      rgba(255, 255, 255, 0.9),
-      rgba(245, 245, 245, 0.9)
-    );
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15),
-      0 0 0 1px rgba(255, 255, 255, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.3);
-  }
-
-  .tab-hover-glow {
-    background: linear-gradient(
-      135deg,
-      rgba(255, 255, 255, 0.05),
-      rgba(255, 255, 255, 0.1)
-    );
-    box-shadow: 0 0 8px rgba(255, 255, 255, 0.1),
-      0 0 0 1px rgba(255, 255, 255, 0.15);
+@media (max-width: 1023px) {
+  .radio-horizontal-scroll {
+    transform: none !important;
   }
 }

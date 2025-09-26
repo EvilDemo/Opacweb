@@ -30,10 +30,10 @@ export function RadioCard({
   const cascadingDelay = index * 0.1;
 
   return (
-    <div className="relative w-full h-96 p-8">
-      {/* Cover Image - Outside the card */}
+    <div className="relative h-55 ">
+      {/* Cover Image - Centered and 50% outside card on top */}
       <motion.div
-        className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/3 z-20"
+        className="relative left-1/2  top-20 md:absolute z-20 md:left-1/2 md:transform md:-translate-x-1/2 md:-top-28"
         initial={{ scale: 0.8, opacity: 0, y: 20 }}
         animate={
           isInView
@@ -49,16 +49,15 @@ export function RadioCard({
       >
         {coverImageUrl ? (
           <motion.div
-            className="w-56 h-56 rounded-2xl overflow-hidden"
             whileHover={{ rotate: 5 }}
             transition={{ duration: 0.15 }}
           >
             <Image
               src={coverImageUrl}
               alt={`${title} cover`}
-              width={224}
-              height={224}
-              className="w-full h-full object-cover"
+              width={100}
+              height={100}
+              className=" w-18 md:w-30"
             />
           </motion.div>
         ) : (
@@ -82,20 +81,20 @@ export function RadioCard({
         <Card variant="radio">
           {/* Content */}
           <motion.div
-            className="flex-1 flex flex-col mt-24 p-4"
+            className="flex-1 flex flex-col p-4 md:pt-14"
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.6 }}
           >
             {/* Centered Heading */}
-            <motion.h3 className="heading-5 text-white text-center mb-2 group-hover:scale-105 transition-transform duration-200">
+            <motion.h3 className="heading-5 text-white text-left  mb-2 group-hover:scale-105 transition-transform duration-200">
               {title}
             </motion.h3>
 
             {/* Description and Play Button Container */}
-            <div className="flex flex-row items-center justify-center gap-6 flex-1">
+            <div className="flex flex-row items-center justify-center gap-6 flex-1 ">
               <motion.p
-                className="paragraph-small-regular text-muted line-clamp-2 text-center flex-1"
+                className="paragraph-small-regular text-muted line-clamp-3 text-left flex-1"
                 initial={{ x: -10, opacity: 0 }}
                 animate={{ x: 0, opacity: 0.7 }}
                 transition={{ delay: 0.2, duration: 0.4 }}
