@@ -46,9 +46,9 @@ export function ContactCard({
             >
               {icon}
             </div>
-            <h3 className="text-white heading-5">{title}</h3>
+            <h3 className="text-white heading-4">{title}</h3>
           </div>
-          <CardDescription className="text-neutral-300 paragraph-small-regular">
+          <CardDescription className="text-neutral-300 body-text">
             {description}
           </CardDescription>
         </CardHeader>

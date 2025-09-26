@@ -8,16 +8,6 @@
   --font-sans: var(--font-geist);
   --font-mono: var(--font-geist-mono);
 
-  /* Custom font sizes */
-  --text-xs: 12px; /* paragraph-mini-regular */
-  --text-sm: 14px; /* text-small-normal */
-  --text-base: 20px; /* paragraph-small-regular */
-  --text-lg: 20px; /* paragraph-regular */
-  --text-xl: 39px; /* heading-4 */
-  --text-2xl: 49px; /* heading-3 */
-  --text-3xl: 61px; /* heading-2 */
-  --text-4xl: 76px; /* heading-1 */
-
   /* Override Tailwind's default line heights to match Figma */
   --line-height-tight: 1;
   --line-height-snug: 1.2;
@@ -156,7 +146,7 @@
   /* Headings - Proper Hierarchy (h1 > h2 > h3 > h4) */
   h1,
   .heading-1 {
-    @apply text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-semibold text-white;
+    @apply text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-semibold text-white;
     line-height: var(--line-height-tight);
     letter-spacing: var(--letter-spacing-tight);
   }

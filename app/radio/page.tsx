@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getRadio } from "@/lib/mediaData";
 import { RadioPageContent } from "@/components/RadioPageContent";
 
 export const metadata: Metadata = {
@@ -58,6 +59,9 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RadioPage() {
-  return <RadioPageContent />;
+export default async function RadioPage() {
+  // Fetch data on the server for faster initial load
+  const radioData = await getRadio();
+
+  return <RadioPageContent initialData={radioData} />;
 }

@@ -33,7 +33,7 @@ export function RadioCard({
     <div className="relative h-55 ">
       {/* Cover Image - Centered and 50% outside card on top */}
       <motion.div
-        className="relative left-1/2  top-20 md:absolute z-20 md:left-1/2 md:transform md:-translate-x-1/2 md:-top-28"
+        className="relative left-1/2  top-20 md:absolute z-20 md:left-1/2 md:transform md:-translate-x-1/2 md:-top-20 lg:-top-28"
         initial={{ scale: 0.8, opacity: 0, y: 20 }}
         animate={
           isInView
@@ -55,9 +55,13 @@ export function RadioCard({
             <Image
               src={coverImageUrl}
               alt={`${title} cover`}
-              width={100}
-              height={100}
-              className=" w-18 md:w-30"
+              width={120}
+              height={185}
+              className="w-18 md:w-22 lg:w-30"
+              sizes="(max-width: 768px) 72px, (max-width: 1024px) 88px, 120px"
+              quality={75}
+              loading={index < 2 ? "eager" : "lazy"}
+              priority={index < 2}
             />
           </motion.div>
         ) : (
@@ -87,12 +91,12 @@ export function RadioCard({
             transition={{ delay: 0.4, duration: 0.6 }}
           >
             {/* Centered Heading */}
-            <motion.h3 className="heading-5 text-white text-left  mb-2 group-hover:scale-105 transition-transform duration-200">
+            <motion.h2 className="heading-4 text-white text-left  mb-2 group-hover:scale-105 transition-transform duration-200">
               {title}
-            </motion.h3>
+            </motion.h2>
 
             {/* Description and Play Button Container */}
-            <div className="flex flex-row items-center justify-center gap-6 flex-1 ">
+            <div className="flex flex-row items-center justify-center gap-2 flex-1 ">
               <motion.p
                 className="paragraph-small-regular text-muted line-clamp-3 text-left flex-1"
                 initial={{ x: -10, opacity: 0 }}
@@ -126,6 +130,7 @@ export function RadioCard({
                     damping: 25,
                     duration: 0.15,
                   }}
+                  aria-label={`Play ${title} on Spotify`}
                 >
                   {/* Ripple Effect */}
                   <motion.div

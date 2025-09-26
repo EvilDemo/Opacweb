@@ -5,7 +5,7 @@ import { motion } from "motion/react";
 import { Switch } from "@/components/ui/switch";
 
 // 3D Sphere video from your public folder
-const sphereVideo = "/esfera3D.mp4";
+const sphereVideo = "/esfera3D_optimized.webm";
 
 export default function HeroSection() {
   const [aotyMode, setAotyMode] = useState(false);
@@ -13,7 +13,7 @@ export default function HeroSection() {
   return (
     <section className="relative w-full h-[calc(100vh-6rem)] flex flex-col justify-center overflow-hidden padding-global ">
       {/* Main Content Container - Responsive Two Column Layout */}
-      <div className="relative flex flex-col lg:flex-row items-end  mx-auto">
+      <div className="relative flex flex-col lg:flex-row items-center lg:items-end  mx-auto">
         {/* Left Column - Text Content */}
         <div className="flex flex-col flex-shrink-0 order-2 lg:order-1">
           <motion.div
@@ -24,7 +24,17 @@ export default function HeroSection() {
           >
             {/* Main Heading with responsive border */}
             <div className="relative w-full">
-              <div className="absolute border-b-2 md:border-b-4 lg:border-b-[6px] border-solid border-white inset-0 pointer-events-none" />
+              <motion.div
+                className="absolute border-b-2 md:border-b-4 lg:border-b-[6px] border-solid border-white pointer-events-none"
+                style={{
+                  bottom: "-0.5rem", // Increased offset from text
+                  left: 0,
+                  right: 0,
+                }}
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: 1 }}
+                transition={{ duration: 1.2, ease: "easeOut", delay: 0.5 }}
+              />
               <h1 className="heading-1 w-full">It&apos;s nothing.</h1>
               <h1 className="heading-1 w-full">It&apos;s everything.</h1>
             </div>
@@ -34,7 +44,7 @@ export default function HeroSection() {
         {/* Right Column - 3D Sphere Video */}
         <div className="flex items-center justify-center flex-shrink-0 lg:ml-auto lg:-mt-32 order-1 lg:order-2">
           <motion.div
-            className="relative w-[280px] h-[280px] md:w-[400px] md:h-[400px] lg:w-[500px] lg:h-[500px] xl:w-[600px] xl:h-[600px] overflow-hidden rounded-full"
+            className="relative w-64 h-64 sm:w-80 sm:h-80 md:w-96 md:h-96 lg:w-[28rem] lg:h-[28rem] xl:w-[38rem] xl:h-[32rem] overflow-hidden rounded-full"
             initial={{ opacity: 0, scale: 0.8, rotateY: -30 }}
             animate={{ opacity: 1, scale: 1, rotateY: 0 }}
             transition={{ duration: 1.2, ease: "easeOut", delay: 0.3 }}
@@ -45,7 +55,7 @@ export default function HeroSection() {
               loop
               muted
               playsInline
-              className="w-[320px] h-[320px] md:w-[480px] md:h-[480px] lg:w-[600px] lg:h-[600px] xl:w-[650px] xl:h-[650px] object-cover absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+              className="w-full h-full object-cover"
             />
           </motion.div>
         </div>

@@ -20,7 +20,7 @@ export default function ContactCTA() {
       <div className="container mx-auto padding-global">
         <div className="text-center mb-16">
           <motion.h2
-            className="heading-2 font-semibold  text-white mb-8"
+            className="heading-3 font-semibold  text-white mb-8"
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}

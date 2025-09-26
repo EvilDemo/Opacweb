@@ -95,6 +95,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
+      <head>
+        {/* Preconnect to external domains for faster loading */}
+        <link rel="preconnect" href="https://h2v639gy.api.sanity.io" />
+        <link rel="preconnect" href="https://va.vercel-scripts.com" />
+        <link rel="preconnect" href="https://cdn.sanity.io" />
+      </head>
       <SpeedInsights />
       <body className={`${geist.variable} antialiased`}>
         <Staging />

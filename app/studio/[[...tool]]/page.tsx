@@ -9,14 +9,28 @@
 
 import { NextStudio } from "next-sanity/studio";
 import config from "../../../sanity.config";
+import type { Metadata } from "next";
 
 export const dynamic = "force-static";
 
-export { metadata, viewport } from "next-sanity/studio";
+// Override Sanity's metadata to ensure SEO hiding
+export const metadata: Metadata = {
+  title: "Opac Studio | Content Management",
+  description:
+    "Opac's content management studio for managing music, media, and creative content.",
+  robots: {
+    index: false,
+    follow: false,
+    noarchive: true,
+    nosnippet: true,
+    noimageindex: true,
+  },
+};
 
 export default function StudioPage() {
-  return;
-  <div className="min-h-[calc(100vh-6rem)] padding-global py-8">
-    <NextStudio config={config} />
-  </div>;
+  return (
+    <div className="min-h-[calc(100vh-6rem)] padding-global py-8">
+      <NextStudio config={config} />
+    </div>
+  );
 }

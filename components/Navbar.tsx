@@ -23,7 +23,7 @@ interface NavItem {
 // Components
 const Logo = ({ className = "" }: { className?: string }) => (
   <Image
-    src="/logo.png"
+    src="/logo.webp"
     alt="OPAC Logo"
     width={125}
     height={62}

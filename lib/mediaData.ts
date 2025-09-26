@@ -101,7 +101,16 @@ export async function getRadio(): Promise<Radio[]> {
     ) {
       return [];
     }
-    return await sanityClient.fetch(radioQuery);
+    return await sanityClient.fetch(
+      radioQuery,
+      {},
+      {
+        next: {
+          revalidate: 3600, // Cache for 1 hour
+          tags: ["radio"],
+        },
+      }
+    );
   } catch (error) {
     console.error("Error fetching radio:", error);
     return [];

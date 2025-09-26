@@ -82,7 +82,7 @@ export const AboutManifestoSection = ({
                 return (
                   <motion.p
                     key={globalIndex}
-                    className="heading-4 text-white"
+                    className="heading-2 text-white"
                     style={scrollStyles[globalIndex]}
                   >
                     {block.text}

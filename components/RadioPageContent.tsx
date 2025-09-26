@@ -1,114 +1,169 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { motion, useScroll, useTransform, AnimatePresence } from "motion/react";
-import { getRadio, type Radio } from "@/lib/mediaData";
-import { LoadingSpinner } from "@/components/LoadingSpinner";
+import { type Radio } from "@/lib/mediaData";
 import { RadioCard } from "@/components/RadioCard";
 
-export function RadioPageContent() {
-  const [radio, setRadio] = useState<Radio[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [isClient, setIsClient] = useState(false);
+interface RadioPageContentProps {
+  initialData: Radio[];
+}
 
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  useEffect(() => {
-    async function fetchRadioData() {
-      try {
-        const radioData = await getRadio();
-        setRadio(radioData);
-      } catch (error) {
-        console.error("Error fetching radio data:", error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchRadioData();
-  }, []);
-
-  if (loading) {
-    return (
-      <motion.div
-        className="flex items-center justify-center h-[calc(100vh-6rem)]"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <motion.div
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-        >
-          <LoadingSpinner />
-        </motion.div>
-      </motion.div>
-    );
-  }
-
+export function RadioPageContent({ initialData }: RadioPageContentProps) {
   // Sort by updated date (newest first)
-  const displayData: Radio[] = radio.sort(
+  const displayData: Radio[] = initialData.sort(
     (a, b) =>
       new Date(b._updatedAt).getTime() - new Date(a._updatedAt).getTime()
   );
 
-  if (!isClient) {
-    return (
-      <motion.div
-        className="flex items-center justify-center h-[calc(100vh-6rem)]"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
-      >
-        <motion.div
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-        >
-          <LoadingSpinner />
-        </motion.div>
-      </motion.div>
-    );
-  }
-
   return <RadioScrollContent displayData={displayData} />;
 }
 
-// Separate component for scroll content that only renders on client
-function RadioScrollContent({ displayData }: { displayData: Radio[] }) {
-  const horizontalScrollRef = useRef<HTMLDivElement>(null);
+// Props interface for RadioScrollContent component
+interface RadioScrollContentProps {
+  displayData: Radio[];
+}
 
-  const { scrollYProgress: horizontalScrollProgress } = useScroll({
-    target: horizontalScrollRef,
+// Separate component for scroll content that only renders on client
+function RadioScrollContent({ displayData }: RadioScrollContentProps) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [dimensions, setDimensions] = useState({
+    contentWidth: 0,
+    viewportWidth: 0,
+    scrollDistance: 0,
+    sectionHeight: 0,
+  });
+  const [isLargeScreen, setIsLargeScreen] = useState(false);
+
+  // Set up scroll tracking with sticky container
+  const { scrollYProgress } = useScroll({
+    target: scrollRef,
     offset: ["start start", "end start"],
   });
 
-  const horizontalTransform = useTransform(
-    horizontalScrollProgress,
-    [0, 0.7],
-    ["0%", "-100%"]
+  // Calculate dimensions and scroll distance
+  const calculateDimensions = useCallback(() => {
+    if (!contentRef.current || !scrollRef.current) return;
+
+    const contentWidth = contentRef.current.scrollWidth;
+    const viewportWidth = scrollRef.current.offsetWidth;
+    const isLargeScreenCheck = window.innerWidth >= 1024; // lg breakpoint
+    setIsLargeScreen(isLargeScreenCheck);
+
+    // Only apply horizontal scroll calculations on large screens
+    if (isLargeScreenCheck) {
+      // Calculate expected width based on card count and dimensions
+      const cardWidth = 320; // lg:w-80 = 320px
+      const cardGap = 48; // lg:gap-12 = 48px
+      const titleSectionWidth = Math.min(viewportWidth * 0.4, 600); // 40vw max 600px
+      const expectedContentWidth =
+        titleSectionWidth +
+        displayData.length * cardWidth +
+        (displayData.length - 1) * cardGap;
+
+      // Use the larger of actual scrollWidth or expected width
+      const finalContentWidth = Math.max(contentWidth, expectedContentWidth);
+
+      // Add extra padding to ensure we can scroll past the last card
+      const extraPadding = 500; // Additional pixels to scroll past the last card
+      const scrollDistance = Math.max(
+        0,
+        finalContentWidth - viewportWidth + extraPadding
+      );
+      const viewportHeight = window.innerHeight;
+      const sectionHeight = viewportHeight + scrollDistance;
+
+      // Debug logging
+      console.log("Scroll calculation (large screen):", {
+        contentWidth,
+        expectedContentWidth,
+        finalContentWidth,
+        viewportWidth,
+        scrollDistance,
+        extraPadding,
+        cardCount: displayData.length,
+        titleSectionWidth,
+        cardWidth,
+        cardGap,
+      });
+
+      setDimensions({
+        contentWidth: finalContentWidth,
+        viewportWidth,
+        scrollDistance,
+        sectionHeight,
+      });
+    } else {
+      // On smaller screens, use auto height to adapt to content
+      setDimensions({
+        contentWidth,
+        viewportWidth,
+        scrollDistance: 0,
+        sectionHeight: 0, // 0 means auto height
+      });
+    }
+  }, [displayData]);
+
+  // Recalculate dimensions when data changes or window resizes
+  useEffect(() => {
+    calculateDimensions();
+
+    const handleResize = () => calculateDimensions();
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, [calculateDimensions]);
+
+  // Transform horizontal scroll from 0 to -scrollDistance
+  // Complete the horizontal scroll by 80% of the vertical scroll
+  // Only apply on large screens (lg and above)
+  const xTransform = useTransform(
+    scrollYProgress,
+    [0, 0.8, 1],
+    [
+      0,
+      isLargeScreen ? -dimensions.scrollDistance : 0,
+      isLargeScreen ? -dimensions.scrollDistance : 0,
+    ]
   );
 
   return (
-    <>
-      <motion.div className="h-auto lg:h-[600vh]" ref={horizontalScrollRef}>
-        <div className="sticky top-0 lg:h-[100vh] -mt-[6rem]">
-          <div className="h-full flex items-center pt-[6rem] pb-20">
-            <motion.div className="overflow-hidden h-full">
+    <div className="min-h-[calc(100vh-6rem)]">
+      <motion.div
+        ref={scrollRef}
+        className="w-full"
+        style={{
+          height: isLargeScreen ? dimensions.sectionHeight || "100vh" : "auto",
+        }}
+      >
+        {/* Sticky container that pins during vertical scroll */}
+        <div
+          className={`${
+            isLargeScreen ? "sticky top-0 h-screen -mt-[6rem]" : ""
+          }`}
+        >
+          <div
+            className={`${
+              isLargeScreen
+                ? "h-full flex items-center pt-[6rem] pb-20"
+                : "pt-[6rem]"
+            }`}
+          >
+            <motion.div
+              className={`overflow-hidden w-full ${
+                isLargeScreen ? "h-full" : ""
+              }`}
+            >
               <motion.div
-                className="flex flex-col lg:flex-row items-center w-full h-full radio-horizontal-scroll"
-                style={
-                  {
-                    "--horizontal-transform": horizontalTransform,
-                  } as React.CSSProperties
-                }
+                ref={contentRef}
+                className={`flex flex-col lg:flex-row items-center lg:w-max padding-global ${
+                  isLargeScreen ? "h-full" : ""
+                }`}
+                style={{ x: xTransform }}
               >
                 {/* Fixed Title Section */}
-                <div className="flex-shrink-0 padding-global w-full lg:max-w-[40vw]">
+                <div className="flex-shrink-0  w-full lg:max-w-[40vw]">
                   <motion.div
                     initial={{ opacity: 0, y: 50 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -116,7 +171,7 @@ function RadioScrollContent({ displayData }: { displayData: Radio[] }) {
                   >
                     <div>
                       <motion.h1
-                        className="heading-4 !leading-[1]"
+                        className=" heading-2"
                         initial={{ opacity: 0, x: -30 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{
@@ -131,9 +186,9 @@ function RadioScrollContent({ displayData }: { displayData: Radio[] }) {
                   </motion.div>
                 </div>
 
-                {/* Playlist Cards */}
+                {/* Horizontal Scrollable Cards Container */}
                 <motion.div
-                  className="pb-20 pt-10 padding-global grid grid-cols-1 md:grid-cols-2 md:pt-36 lg:flex lg:flex-row lg:flex-nowrap lg:pt-0 lg:pb-0 gap-0 md:gap-12 md:gap-y-34 lg:gap-12"
+                  className="pb-20 pt-10 padding-global grid grid-cols-1 md:grid-cols-3 md:pt-36 lg:flex lg:flex-row lg:flex-nowrap lg:pt-0 lg:pb-0 gap-0 md:gap-6 md:gap-y-34 lg:gap-12 lg:min-w-max"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.8, duration: 0.6 }}
@@ -146,14 +201,13 @@ function RadioScrollContent({ displayData }: { displayData: Radio[] }) {
                         initial={{ opacity: 0, y: 100, scale: 0.8 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         transition={{
-                          delay: 1 + index * 0.1,
-                          duration: 0.6,
+                          delay: 1 + index * 0.05,
+                          duration: 0.4,
                           ease: "easeOut",
-                          type: "spring",
-                          stiffness: 100,
                         }}
                         whileHover={{
                           y: -10,
+                          scale: 1.02,
                           transition: { duration: 0.2 },
                         }}
                       >
@@ -175,6 +229,6 @@ function RadioScrollContent({ displayData }: { displayData: Radio[] }) {
           </div>
         </div>
       </motion.div>
-    </>
+    </div>
   );
 }

@@ -10,27 +10,52 @@ export default function Footer() {
   const navItems = getVisibleNavItems();
 
   return (
-    <div
-      className="bg-no-repeat box-border flex flex-col gap-8 md:gap-20 items-start justify-start padding-global py-8 relative w-full min-h-fits mt-30"
-      style={{
-        backgroundImage: "url('/opac-word-short.gif')",
-        backgroundPosition: "center bottom",
-        backgroundSize: "max(100%, 800px) auto",
-      }}
-    >
+    <div className="box-border flex flex-col gap-8 md:gap-20 items-start justify-start padding-global py-8 relative w-full min-h-fits mt-30 overflow-hidden">
+      {/* WebM Video Background */}
+      <div className="absolute inset-0 z-0">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="w-full h-full object-cover object-center animate-[pulse_2s_ease-in-out_infinite]"
+          style={{
+            objectPosition: "center bottom",
+          }}
+        >
+          <source src="/sphere-lowheight2_small.webm" type="video/webm" />
+          {/* Fallback to WebP for browsers that don't support WebM */}
+          <Image
+            src="/opac-word-short.webp"
+            alt="Opac background"
+            fill
+            className="object-cover object-center"
+            style={{
+              objectPosition: "center bottom",
+              objectFit: "cover",
+            }}
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 100vw"
+            priority={false}
+            quality={60}
+          />
+        </video>
+      </div>
+
       {/* Main Content Section */}
-      <div className="flex flex-col lg:flex-row items-start justify-start relative w-full gap-8 md:gap-10 lg:gap-0">
+      <div className="flex flex-col lg:flex-row items-start justify-start relative w-full gap-8 md:gap-10 lg:gap-0 z-10">
         {/* Left Column - Logo and Links */}
         <div className="flex flex-col gap-4 md:gap-6 lg:gap-4 lg:grow items-start justify-start relative w-full lg:w-auto">
           {/* Company Logo */}
           <div className="content-stretch flex flex-col gap-2.5 h-9 items-center justify-center lg:justify-start overflow-clip relative shrink-0 w-21">
             <div className="aspect-[84/36] bg-center bg-cover bg-no-repeat shrink-0 w-full">
               <Image
-                src="/logo.png"
+                src="/logo.webp"
                 alt="Opac Logo"
                 width={84}
                 height={36}
                 className="w-full h-full object-cover"
+                priority
+                quality={40}
               />
             </div>
           </div>
@@ -85,7 +110,7 @@ export default function Footer() {
       </div>
 
       {/* Bottom Credits Section */}
-      <div className="content-stretch flex flex-col gap-4 items-start justify-start relative shrink-0 w-full">
+      <div className="content-stretch flex flex-col gap-4 items-start justify-start relative shrink-0 w-full z-10">
         {/* Separator */}
         <div className="content-stretch flex h-px items-center justify-start relative shrink-0 w-full">
           <Separator className="bg-neutral-200" />
