@@ -1,0 +1,57 @@
+import { revalidateTag } from "next/cache";
+import { NextRequest, NextResponse } from "next/server";
+
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+
+    // Verify this is a valid Sanity webhook
+    const secret = request.headers.get("sanity-webhook-secret");
+    if (secret !== process.env.SANITY_WEBHOOK_SECRET) {
+      return NextResponse.json({ message: "Invalid secret" }, { status: 401 });
+    }
+
+    // Get the document type from the webhook payload
+    const { _type } = body;
+
+    if (!_type) {
+      return NextResponse.json(
+        { message: "Missing document type" },
+        { status: 400 }
+      );
+    }
+
+    // Map document types to cache tags
+    const tagMap: Record<string, string> = {
+      pictures: "pictures",
+      video: "videos",
+      music: "music",
+      radio: "radio",
+    };
+
+    const tag = tagMap[_type];
+
+    if (tag) {
+      // Revalidate the specific tag
+      revalidateTag(tag);
+
+      return NextResponse.json({
+        revalidated: true,
+        now: Date.now(),
+        tag,
+        documentType: _type,
+      });
+    }
+
+    return NextResponse.json({
+      message: "No revalidation needed for this document type",
+      documentType: _type,
+    });
+  } catch (err) {
+    console.error("Error in Sanity webhook:", err);
+    return NextResponse.json(
+      { message: "Error processing webhook" },
+      { status: 500 }
+    );
+  }
+}

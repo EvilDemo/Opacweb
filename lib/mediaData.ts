@@ -52,7 +52,16 @@ export async function getPictures(): Promise<Pictures[]> {
     ) {
       return [];
     }
-    return await sanityClient.fetch(picturesQuery);
+    return await sanityClient.fetch(
+      picturesQuery,
+      {},
+      {
+        next: {
+          revalidate: 60, // Cache for 1 minute
+          tags: ["pictures"],
+        },
+      }
+    );
   } catch (error) {
     console.error("Error fetching pictures:", error);
     return [];
@@ -68,7 +77,16 @@ export async function getVideos(): Promise<Video[]> {
     ) {
       return [];
     }
-    return await sanityClient.fetch(videosQuery);
+    return await sanityClient.fetch(
+      videosQuery,
+      {},
+      {
+        next: {
+          revalidate: 60, // Cache for 1 minute
+          tags: ["videos"],
+        },
+      }
+    );
   } catch (error) {
     console.error("Error fetching videos:", error);
     return [];
@@ -84,7 +102,16 @@ export async function getMusic(): Promise<Music[]> {
     ) {
       return [];
     }
-    return await sanityClient.fetch(musicQuery);
+    return await sanityClient.fetch(
+      musicQuery,
+      {},
+      {
+        next: {
+          revalidate: 60, // Cache for 1 minute
+          tags: ["music"],
+        },
+      }
+    );
   } catch (error) {
     console.error("Error fetching music:", error);
     return [];
