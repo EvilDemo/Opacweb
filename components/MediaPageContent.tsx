@@ -64,19 +64,22 @@ function MediaScrollContent({ allMediaData }: MediaScrollContentProps) {
   const [isLargeScreen, setIsLargeScreen] = useState(false);
 
   // Simple filtering logic
-  const getFilteredData = (filter: FilterType): MediaItem[] => {
-    if (filter === "all") {
-      // For "all", only show videos with cover images
-      return allMediaData.filter((item) => {
-        if (item.type === "video") {
-          return item.thumbnailUrl || item.animatedCoverImageUrl;
-        }
-        return true;
-      });
-    }
-    // For specific filters, show all items of that type
-    return allMediaData.filter((item) => item.type === filter);
-  };
+  const getFilteredData = useCallback(
+    (filter: FilterType): MediaItem[] => {
+      if (filter === "all") {
+        // For "all", only show videos with cover images
+        return allMediaData.filter((item) => {
+          if (item.type === "video") {
+            return item.thumbnailUrl || item.animatedCoverImageUrl;
+          }
+          return true;
+        });
+      }
+      // For specific filters, show all items of that type
+      return allMediaData.filter((item) => item.type === filter);
+    },
+    [allMediaData]
+  );
 
   // Make displayData stable to prevent infinite loops
   const displayData = useMemo(
