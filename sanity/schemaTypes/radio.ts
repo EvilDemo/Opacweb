@@ -25,10 +25,10 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: "coverImage",
-      title: "Cover Image",
+      name: "thumbnail",
+      title: "Thumbnail",
       type: "image",
-      description: "Playlist cover image",
+      description: "Playlist thumbnail image",
       options: {
         hotspot: true,
       },

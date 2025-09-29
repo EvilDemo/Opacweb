@@ -78,7 +78,7 @@ export function MediaTabs({ pictures, videos, music }: MediaTabsProps) {
               .filter(
                 (item) =>
                   item.type === "video" &&
-                  (item.coverImageUrl || item.animatedCoverImageUrl)
+                  (item.thumbnailUrl || item.animatedCoverImageUrl)
               ) // Only render if we have at least one image
               .map((item, index) => (
                 <MediaCard key={item._id} item={item} index={index} />

@@ -42,7 +42,7 @@ export default function ContactPageClient() {
             <div className="flex flex-col gap-4 justify-center h-full">
               <motion.h1
                 id="contact-heading"
-                className="heading-2"
+                className="heading-3"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}

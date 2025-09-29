@@ -19,12 +19,13 @@ export function urlFor(source: SanityImageSource) {
 
 // GROQ queries for fetching content with optimized URLs
 export const picturesQuery = `
-  *[_type == "pictures"] | order(_createdAt desc) {
+  *[_type == "pictures"] | order(_updatedAt desc) {
     _id,
     title,
     description,
     "thumbnailUrl": thumbnail.asset->url + "?auto=format&w=400&q=85",
-    "gallery": gallery[].asset->url
+    "gallery": gallery[].asset->url,
+    _updatedAt
   }
 `;
 
@@ -40,23 +41,25 @@ export const singlePictureQuery = `
 `;
 
 export const videosQuery = `
-  *[_type == "video"] | order(_createdAt desc) {
+  *[_type == "video"] | order(_updatedAt desc) {
     _id,
     title,
     description,
     "videoUrl": videoUrl,
-    "coverImageUrl": coverImage.asset->url + "?auto=format&w=400&q=85",
-    "animatedCoverImageUrl": animatedCoverImage.asset->url + "?auto=format&w=400&q=85"
+    "thumbnailUrl": thumbnail.asset->url + "?auto=format&w=400&q=85",
+    "animatedCoverImageUrl": animatedCoverImage.asset->url + "?auto=format&w=400&q=85",
+    _updatedAt
   }
 `;
 
 export const musicQuery = `
-  *[_type == "music"] | order(_createdAt desc) {
+  *[_type == "music"] | order(_updatedAt desc) {
     _id,
     title,
     description,
     spotifyUrl,
-    "coverImageUrl": coverImage.asset->url + "?auto=format&w=400&q=85"
+    "thumbnailUrl": thumbnail.asset->url + "?auto=format&w=400&q=85",
+    _updatedAt
   }
 `;
 
@@ -66,7 +69,7 @@ export const radioQuery = `
     title,
     description,
     spotifyUrl,
-    "coverImageUrl": coverImage.asset->url + "?auto=format&fm=webp&w=180&q=60&fit=crop&crop=center&h=278",
+    "thumbnailUrl": thumbnail.asset->url + "?auto=format&fm=webp&w=180&q=60&fit=crop&crop=center&h=278",
     _updatedAt
   }
 `;

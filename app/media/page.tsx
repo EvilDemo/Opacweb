@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { MediaPageContent } from "@/components/MediaPageContent";
+import { getPictures, getVideos, getMusic } from "@/lib/mediaData";
 
 export const metadata: Metadata = {
   title: "Opac Media | Music, Videos & Pictures",
@@ -57,6 +58,21 @@ export const metadata: Metadata = {
   },
 };
 
-export default function MediaPage() {
-  return <MediaPageContent />;
+export default async function MediaPage() {
+  // Fetch all media data on the server
+  const [pictures, videos, music] = await Promise.all([
+    getPictures(),
+    getVideos(),
+    getMusic(),
+  ]);
+
+  return (
+    <MediaPageContent
+      initialData={{
+        pictures,
+        videos,
+        music,
+      }}
+    />
+  );
 }

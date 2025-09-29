@@ -145,9 +145,7 @@ function RadioScrollContent({ displayData }: RadioScrollContentProps) {
         >
           <div
             className={`${
-              isLargeScreen
-                ? "h-full flex items-center pt-[6rem] pb-20"
-                : "pt-[6rem]"
+              isLargeScreen ? "h-full flex items-center pt-[6rem]" : "pt-[6rem]"
             }`}
           >
             <motion.div
@@ -163,7 +161,7 @@ function RadioScrollContent({ displayData }: RadioScrollContentProps) {
                 style={{ x: xTransform }}
               >
                 {/* Fixed Title Section */}
-                <div className="flex-shrink-0  w-full lg:max-w-[40vw]">
+                <div className="flex-shrink-0  w-full lg:max-w-[25vw]">
                   <motion.div
                     initial={{ opacity: 0, y: 50 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -171,7 +169,7 @@ function RadioScrollContent({ displayData }: RadioScrollContentProps) {
                   >
                     <div>
                       <motion.h1
-                        className=" heading-2"
+                        className=" heading-3"
                         initial={{ opacity: 0, x: -30 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{
@@ -215,7 +213,7 @@ function RadioScrollContent({ displayData }: RadioScrollContentProps) {
                           _id={item._id}
                           title={item.title}
                           description={item.description}
-                          coverImageUrl={item.coverImageUrl}
+                          thumbnailUrl={item.thumbnailUrl}
                           spotifyUrl={item.spotifyUrl}
                           _updatedAt={item._updatedAt}
                           index={index}

@@ -30,14 +30,14 @@ interface PictureItem extends BaseMediaItem {
 
 interface VideoItem extends BaseMediaItem {
   type: "video";
-  coverImageUrl?: string;
+  thumbnailUrl?: string;
   animatedCoverImageUrl?: string;
   videoUrl: string;
 }
 
 interface MusicItem extends BaseMediaItem {
   type: "music";
-  coverImageUrl?: string;
+  thumbnailUrl?: string;
   spotifyUrl: string;
 }
 
@@ -61,7 +61,7 @@ export function MediaCard({ item, index = 0 }: MediaCardProps) {
   const headerClasses = "flex-1 flex flex-col min-h-0 pt-3 ";
   const titleClasses = "body-text-md !font-medium  line-clamp-1 leading-tight";
   const descriptionClasses =
-    "paragraph-mini-regular text-muted line-clamp-3 flex-1";
+    "paragraph-mini-regular text-muted line-clamp-3 flex-1 min-h-[4.5rem]";
   const contentClasses = "pb-4 pt-3";
 
   // Render image based on media type
@@ -75,13 +75,14 @@ export function MediaCard({ item, index = 0 }: MediaCardProps) {
             width={200}
             height={200}
             className="w-full h-full object-cover"
-            // unoptimized={true}
+            unoptimized={true}
+            priority={index === 0}
           />
         );
 
       case "video":
         const primaryImageUrl = item.animatedCoverImageUrl;
-        const fallbackImageUrl = item.coverImageUrl;
+        const fallbackImageUrl = item.thumbnailUrl;
 
         if (!fallbackImageUrl && !primaryImageUrl) {
           return null;
@@ -94,7 +95,8 @@ export function MediaCard({ item, index = 0 }: MediaCardProps) {
             width={200}
             height={200}
             className="w-full h-full object-cover"
-            // unoptimized={true}
+            unoptimized={true}
+            priority={index === 0}
             onLoad={() => {
               // If we're on mobile, don't do any additional loading logic
               if (window.innerWidth <= 768) {
@@ -113,14 +115,15 @@ export function MediaCard({ item, index = 0 }: MediaCardProps) {
         );
 
       case "music":
-        return item.coverImageUrl ? (
+        return item.thumbnailUrl ? (
           <Image
-            src={item.coverImageUrl}
+            src={item.thumbnailUrl}
             alt={`${item.title} cover`}
             width={200}
             height={200}
             className="w-full h-full object-cover"
-            // unoptimized={true}
+            unoptimized={true}
+            priority={index === 0}
           />
         ) : (
           <MusicIcon className="h-16 w-16 text-muted-foreground" />
@@ -217,6 +220,7 @@ export function MediaCard({ item, index = 0 }: MediaCardProps) {
   return (
     <motion.div
       ref={ref}
+      className="relative"
       initial={{ opacity: 0, y: 20 }}
       animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
       transition={{

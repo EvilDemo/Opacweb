@@ -21,7 +21,7 @@ export interface Video {
   title: string;
   description: string;
   videoUrl: string;
-  coverImageUrl?: string;
+  thumbnailUrl?: string;
   animatedCoverImageUrl?: string;
   _updatedAt: string;
 }
@@ -31,7 +31,7 @@ export interface Music {
   title: string;
   description: string;
   spotifyUrl: string;
-  coverImageUrl?: string;
+  thumbnailUrl?: string;
   _updatedAt: string;
 }
 
@@ -40,7 +40,7 @@ export interface Radio {
   title: string;
   description: string;
   spotifyUrl: string;
-  coverImageUrl?: string;
+  thumbnailUrl?: string;
   _updatedAt: string;
 }
 

@@ -10,7 +10,7 @@ interface RadioCardProps {
   _id: string;
   title: string;
   description: string;
-  coverImageUrl?: string;
+  thumbnailUrl?: string;
   spotifyUrl: string;
   _updatedAt: string;
   index?: number;
@@ -19,7 +19,7 @@ interface RadioCardProps {
 export function RadioCard({
   title,
   description,
-  coverImageUrl,
+  thumbnailUrl,
   spotifyUrl,
   index = 0,
 }: RadioCardProps) {
@@ -47,13 +47,13 @@ export function RadioCard({
         }}
         whileHover={{ scale: 1.05, transition: { duration: 0.15 } }}
       >
-        {coverImageUrl ? (
+        {thumbnailUrl ? (
           <motion.div
             whileHover={{ rotate: 5 }}
             transition={{ duration: 0.15 }}
           >
             <Image
-              src={coverImageUrl}
+              src={thumbnailUrl}
               alt={`${title} cover`}
               width={120}
               height={185}

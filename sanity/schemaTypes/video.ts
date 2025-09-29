@@ -35,10 +35,10 @@ export default defineType({
       },
     }),
     defineField({
-      name: "coverImage",
-      title: "Cover Image",
+      name: "thumbnail",
+      title: "Thumbnail",
       type: "image",
-      description: "Video cover image JPEG",
+      description: "Video thumbnail image",
       options: {
         hotspot: true,
       },

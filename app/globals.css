@@ -153,21 +153,21 @@
 
   h2,
   .heading-2 {
-    @apply text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-semibold text-white;
+    @apply text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-6xl font-semibold text-white;
     line-height: var(--line-height-tight);
     letter-spacing: var(--letter-spacing-snug);
   }
 
   h3,
   .heading-3 {
-    @apply text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-semibold text-white;
+    @apply text-xl sm:text-2xl md:text-3xl xl:text-4xl font-semibold text-white;
     line-height: var(--line-height-snug);
-    letter-spacing: var(--letter-spacing-normal);
+    letter-spacing: var(--letter-spacing-snug);
   }
 
   h4,
   .heading-4 {
-    @apply text-xl sm:text-2xl md:text-3xl xl:text-4xl font-semibold text-white;
+    @apply text-base sm:text-lg lg:text-xl xl:text-3xl font-semibold text-white;
     line-height: var(--line-height-snug);
     letter-spacing: var(--letter-spacing-wide);
   }

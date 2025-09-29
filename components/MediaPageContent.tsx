@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useState, useRef, useCallback, useEffect, useMemo } from "react";
 import { motion, useScroll, useTransform, AnimatePresence } from "motion/react";
 import {
   getPictures,
@@ -12,7 +12,7 @@ import {
 } from "@/lib/mediaData";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { MediaCard, type MediaItem } from "@/components/MediaCard";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
 import {
   Image as ImageIcon,
   Video as VideoIcon,
@@ -29,278 +29,314 @@ const transformVideos = (videos: Video[]): MediaItem[] =>
 const transformMusic = (music: Music[]): MediaItem[] =>
   music.map((item) => ({ ...item, type: "music" as const }));
 
-export function MediaPageContent() {
-  const [pictures, setPictures] = useState<Pictures[]>([]);
-  const [videos, setVideos] = useState<Video[]>([]);
-  const [music, setMusic] = useState<Music[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [isClient, setIsClient] = useState(false);
-  const [activeTab, setActiveTab] = useState("pictures");
+type FilterType = "all" | "picture" | "video" | "music";
 
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
+interface MediaPageContentProps {
+  initialData: {
+    pictures: Pictures[];
+    videos: Video[];
+    music: Music[];
+  };
+}
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const [picturesData, videosData, musicData] = await Promise.all([
-          getPictures(),
-          getVideos(),
-          getMusic(),
-        ]);
-
-        setPictures(picturesData);
-        setVideos(videosData);
-        setMusic(musicData);
-      } catch (error) {
-        console.error("Error fetching media data:", error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchData();
-  }, []);
-
-  if (loading) {
-    return (
-      <motion.div
-        className="flex items-center justify-center h-[calc(100vh-6rem)]"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <motion.div
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-        >
-          <LoadingSpinner />
-        </motion.div>
-      </motion.div>
-    );
-  }
-
-  if (!isClient) {
-    return (
-      <motion.div
-        className="flex items-center justify-center h-[calc(100vh-6rem)]"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
-      >
-        <motion.div
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-        >
-          <LoadingSpinner />
-        </motion.div>
-      </motion.div>
-    );
-  }
-
-  return (
-    <div className="min-h-[calc(100vh-6rem)]">
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        {/* Tab Navigation */}
-        <div className="sticky top-[6rem] z-40 bg-background/95 backdrop-blur-sm">
-          <div className="px-4 sm:px-8 md:px-12 lg:px-16 py-4">
-            <TabsList className="grid w-full grid-cols-3 h-auto gap-2">
-              <TabsTrigger value="pictures" className="flex items-center gap-2">
-                <ImageIcon className="h-4 w-4" />
-                Pictures
-              </TabsTrigger>
-              <TabsTrigger value="videos" className="flex items-center gap-2">
-                <VideoIcon className="h-4 w-4" />
-                Videos
-              </TabsTrigger>
-              <TabsTrigger value="by-us" className="flex items-center gap-2">
-                <MusicIcon className="h-4 w-4" />
-                By Us
-              </TabsTrigger>
-            </TabsList>
-          </div>
-        </div>
-
-        {/* Content based on active tab */}
-        <TabsContent value="pictures" className="mt-0">
-          <Media2ScrollContent
-            data={transformPictures(pictures)}
-            title="What can't be seen must be heard."
-            emptyMessage="No pictures available yet."
-          />
-        </TabsContent>
-
-        <TabsContent value="videos" className="mt-0">
-          <Media2ScrollContent
-            data={transformVideos(videos).filter(
-              (item) =>
-                item.type === "video" &&
-                (item.coverImageUrl || item.animatedCoverImageUrl)
-            )}
-            title="What can't be seen must be heard."
-            emptyMessage="No videos available yet."
-          />
-        </TabsContent>
-
-        <TabsContent value="by-us" className="mt-0">
-          <Media2ScrollContent
-            data={transformMusic(music)}
-            title="What can't be seen must be heard."
-            emptyMessage="No music tracks available yet."
-          />
-        </TabsContent>
-      </Tabs>
-    </div>
+export function MediaPageContent({ initialData }: MediaPageContentProps) {
+  // Combine all media data and sort by updated date
+  const allMediaData = [
+    ...transformPictures(initialData.pictures),
+    ...transformVideos(initialData.videos),
+    ...transformMusic(initialData.music),
+  ].sort(
+    (a, b) =>
+      new Date(b._updatedAt).getTime() - new Date(a._updatedAt).getTime()
   );
+
+  return <MediaScrollContent allMediaData={allMediaData} />;
+}
+
+// Props interface for MediaScrollContent component
+interface MediaScrollContentProps {
+  allMediaData: MediaItem[];
 }
 
 // Separate component for scroll content that only renders on client
-function Media2ScrollContent({
-  data,
-  title,
-  emptyMessage,
-}: {
-  data: MediaItem[];
-  title: string;
-  emptyMessage: string;
-}) {
+function MediaScrollContent({ allMediaData }: MediaScrollContentProps) {
+  const [activeFilter, setActiveFilter] = useState<FilterType>("all");
   const scrollRef = useRef<HTMLDivElement>(null);
-  const titleRef = useRef<HTMLDivElement>(null);
-  const cardsRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [dimensions, setDimensions] = useState({
+    contentWidth: 0,
+    viewportWidth: 0,
+    scrollDistance: 0,
+    sectionHeight: 0,
+  });
+  const [isLargeScreen, setIsLargeScreen] = useState(false);
 
+  // Simple filtering logic
+  const getFilteredData = (filter: FilterType): MediaItem[] => {
+    if (filter === "all") {
+      // For "all", only show videos with cover images
+      return allMediaData.filter((item) => {
+        if (item.type === "video") {
+          return item.thumbnailUrl || item.animatedCoverImageUrl;
+        }
+        return true;
+      });
+    }
+    // For specific filters, show all items of that type
+    return allMediaData.filter((item) => item.type === filter);
+  };
+
+  // Make displayData stable to prevent infinite loops
+  const displayData = useMemo(
+    () => getFilteredData(activeFilter),
+    [allMediaData, activeFilter]
+  );
+
+  // Set up scroll tracking with sticky container
   const { scrollYProgress } = useScroll({
     target: scrollRef,
     offset: ["start start", "end start"],
   });
 
-  const x = useTransform(scrollYProgress, [0, 1], ["0%", "-100%"]);
+  // Calculate dimensions and scroll distance (same as radio page)
+  const calculateDimensions = useCallback(() => {
+    if (!contentRef.current || !scrollRef.current) return;
 
-  // Enhanced scroll-based animations
-  const titleY = useTransform(scrollYProgress, [0, 0.3], ["0%", "-20%"]);
-  const titleOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
-  const cardsScale = useTransform(scrollYProgress, [0, 0.5], [1, 0.95]);
+    const contentWidth = contentRef.current.scrollWidth;
+    const viewportWidth = scrollRef.current.offsetWidth;
+    const isLargeScreenCheck = window.innerWidth >= 1024; // lg breakpoint
+    setIsLargeScreen(isLargeScreenCheck);
 
-  // Sort by updated date (newest first)
-  const displayData = data.sort(
-    (a, b) =>
-      new Date(b._updatedAt).getTime() - new Date(a._updatedAt).getTime()
+    // Only apply horizontal scroll calculations on large screens
+    if (isLargeScreenCheck) {
+      // Calculate expected width based on card count and dimensions
+      const cardWidth = 320; // lg:w-80 = 320px
+      const cardGap = 48; // lg:gap-12 = 48px
+      const titleSectionWidth = Math.min(viewportWidth * 0.4, 600); // 40vw max 600px
+      const expectedContentWidth =
+        titleSectionWidth +
+        displayData.length * cardWidth +
+        (displayData.length - 1) * cardGap;
+
+      // Use the larger of actual scrollWidth or expected width
+      const finalContentWidth = Math.max(contentWidth, expectedContentWidth);
+
+      // Add extra padding to ensure we can scroll past the last card
+      const extraPadding = 500; // Additional pixels to scroll past the last card
+      const scrollDistance = Math.max(
+        0,
+        finalContentWidth - viewportWidth + extraPadding
+      );
+      const viewportHeight = window.innerHeight;
+      const sectionHeight = viewportHeight + scrollDistance;
+
+      setDimensions({
+        contentWidth: finalContentWidth,
+        viewportWidth,
+        scrollDistance,
+        sectionHeight,
+      });
+    } else {
+      // On smaller screens, use auto height to adapt to content
+      setDimensions({
+        contentWidth,
+        viewportWidth,
+        scrollDistance: 0,
+        sectionHeight: 0, // 0 means auto height
+      });
+    }
+  }, [displayData]);
+
+  // Recalculate dimensions when filter changes or window resizes
+  useEffect(() => {
+    calculateDimensions();
+
+    const handleResize = () => calculateDimensions();
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, [activeFilter]); // Only recalculate when filter changes
+
+  // Transform horizontal scroll from 0 to -scrollDistance
+  // Complete the horizontal scroll by 80% of the vertical scroll
+  // Only apply on large screens (lg and above)
+  const xTransform = useTransform(
+    scrollYProgress,
+    [0, 0.8, 1],
+    [
+      0,
+      isLargeScreen ? -dimensions.scrollDistance : 0,
+      isLargeScreen ? -dimensions.scrollDistance : 0,
+    ]
   );
+
+  const filterButtons = [
+    { type: "all" as const, label: "All", icon: null },
+    { type: "picture" as const, label: "Pictures", icon: ImageIcon },
+    { type: "video" as const, label: "Videos", icon: VideoIcon },
+    { type: "music" as const, label: "Music", icon: MusicIcon },
+  ];
 
   if (displayData.length === 0) {
     return (
-      <div className="flex items-center justify-center h-[calc(100vh-12rem)] px-4 sm:px-8 md:px-12 lg:px-16">
-        <div className="text-center">
-          <p className="body-text text-muted-foreground">{emptyMessage}</p>
-          <p className="body-text-sm text-muted-foreground mt-2">
-            Check back soon!
-          </p>
+      <div className="min-h-[calc(100vh-6rem)]">
+        <div className="pt-[6rem] padding-global">
+          <div className="mb-8">
+            <h1 className="heading-3 mb-6">
+              What can't be seen must be heard.
+            </h1>
+
+            {/* Filter Buttons */}
+            <div className="flex flex-wrap gap-3 mb-8">
+              {filterButtons.map(({ type, label, icon: Icon }) => (
+                <Button
+                  key={type}
+                  variant={activeFilter === type ? "default" : "secondary"}
+                  size="sm"
+                  onClick={() => setActiveFilter(type)}
+                >
+                  {Icon && <Icon className="h-4 w-4" />}
+                  {label}
+                </Button>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex items-center justify-center h-[calc(100vh-12rem)]">
+            <div className="text-center">
+              <p className="body-text text-muted-foreground">
+                No {activeFilter === "all" ? "media" : activeFilter + "s"}{" "}
+                available yet.
+              </p>
+              <p className="body-text-sm text-muted-foreground mt-2">
+                Check back soon!
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <>
-      <motion.div className="h-[500vh]" ref={scrollRef}>
-        <div className="h-[calc(100vh-12rem)] overflow-hidden sticky top-[12rem]">
-          <motion.div
-            className="flex items-center h-full"
-            style={{ x, scale: cardsScale }}
+    <div className="min-h-[calc(100vh-6rem)]">
+      <motion.div
+        ref={scrollRef}
+        className="w-full relative"
+        style={{
+          height: isLargeScreen ? dimensions.sectionHeight || "100vh" : "auto",
+        }}
+      >
+        {/* Sticky container that pins during vertical scroll */}
+        <div
+          className={`${
+            isLargeScreen ? "sticky top-0 h-screen -mt-[6rem]" : ""
+          }`}
+        >
+          <div
+            className={`${
+              isLargeScreen ? "h-full flex items-center pt-[6rem]" : "pt-[6rem]"
+            }`}
           >
-            {/* Fixed Title Section */}
             <motion.div
-              ref={titleRef}
-              className="flex-shrink-0 padding-global mr-8 max-w-[40vw]"
-              style={{ y: titleY, opacity: titleOpacity }}
+              className={`overflow-hidden w-full relative ${
+                isLargeScreen ? "h-full" : ""
+              }`}
             >
               <motion.div
-                className="flex items-start gap-4"
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
+                ref={contentRef}
+                className={`flex flex-col lg:flex-row items-center lg:w-max padding-global ${
+                  isLargeScreen ? "h-full" : ""
+                }`}
+                style={{ x: isLargeScreen ? xTransform : 0 }}
               >
-                <div className="flex items-start gap-3 mb-2">
-                  <motion.h1
-                    className="heading-4 !leading-[1]"
-                    initial={{ opacity: 0, x: -30 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.5, duration: 0.8, ease: "easeOut" }}
+                {/* Fixed Title Section */}
+                <div className="flex-shrink-0 w-full lg:max-w-[25vw]">
+                  <motion.div
+                    initial={{ opacity: 0, y: 50 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, ease: "easeOut" }}
                   >
-                    {title}
-                  </motion.h1>
+                    <div>
+                      <motion.h1
+                        className="heading-3 mb-6"
+                        initial={{ opacity: 0, x: -30 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{
+                          delay: 0.5,
+                          duration: 0.8,
+                          ease: "easeOut",
+                        }}
+                      >
+                        What can&apos;t be seen must be heard.
+                      </motion.h1>
+
+                      {/* Filter Buttons */}
+                      <motion.div
+                        className="flex flex-wrap gap-3"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{
+                          delay: 0.7,
+                          duration: 0.6,
+                          ease: "easeOut",
+                        }}
+                      >
+                        {filterButtons.map(({ type, label, icon: Icon }) => (
+                          <Button
+                            key={type}
+                            variant={
+                              activeFilter === type ? "default" : "secondary"
+                            }
+                            size="sm"
+                            onClick={() => setActiveFilter(type)}
+                          >
+                            {Icon && <Icon className="h-4 w-4" />}
+                            {label}
+                          </Button>
+                        ))}
+                      </motion.div>
+                    </div>
+                  </motion.div>
                 </div>
+
+                {/* Horizontal Scrollable Cards Container */}
+                <motion.div
+                  key={activeFilter} // Force re-render on filter change
+                  className="pb-20 pt-10 padding-global grid grid-cols-1 md:grid-cols-3 md:pt-36 lg:flex lg:flex-row lg:flex-nowrap lg:pt-0 lg:pb-0 gap-0 md:gap-6 md:gap-y-34 lg:gap-12 lg:min-w-max relative"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <AnimatePresence>
+                    {displayData.map((item, index) => (
+                      <motion.div
+                        key={item._id}
+                        className="lg:flex-shrink-0 lg:w-80"
+                        initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                        transition={{
+                          delay: index * 0.05,
+                          duration: 0.3,
+                          ease: "easeOut",
+                        }}
+                        whileHover={{
+                          y: -10,
+                          scale: 1.02,
+                          transition: { duration: 0.2 },
+                        }}
+                      >
+                        <MediaCard item={item} index={index} />
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
+                </motion.div>
               </motion.div>
             </motion.div>
-
-            {/* Media Cards */}
-            <motion.div
-              ref={cardsRef}
-              className="flex gap-4 sm:gap-6 md:gap-8 pl-4 sm:pl-8"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.8, duration: 0.6 }}
-            >
-              <AnimatePresence>
-                {displayData.map((item, index) => (
-                  <motion.div
-                    key={item._id}
-                    className="flex-shrink-0 w-72 sm:w-110"
-                    initial={{ opacity: 0, y: 100, scale: 0.8 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    transition={{
-                      delay: 1 + index * 0.1,
-                      duration: 0.6,
-                      ease: "easeOut",
-                      type: "spring",
-                      stiffness: 100,
-                    }}
-                    whileHover={{
-                      y: -10,
-                      transition: { duration: 0.2 },
-                    }}
-                  >
-                    <MediaCard item={item} />
-                  </motion.div>
-                ))}
-              </AnimatePresence>
-            </motion.div>
-          </motion.div>
-
-          {/* Scroll Indicator for Mobile */}
-          <motion.div
-            className="absolute bottom-4 left-1/2 transform -translate-x-1/2 sm:hidden z-20"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 2, duration: 0.6 }}
-          >
-            <motion.div
-              className="bg-background/90 backdrop-blur-sm rounded-full px-4 py-2 border border-border"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <div className="text-xs text-muted-foreground flex items-center gap-2">
-                <span>Scroll to explore</span>
-                <motion.div
-                  className="w-2 h-2 rounded-full bg-green-500"
-                  animate={{
-                    scale: [1, 1.2, 1],
-                    opacity: [1, 0.7, 1],
-                  }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
-                />
-              </div>
-            </motion.div>
-          </motion.div>
+          </div>
         </div>
       </motion.div>
-    </>
+    </div>
   );
 }

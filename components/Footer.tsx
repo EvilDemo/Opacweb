@@ -53,7 +53,7 @@ export default function Footer() {
                 alt="Opac Logo"
                 width={84}
                 height={36}
-                className="w-full h-full object-cover"
+                className="w-full h-auto object-cover"
                 priority
                 quality={40}
               />
