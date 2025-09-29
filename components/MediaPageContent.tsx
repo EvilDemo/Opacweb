@@ -2,15 +2,7 @@
 
 import { useState, useRef, useCallback, useEffect, useMemo } from "react";
 import { motion, useScroll, useTransform, AnimatePresence } from "motion/react";
-import {
-  getPictures,
-  getVideos,
-  getMusic,
-  type Pictures,
-  type Video,
-  type Music,
-} from "@/lib/mediaData";
-import { LoadingSpinner } from "@/components/LoadingSpinner";
+import { type Pictures, type Video, type Music } from "@/lib/mediaData";
 import { MediaCard, type MediaItem } from "@/components/MediaCard";
 import { Button } from "@/components/ui/button";
 import {
@@ -89,7 +81,7 @@ function MediaScrollContent({ allMediaData }: MediaScrollContentProps) {
   // Make displayData stable to prevent infinite loops
   const displayData = useMemo(
     () => getFilteredData(activeFilter),
-    [allMediaData, activeFilter]
+    [activeFilter, getFilteredData]
   );
 
   // Set up scroll tracking with sticky container
@@ -155,7 +147,7 @@ function MediaScrollContent({ allMediaData }: MediaScrollContentProps) {
     window.addEventListener("resize", handleResize);
 
     return () => window.removeEventListener("resize", handleResize);
-  }, [activeFilter]); // Only recalculate when filter changes
+  }, [activeFilter, calculateDimensions]); // Only recalculate when filter changes
 
   // Transform horizontal scroll from 0 to -scrollDistance
   // Complete the horizontal scroll by 80% of the vertical scroll
@@ -183,7 +175,7 @@ function MediaScrollContent({ allMediaData }: MediaScrollContentProps) {
         <div className="pt-[6rem] padding-global">
           <div className="mb-8">
             <h1 className="heading-3 mb-6">
-              What can't be seen must be heard.
+              What can&apos;t be seen must be heard.
             </h1>
 
             {/* Filter Buttons */}
