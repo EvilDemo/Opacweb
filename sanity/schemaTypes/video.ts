@@ -25,16 +25,6 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: "animatedCoverImage",
-      title: "Animated Cover Image",
-      type: "image",
-
-      description: "Video cover image GIF",
-      options: {
-        hotspot: true,
-      },
-    }),
-    defineField({
       name: "thumbnail",
       title: "Thumbnail",
       type: "image",

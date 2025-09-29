@@ -22,7 +22,6 @@ export interface Video {
   description: string;
   videoUrl: string;
   thumbnailUrl?: string;
-  animatedCoverImageUrl?: string;
   _updatedAt: string;
 }
 

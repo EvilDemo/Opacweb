@@ -31,7 +31,6 @@ interface PictureItem extends BaseMediaItem {
 interface VideoItem extends BaseMediaItem {
   type: "video";
   thumbnailUrl?: string;
-  animatedCoverImageUrl?: string;
   videoUrl: string;
 }
 
@@ -81,36 +80,19 @@ export function MediaCard({ item, index = 0 }: MediaCardProps) {
         );
 
       case "video":
-        const primaryImageUrl = item.animatedCoverImageUrl;
-        const fallbackImageUrl = item.thumbnailUrl;
-
-        if (!fallbackImageUrl && !primaryImageUrl) {
+        if (!item.thumbnailUrl) {
           return null;
         }
 
         return (
           <Image
-            src={primaryImageUrl || fallbackImageUrl || ""}
+            src={item.thumbnailUrl}
             alt={`${item.title} - ${item.description}`}
             width={200}
             height={200}
             className="w-full h-full object-cover"
             unoptimized={true}
             priority={index === 0}
-            onLoad={() => {
-              // If we're on mobile, don't do any additional loading logic
-              if (window.innerWidth <= 768) {
-                return;
-              }
-            }}
-            onError={(e) => {
-              const target = e.target as HTMLImageElement;
-
-              // If primary image fails to load, try fallback
-              if (fallbackImageUrl && target.src !== fallbackImageUrl) {
-                target.src = fallbackImageUrl;
-              }
-            }}
           />
         );
 

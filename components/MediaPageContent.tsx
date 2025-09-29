@@ -67,10 +67,10 @@ function MediaScrollContent({ allMediaData }: MediaScrollContentProps) {
   const getFilteredData = useCallback(
     (filter: FilterType): MediaItem[] => {
       if (filter === "all") {
-        // For "all", only show videos with cover images
+        // For "all", only show videos with thumbnails
         return allMediaData.filter((item) => {
           if (item.type === "video") {
-            return item.thumbnailUrl || item.animatedCoverImageUrl;
+            return item.thumbnailUrl;
           }
           return true;
         });

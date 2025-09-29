@@ -47,7 +47,6 @@ export const videosQuery = `
     description,
     "videoUrl": videoUrl,
     "thumbnailUrl": thumbnail.asset->url + "?auto=format&w=400&q=85",
-    "animatedCoverImageUrl": animatedCoverImage.asset->url + "?auto=format&w=400&q=85",
     _updatedAt
   }
 `;

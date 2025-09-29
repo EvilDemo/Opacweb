@@ -75,11 +75,7 @@ export function MediaTabs({ pictures, videos, music }: MediaTabsProps) {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
             {transformVideos(videos)
-              .filter(
-                (item) =>
-                  item.type === "video" &&
-                  (item.thumbnailUrl || item.animatedCoverImageUrl)
-              ) // Only render if we have at least one image
+              .filter((item) => item.type === "video" && item.thumbnailUrl) // Only render if we have a thumbnail
               .map((item, index) => (
                 <MediaCard key={item._id} item={item} index={index} />
               ))}
