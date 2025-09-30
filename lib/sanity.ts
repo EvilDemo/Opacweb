@@ -8,6 +8,10 @@ export const config = {
   apiVersion: process.env.NEXT_PUBLIC_SANITY_API_VERSION || "2025-08-28",
   useCdn: false, // Always disable CDN to get fresh data
   perspective: "published" as const, // Ensure we get published content
+  // Disable caching in development
+  ...(process.env.NODE_ENV === "development" && {
+    token: process.env.SANITY_API_TOKEN, // Use token for fresh data in dev
+  }),
 };
 
 export const sanityClient = createClient(config);

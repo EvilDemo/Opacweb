@@ -13,6 +13,8 @@ export async function POST(request: NextRequest) {
     }
 
     console.log("Webhook received:", JSON.stringify(body, null, 2));
+    console.log("Environment:", process.env.NODE_ENV);
+    console.log("Timestamp:", new Date().toISOString());
 
     // Get the document type from the webhook payload
     const { _type, _id } = body;

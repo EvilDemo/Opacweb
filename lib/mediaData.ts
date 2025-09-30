@@ -59,7 +59,7 @@ export async function getPictures(): Promise<Pictures[]> {
       {},
       {
         next: {
-          revalidate: 3600, // 1 hour fallback, webhook handles instant updates
+          revalidate: 0, // Temporarily disable cache to force fresh data
           tags: ["pictures"],
         },
       }
@@ -85,7 +85,7 @@ export async function getVideos(): Promise<Video[]> {
       {},
       {
         next: {
-          revalidate: 3600, // 1 hour fallback, webhook handles instant updates
+          revalidate: 0, // Temporarily disable cache to force fresh data
           tags: ["videos"],
         },
       }
@@ -110,7 +110,7 @@ export async function getMusic(): Promise<Music[]> {
       {},
       {
         next: {
-          revalidate: 3600, // 1 hour fallback, webhook handles instant updates
+          revalidate: 0, // Temporarily disable cache to force fresh data
           tags: ["music"],
         },
       }
@@ -135,7 +135,7 @@ export async function getRadio(): Promise<Radio[]> {
       {},
       {
         next: {
-          revalidate: 3600, // 1 hour fallback, webhook handles instant updates
+          revalidate: 0, // Temporarily disable cache to force fresh data
           tags: ["radio"],
         },
       }
