@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 import { getRadio } from "@/lib/mediaData";
 import { RadioPageContent } from "@/components/RadioPageContent";
 
+// Force dynamic rendering to ensure fresh data
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export const metadata: Metadata = {
   title: "Opac Radio | Curated Playlists & Shows",
   description:

@@ -18,14 +18,14 @@ export function urlFor(source: SanityImageSource) {
   return builder.image(source);
 }
 
-// GROQ queries for fetching content with optimized URLs
+// GROQ queries for fetching content with consistent image URLs
 export const picturesQuery = `
   *[_type == "pictures"] | order(_updatedAt desc) {
     _id,
     title,
     description,
-    "thumbnailUrl": thumbnail.asset->url + "?auto=format&w=400&q=85",
-    "gallery": gallery[].asset->url,
+    "thumbnailUrl": thumbnail.asset->url + "?auto=format&w=400&q=85&t=" + _updatedAt,
+    "gallery": gallery[].asset->url + "?auto=format&w=800&q=85&t=" + _updatedAt,
     _updatedAt
   }
 `;
@@ -36,8 +36,8 @@ export const singlePictureQuery = `
     _id,
     title,
     description,
-    "thumbnailUrl": thumbnail.asset->url,
-    "gallery": gallery[].asset->url
+    "thumbnailUrl": thumbnail.asset->url + "?auto=format&w=800&q=85&t=" + _updatedAt,
+    "gallery": gallery[].asset->url + "?auto=format&w=1200&q=85&t=" + _updatedAt
   }
 `;
 
@@ -47,7 +47,7 @@ export const videosQuery = `
     title,
     description,
     "videoUrl": videoUrl,
-    "thumbnailUrl": thumbnail.asset->url + "?auto=format&w=400&q=85",
+    "thumbnailUrl": thumbnail.asset->url + "?auto=format&w=400&q=85&t=" + _updatedAt,
     _updatedAt
   }
 `;
@@ -58,7 +58,7 @@ export const musicQuery = `
     title,
     description,
     spotifyUrl,
-    "thumbnailUrl": thumbnail.asset->url + "?auto=format&w=400&q=85",
+    "thumbnailUrl": thumbnail.asset->url + "?auto=format&w=400&q=85&t=" + _updatedAt,
     _updatedAt
   }
 `;
@@ -69,7 +69,7 @@ export const radioQuery = `
     title,
     description,
     spotifyUrl,
-    "thumbnailUrl": thumbnail.asset->url + "?auto=format&fm=webp&w=180&q=60&fit=crop&crop=center&h=278",
+    "thumbnailUrl": thumbnail.asset->url + "?auto=format&fm=webp&w=180&q=60&fit=crop&crop=center&h=278&t=" + _updatedAt,
     _updatedAt
   }
 `;

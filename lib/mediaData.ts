@@ -50,18 +50,39 @@ export async function getPictures(): Promise<Pictures[]> {
       !process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ||
       process.env.NEXT_PUBLIC_SANITY_PROJECT_ID === "dummy-project-id"
     ) {
+      console.log("Skipping Sanity call - no project ID configured");
       return [];
     }
-    return await sanityClient.fetch(
+
+    console.log("Fetching pictures from Sanity...");
+    console.log("Query:", picturesQuery);
+    console.log("Environment:", process.env.NODE_ENV);
+    console.log("Sanity config:", {
+      projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
+      dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
+      apiVersion: process.env.NEXT_PUBLIC_SANITY_API_VERSION,
+    });
+
+    const result = await sanityClient.fetch(
       picturesQuery,
       {},
       {
         next: {
-          revalidate: 3600, // 1 hour cache - webhook will revalidate instantly on publish
+          revalidate: 0, // Always fetch fresh data - webhook will revalidate instantly on publish
           tags: ["pictures"],
         },
       }
     );
+    console.log("Pictures fetched:", result.length, "items");
+    console.log(
+      "Picture titles:",
+      result.map((p: Pictures) => p.title)
+    );
+    console.log(
+      "Picture IDs:",
+      result.map((p: Pictures) => p._id)
+    );
+    return result;
   } catch (error) {
     console.error("Error fetching pictures:", error);
     return [];
@@ -82,7 +103,7 @@ export async function getVideos(): Promise<Video[]> {
       {},
       {
         next: {
-          revalidate: 3600, // 1 hour cache - webhook will revalidate instantly on publish
+          revalidate: 0, // Always fetch fresh data - webhook will revalidate instantly on publish
           tags: ["videos"],
         },
       }
@@ -107,7 +128,7 @@ export async function getMusic(): Promise<Music[]> {
       {},
       {
         next: {
-          revalidate: 3600, // 1 hour cache - webhook will revalidate instantly on publish
+          revalidate: 0, // Always fetch fresh data - webhook will revalidate instantly on publish
           tags: ["music"],
         },
       }
@@ -132,7 +153,7 @@ export async function getRadio(): Promise<Radio[]> {
       {},
       {
         next: {
-          revalidate: 3600, // 1 hour cache - webhook will revalidate instantly on publish
+          revalidate: 0, // Always fetch fresh data - webhook will revalidate instantly on publish
           tags: ["radio"],
         },
       }

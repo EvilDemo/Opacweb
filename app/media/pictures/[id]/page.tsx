@@ -3,6 +3,10 @@ import { getSinglePicture } from "@/lib/mediaData";
 import { notFound } from "next/navigation";
 import PictureGalleryContent from "@/components/PictureGalleryContent";
 
+// Force dynamic rendering to ensure fresh data
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 interface PicturePageProps {
   params: Promise<{
     id: string;

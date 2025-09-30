@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 import { MediaPageContent } from "@/components/MediaPageContent";
 import { getPictures, getVideos, getMusic } from "@/lib/mediaData";
 
+// Force dynamic rendering to ensure fresh data
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export const metadata: Metadata = {
   title: "Opac Media | Music, Videos & Pictures",
   description:

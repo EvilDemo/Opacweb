@@ -8,8 +8,11 @@ export async function POST(request: NextRequest) {
     // Verify this is a valid Sanity webhook
     const secret = request.headers.get("sanity-webhook-secret");
     if (secret !== process.env.SANITY_WEBHOOK_SECRET) {
+      console.log("Invalid webhook secret");
       return NextResponse.json({ message: "Invalid secret" }, { status: 401 });
     }
+
+    console.log("Webhook received:", JSON.stringify(body, null, 2));
 
     // Get the document type from the webhook payload
     const { _type, _id } = body;
@@ -20,7 +23,10 @@ export async function POST(request: NextRequest) {
 
       // Revalidate all content types for delete operations
       const allTags = ["pictures", "videos", "music", "radio"];
-      allTags.forEach((tag) => revalidateTag(tag));
+      allTags.forEach((tag) => {
+        revalidateTag(tag);
+        console.log(`Revalidated tag: ${tag}`);
+      });
 
       return NextResponse.json({
         revalidated: true,
@@ -32,6 +38,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (!_type) {
+      console.log("Missing document type in webhook payload");
       return NextResponse.json(
         { message: "Missing document type" },
         { status: 400 }
@@ -51,6 +58,7 @@ export async function POST(request: NextRequest) {
     if (tag) {
       // Revalidate the specific tag
       revalidateTag(tag);
+      console.log(`Revalidated tag: ${tag} for document type: ${_type}`);
 
       return NextResponse.json({
         revalidated: true,
@@ -61,6 +69,7 @@ export async function POST(request: NextRequest) {
       });
     }
 
+    console.log(`No revalidation needed for document type: ${_type}`);
     return NextResponse.json({
       message: "No revalidation needed for this document type",
       documentType: _type,
