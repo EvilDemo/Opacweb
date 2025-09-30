@@ -2,9 +2,7 @@ import type { Metadata } from "next";
 import { getRadio } from "@/lib/mediaData";
 import { RadioPageContent } from "@/components/RadioPageContent";
 
-// Force dynamic rendering to ensure fresh data
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+// ISR with webhook revalidation - content updates instantly via webhook
 
 export const metadata: Metadata = {
   title: "Opac Radio | Curated Playlists & Shows",

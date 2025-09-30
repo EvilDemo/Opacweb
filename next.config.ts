@@ -18,11 +18,11 @@ const nextConfig: NextConfig = {
   },
   // Enable compression
   compress: true,
-  // Consistent caching behavior across environments
+  // Enable ISR with webhook revalidation for optimal performance
   experimental: {
     staleTimes: {
-      dynamic: 0, // Always fetch fresh data for dynamic content
-      static: 0, // Always fetch fresh data for static content
+      dynamic: 60, // 1 minute stale time for dynamic content
+      static: 300, // 5 minutes stale time for static content
     },
   },
 };

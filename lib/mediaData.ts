@@ -54,33 +54,15 @@ export async function getPictures(): Promise<Pictures[]> {
       return [];
     }
 
-    console.log("Fetching pictures from Sanity...");
-    console.log("Query:", picturesQuery);
-    console.log("Environment:", process.env.NODE_ENV);
-    console.log("Sanity config:", {
-      projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
-      dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
-      apiVersion: process.env.NEXT_PUBLIC_SANITY_API_VERSION,
-    });
-
     const result = await sanityClient.fetch(
       picturesQuery,
       {},
       {
         next: {
-          revalidate: 0, // Always fetch fresh data - webhook will revalidate instantly on publish
+          revalidate: 3600, // 1 hour fallback, webhook handles instant updates
           tags: ["pictures"],
         },
       }
-    );
-    console.log("Pictures fetched:", result.length, "items");
-    console.log(
-      "Picture titles:",
-      result.map((p: Pictures) => p.title)
-    );
-    console.log(
-      "Picture IDs:",
-      result.map((p: Pictures) => p._id)
     );
     return result;
   } catch (error) {
@@ -103,7 +85,7 @@ export async function getVideos(): Promise<Video[]> {
       {},
       {
         next: {
-          revalidate: 0, // Always fetch fresh data - webhook will revalidate instantly on publish
+          revalidate: 3600, // 1 hour fallback, webhook handles instant updates
           tags: ["videos"],
         },
       }
@@ -128,7 +110,7 @@ export async function getMusic(): Promise<Music[]> {
       {},
       {
         next: {
-          revalidate: 0, // Always fetch fresh data - webhook will revalidate instantly on publish
+          revalidate: 3600, // 1 hour fallback, webhook handles instant updates
           tags: ["music"],
         },
       }
@@ -153,7 +135,7 @@ export async function getRadio(): Promise<Radio[]> {
       {},
       {
         next: {
-          revalidate: 0, // Always fetch fresh data - webhook will revalidate instantly on publish
+          revalidate: 3600, // 1 hour fallback, webhook handles instant updates
           tags: ["radio"],
         },
       }
