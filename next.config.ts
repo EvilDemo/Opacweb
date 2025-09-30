@@ -21,8 +21,8 @@ const nextConfig: NextConfig = {
   // Enable ISR with webhook revalidation for optimal performance
   experimental: {
     staleTimes: {
-      dynamic: 60, // 1 minute stale time for dynamic content
-      static: 300, // 5 minutes stale time for static content
+      dynamic: 0, // Always fresh for dynamic content in development
+      static: 0, // Always fresh for static content in development
     },
   },
 };

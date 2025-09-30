@@ -59,7 +59,7 @@ export async function getPictures(): Promise<Pictures[]> {
       {},
       {
         next: {
-          revalidate: 0, // Temporarily disable cache to force fresh data
+          revalidate: process.env.NODE_ENV === "development" ? 0 : 3600, // No cache in dev, 1 hour in prod with webhook revalidation
           tags: ["pictures"],
         },
       }
@@ -85,7 +85,7 @@ export async function getVideos(): Promise<Video[]> {
       {},
       {
         next: {
-          revalidate: 0, // Temporarily disable cache to force fresh data
+          revalidate: process.env.NODE_ENV === "development" ? 0 : 3600, // No cache in dev, 1 hour in prod with webhook revalidation
           tags: ["videos"],
         },
       }
@@ -110,7 +110,7 @@ export async function getMusic(): Promise<Music[]> {
       {},
       {
         next: {
-          revalidate: 0, // Temporarily disable cache to force fresh data
+          revalidate: process.env.NODE_ENV === "development" ? 0 : 3600, // No cache in dev, 1 hour in prod with webhook revalidation
           tags: ["music"],
         },
       }
@@ -135,7 +135,7 @@ export async function getRadio(): Promise<Radio[]> {
       {},
       {
         next: {
-          revalidate: 0, // Temporarily disable cache to force fresh data
+          revalidate: process.env.NODE_ENV === "development" ? 0 : 3600, // No cache in dev, 1 hour in prod with webhook revalidation
           tags: ["radio"],
         },
       }
