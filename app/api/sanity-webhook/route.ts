@@ -5,35 +5,25 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
-    // Verify this is a valid Sanity webhook using signature verification
+    // Verify this is a valid Sanity webhook
     const signature = request.headers.get("sanity-webhook-signature");
-    const webhookSecret = process.env.SANITY_WEBHOOK_SECRET;
     
-    console.log("Webhook signature received:", signature);
-    console.log("Expected secret:", webhookSecret);
-    
-    // For now, let's accept all webhooks and focus on the revalidation
-    // TODO: Implement proper signature verification if needed
     if (!signature) {
-      console.log("No signature provided, but continuing with revalidation");
+      return NextResponse.json(
+        { message: "Missing webhook signature" },
+        { status: 401 }
+      );
     }
-
-    console.log("Webhook received:", JSON.stringify(body, null, 2));
-    console.log("Environment:", process.env.NODE_ENV);
-    console.log("Timestamp:", new Date().toISOString());
 
     // Get the document type from the webhook payload
     const { _type, _id } = body;
 
     // Handle delete operations (no _type field)
     if (!_type && _id) {
-      console.log("Delete operation detected, revalidating all content types");
-
       // Revalidate all content types for delete operations
       const allTags = ["pictures", "videos", "music", "radio"];
       allTags.forEach((tag) => {
         revalidateTag(tag);
-        console.log(`Revalidated tag: ${tag}`);
       });
 
       return NextResponse.json({
@@ -46,7 +36,6 @@ export async function POST(request: NextRequest) {
     }
 
     if (!_type) {
-      console.log("Missing document type in webhook payload");
       return NextResponse.json(
         { message: "Missing document type" },
         { status: 400 }
@@ -66,7 +55,6 @@ export async function POST(request: NextRequest) {
     if (tag) {
       // Revalidate the specific tag
       revalidateTag(tag);
-      console.log(`Revalidated tag: ${tag} for document type: ${_type}`);
 
       return NextResponse.json({
         revalidated: true,
@@ -77,7 +65,6 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    console.log(`No revalidation needed for document type: ${_type}`);
     return NextResponse.json({
       message: "No revalidation needed for this document type",
       documentType: _type,
