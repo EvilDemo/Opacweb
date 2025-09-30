@@ -4,12 +4,9 @@ import { useState, useCallback, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import { type Pictures, type Gallery } from "@/lib/mediaData";
-import {
-  getOptimizedImageUrl,
-  getResponsiveImageSrcSet,
-} from "@/sanity/lib/image";
+import { getOptimizedImageUrl } from "@/sanity/lib/image";
 
 // Responsive image sizes optimized for actual display dimensions
 const RESPONSIVE_IMAGE_SIZES = {

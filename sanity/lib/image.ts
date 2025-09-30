@@ -15,7 +15,7 @@ export const getOptimizedImageUrl = (
   source: SanityImageSource,
   width?: number,
   quality: number = 80,
-  format?: 'auto' | 'webp' | 'jpg' | 'png'
+  format?: "auto" | "webp" | "jpg" | "png"
 ) => {
   let imageBuilder = builder.image(source);
 
@@ -24,11 +24,11 @@ export const getOptimizedImageUrl = (
   }
 
   const optimizedBuilder = imageBuilder.quality(quality);
-  
-  if (format && format !== 'auto') {
+
+  if (format && format !== "auto") {
     return optimizedBuilder.format(format).url();
   }
-  
+
   return optimizedBuilder.auto("format").url(); // Automatically choose best format (WebP when supported)
 };
 
@@ -39,13 +39,13 @@ export const imagePresets = {
     getOptimizedImageUrl(source, 546, 75), // Matches display size exactly
   galleryThumbRetina: (source: SanityImageSource) =>
     getOptimizedImageUrl(source, 1092, 75), // 2x for retina displays
-  
+
   // Lightbox images - higher quality for detailed viewing
   lightbox: (source: SanityImageSource) =>
     getOptimizedImageUrl(source, 1200, 80),
   lightboxRetina: (source: SanityImageSource) =>
     getOptimizedImageUrl(source, 2400, 80), // 2x for retina displays
-  
+
   // Legacy presets for backward compatibility
   thumbnail: (source: SanityImageSource) =>
     getOptimizedImageUrl(source, 400, 75),
@@ -63,6 +63,6 @@ export const getResponsiveImageSrcSet = (
 ) => {
   const sizes = [baseWidth, baseWidth * 2]; // 1x and 2x for retina
   return sizes
-    .map(size => `${getOptimizedImageUrl(source, size, quality)} ${size}w`)
-    .join(', ');
+    .map((size) => `${getOptimizedImageUrl(source, size, quality)} ${size}w`)
+    .join(", ");
 };

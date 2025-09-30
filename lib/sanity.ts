@@ -24,13 +24,13 @@ export function urlFor(source: SanityImageSource) {
   return builder.image(source);
 }
 
-// GROQ queries for fetching content with consistent image URLs
+// GROQ queries for fetching content - return raw URLs for client-side optimization
 export const picturesQuery = `
   *[_type == "pictures"] | order(_updatedAt desc) {
     _id,
     title,
     description,
-    "thumbnailUrl": thumbnail.asset->url + "?auto=format&w=400&q=75&t=" + _updatedAt,
+    "thumbnailUrl": thumbnail.asset->url,
     _updatedAt
   }
 `;
@@ -48,7 +48,7 @@ export const videosQuery = `
     title,
     description,
     "videoUrl": videoUrl,
-    "thumbnailUrl": thumbnail.asset->url + "?auto=format&w=400&q=75&t=" + _updatedAt,
+    "thumbnailUrl": thumbnail.asset->url,
     _updatedAt
   }
 `;
@@ -59,7 +59,7 @@ export const musicQuery = `
     title,
     description,
     spotifyUrl,
-    "thumbnailUrl": thumbnail.asset->url + "?auto=format&w=400&q=75&t=" + _updatedAt,
+    "thumbnailUrl": thumbnail.asset->url,
     _updatedAt
   }
 `;
@@ -70,7 +70,7 @@ export const radioQuery = `
     title,
     description,
     spotifyUrl,
-    "thumbnailUrl": thumbnail.asset->url + "?auto=format&fm=webp&w=180&q=60&fit=crop&crop=center&h=278&t=" + _updatedAt,
+    "thumbnailUrl": thumbnail.asset->url,
     _updatedAt
   }
 `;

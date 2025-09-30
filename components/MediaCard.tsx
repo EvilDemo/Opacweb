@@ -13,6 +13,17 @@ import { motion, useInView } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRef } from "react";
+import { getOptimizedImageUrl } from "@/sanity/lib/image";
+
+// Image optimization constants
+const MEDIA_CARD_IMAGE_SIZES = {
+  THUMBNAIL: 400, // Base thumbnail size for cards
+  THUMBNAIL_RETINA: 800, // 2x for retina displays
+} as const;
+
+const QUALITY_SETTINGS = {
+  THUMBNAIL: 75, // Optimized quality for thumbnails
+} as const;
 
 // Base interface for all media items
 interface BaseMediaItem {
@@ -69,14 +80,18 @@ export function MediaCard({ item, index = 0 }: MediaCardProps) {
       case "picture":
         return (
           <Image
-            src={item.thumbnailUrl}
+            src={getOptimizedImageUrl(
+              item.thumbnailUrl,
+              MEDIA_CARD_IMAGE_SIZES.THUMBNAIL,
+              QUALITY_SETTINGS.THUMBNAIL
+            )}
             alt={`${item.title} - ${item.description}`}
-            width={400}
-            height={400}
+            width={MEDIA_CARD_IMAGE_SIZES.THUMBNAIL}
+            height={MEDIA_CARD_IMAGE_SIZES.THUMBNAIL}
             className="w-full h-full object-cover"
-            unoptimized={true}
-            priority={index === 0}
+            loading={index < 6 ? "eager" : "lazy"}
             sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            unoptimized
           />
         );
 
@@ -87,28 +102,36 @@ export function MediaCard({ item, index = 0 }: MediaCardProps) {
 
         return (
           <Image
-            src={item.thumbnailUrl}
+            src={getOptimizedImageUrl(
+              item.thumbnailUrl,
+              MEDIA_CARD_IMAGE_SIZES.THUMBNAIL,
+              QUALITY_SETTINGS.THUMBNAIL
+            )}
             alt={`${item.title} - ${item.description}`}
-            width={400}
-            height={400}
+            width={MEDIA_CARD_IMAGE_SIZES.THUMBNAIL}
+            height={MEDIA_CARD_IMAGE_SIZES.THUMBNAIL}
             className="w-full h-full object-cover"
-            unoptimized={true}
-            priority={index === 0}
+            loading={index < 6 ? "eager" : "lazy"}
             sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            unoptimized
           />
         );
 
       case "music":
         return item.thumbnailUrl ? (
           <Image
-            src={item.thumbnailUrl}
+            src={getOptimizedImageUrl(
+              item.thumbnailUrl,
+              MEDIA_CARD_IMAGE_SIZES.THUMBNAIL,
+              QUALITY_SETTINGS.THUMBNAIL
+            )}
             alt={`${item.title} cover`}
-            width={400}
-            height={400}
+            width={MEDIA_CARD_IMAGE_SIZES.THUMBNAIL}
+            height={MEDIA_CARD_IMAGE_SIZES.THUMBNAIL}
             className="w-full h-full object-cover"
-            unoptimized={true}
-            priority={index === 0}
+            loading={index < 6 ? "eager" : "lazy"}
             sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            unoptimized
           />
         ) : (
           <MusicIcon className="h-16 w-16 text-muted-foreground" />

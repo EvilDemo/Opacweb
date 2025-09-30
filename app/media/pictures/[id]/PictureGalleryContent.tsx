@@ -6,10 +6,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { type Pictures, type Gallery } from "@/lib/mediaData";
-import {
-  getOptimizedImageUrl,
-  getResponsiveImageSrcSet,
-} from "@/sanity/lib/image";
+import { getOptimizedImageUrl } from "@/sanity/lib/image";
 
 interface PictureGalleryContentProps {
   picture: Pictures;
