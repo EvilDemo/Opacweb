@@ -54,7 +54,7 @@ export default function Footer() {
                 width={84}
                 height={36}
                 className="w-full h-auto object-cover"
-                priority
+                loading="lazy"
                 quality={40}
               />
             </div>

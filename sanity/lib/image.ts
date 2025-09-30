@@ -32,8 +32,8 @@ export const getOptimizedImageUrl = (
 export const imagePresets = {
   thumbnail: (source: SanityImageSource) =>
     getOptimizedImageUrl(source, 400, 80),
-  medium: (source: SanityImageSource) => getOptimizedImageUrl(source, 800, 85),
-  large: (source: SanityImageSource) => getOptimizedImageUrl(source, 1200, 85),
+  medium: (source: SanityImageSource) => getOptimizedImageUrl(source, 800, 75),
+  large: (source: SanityImageSource) => getOptimizedImageUrl(source, 1200, 75),
   fullSize: (source: SanityImageSource) =>
-    getOptimizedImageUrl(source, 1920, 90),
+    getOptimizedImageUrl(source, 1920, 75),
 };

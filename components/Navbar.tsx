@@ -29,6 +29,8 @@ const Logo = ({ className = "" }: { className?: string }) => (
     height={62}
     className={`object-contain w-auto h-auto  ${className}`}
     priority
+    fetchPriority="high" // LCP optimization for logo
+    quality={75} // Good quality for logo
   />
 );
 
@@ -66,7 +68,7 @@ const Cart = ({ className = "" }: { className?: string }) => {
     <div
       className={`hidden lg:flex items-center space-x-2 text-white ${className}`}
     >
-      <Image src="/cart.svg" alt="Cart" width={20} height={20} />
+      <Image src="/cart.svg" alt="Cart" width={20} height={20} unoptimized />
       <span className="text-white body-text-sm">CART</span>
     </div>
   );
@@ -84,7 +86,7 @@ const MobileMenuButton = ({
         size="sm"
         className="lg:hidden text-white hover:bg-gray-800"
       >
-        <Image src="/menu.svg" alt="Menu" width={24} height={24} />
+        <Image src="/menu.svg" alt="Menu" width={24} height={24} unoptimized />
       </Button>
     </SheetTrigger>
     <MobileMenu setIsOpen={setIsOpen} />
@@ -116,6 +118,7 @@ const MobileMenu = ({ setIsOpen }: { setIsOpen: (open: boolean) => void }) => {
                   alt={item.label}
                   width={80}
                   height={80}
+                  unoptimized
                 />
                 {item.label}
               </Link>
@@ -127,7 +130,13 @@ const MobileMenu = ({ setIsOpen }: { setIsOpen: (open: boolean) => void }) => {
         {isShopEnabled() && (
           <div className="border-t border-white-50 py-6 padding-global">
             <div className="flex items-center space-x-2 text-white">
-              <Image src="/cart.svg" alt="Cart" width={24} height={24} />
+              <Image
+                src="/cart.svg"
+                alt="Cart"
+                width={24}
+                height={24}
+                unoptimized
+              />
               <span className="body-text-lg">CART</span>
             </div>
           </div>

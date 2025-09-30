@@ -7,7 +7,7 @@ export async function POST(request: NextRequest) {
 
     // Verify this is a valid Sanity webhook
     const signature = request.headers.get("sanity-webhook-signature");
-    
+
     if (!signature) {
       return NextResponse.json(
         { message: "Missing webhook signature" },

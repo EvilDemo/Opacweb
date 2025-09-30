@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { getSinglePicture } from "@/lib/mediaData";
+import { getPictures, getGallery } from "@/lib/mediaData";
 import { notFound } from "next/navigation";
 import PictureGalleryContent from "@/components/PictureGalleryContent";
 
-// Force dynamic rendering to ensure fresh data
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+// Use Next.js default caching - data layer handles the actual caching
+// export const dynamic = "force-dynamic"; // Removed to allow bfcache
+// export const revalidate = 0; // Removed to allow bfcache
 
 interface PicturePageProps {
   params: Promise<{
@@ -17,7 +17,12 @@ export async function generateMetadata({
   params,
 }: PicturePageProps): Promise<Metadata> {
   const { id } = await params;
-  const picture = await getSinglePicture(id);
+  const [allPictures, gallery] = await Promise.all([
+    getPictures(),
+    getGallery(id),
+  ]);
+
+  const picture = allPictures.find((p) => p._id === id);
 
   if (!picture) {
     return {
@@ -30,7 +35,7 @@ export async function generateMetadata({
     };
   }
 
-  const imageCount = (picture.gallery?.length || 0) + 1; // +1 for thumbnail
+  const imageCount = (gallery?.gallery?.length || 0) + 1; // +1 for thumbnail
 
   return {
     title: `${picture.title} - Picture Gallery | Opac Media`,
@@ -58,7 +63,7 @@ export async function generateMetadata({
           height: 630,
           alt: `${picture.title} - Gallery thumbnail`,
         },
-        ...(picture.gallery?.slice(0, 3).map((url, index) => ({
+        ...(gallery?.gallery?.slice(0, 3).map((url, index) => ({
           url,
           width: 1200,
           height: 630,
@@ -93,11 +98,16 @@ export async function generateMetadata({
 
 export default async function PicturePage({ params }: PicturePageProps) {
   const { id } = await params;
-  const picture = await getSinglePicture(id);
+  const [allPictures, gallery] = await Promise.all([
+    getPictures(),
+    getGallery(id),
+  ]);
+
+  const picture = allPictures.find((p) => p._id === id);
 
   if (!picture) {
     notFound();
   }
 
-  return <PictureGalleryContent picture={picture} />;
+  return <PictureGalleryContent picture={picture} gallery={gallery} />;
 }

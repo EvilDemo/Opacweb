@@ -1,7 +1,7 @@
 import {
   sanityClient,
   picturesQuery,
-  singlePictureQuery,
+  galleryQuery,
   videosQuery,
   musicQuery,
   radioQuery,
@@ -12,8 +12,11 @@ export interface Pictures {
   title: string;
   description: string;
   thumbnailUrl: string;
-  gallery?: string[];
   _updatedAt: string;
+}
+
+export interface Gallery {
+  gallery: string[];
 }
 
 export interface Video {
@@ -146,7 +149,7 @@ export async function getRadio(): Promise<Radio[]> {
   }
 }
 
-export async function getSinglePicture(id: string): Promise<Pictures | null> {
+export async function getGallery(id: string): Promise<Gallery | null> {
   try {
     // Skip Sanity calls during build if no project ID is configured
     if (
@@ -155,9 +158,23 @@ export async function getSinglePicture(id: string): Promise<Pictures | null> {
     ) {
       return null;
     }
-    return await sanityClient.fetch(singlePictureQuery, { id });
+    const result = await sanityClient.fetch(
+      galleryQuery,
+      { id },
+      {
+        next: {
+          revalidate: process.env.NODE_ENV === "development" ? 0 : 3600, // No cache in dev, 1 hour in prod with webhook revalidation
+          tags: ["gallery", `gallery-${id}`], // Specific tag for this gallery
+        },
+      }
+    );
+    console.log("Fetched gallery data:");
+    console.log("  id:", id);
+    console.log("  galleryLength:", result?.gallery?.length || 0);
+    console.log("  gallery:", result?.gallery);
+    return result;
   } catch (error) {
-    console.error("Error fetching single picture:", error);
+    console.error("Error fetching gallery:", error);
     return null;
   }
 }

@@ -5,14 +5,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, X, ChevronLeft, ChevronRight } from "lucide-react";
-import { type Pictures } from "@/lib/mediaData";
+import { type Pictures, type Gallery } from "@/lib/mediaData";
 
 interface PictureGalleryContentProps {
   picture: Pictures;
+  gallery: Gallery | null;
 }
 
 export default function PictureGalleryContent({
   picture,
+  gallery,
 }: PictureGalleryContentProps) {
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(
     null
@@ -20,7 +22,7 @@ export default function PictureGalleryContent({
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
 
   // Combine thumbnail and gallery images
-  const allImages = [picture.thumbnailUrl, ...(picture.gallery || [])].filter(
+  const allImages = [picture.thumbnailUrl, ...(gallery?.gallery || [])].filter(
     Boolean
   );
   const imageCount = allImages.length;

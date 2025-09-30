@@ -59,9 +59,9 @@ export function RadioCard({
               height={185}
               className="w-18 md:w-22 lg:w-30"
               sizes="(max-width: 768px) 72px, (max-width: 1024px) 88px, 120px"
-              quality={75}
               loading={index < 2 ? "eager" : "lazy"}
               priority={index < 2}
+              unoptimized // Already optimized by Sanity CDN
             />
           </motion.div>
         ) : (

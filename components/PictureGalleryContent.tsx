@@ -5,12 +5,17 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, X, ChevronLeft, ChevronRight } from "lucide-react";
-import { type Pictures } from "@/lib/mediaData";
+import { type Pictures, type Gallery } from "@/lib/mediaData";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
+import { motion, useInView } from "motion/react";
+import { getOptimizedImageUrl } from "@/sanity/lib/image";
 
-interface PictureGalleryContentProps {
-  picture: Pictures;
-}
+// Simplified image sizing strategy
+const IMAGE_SIZES = {
+  GALLERY: 600, // Same size for all gallery images
+  LIGHTBOX: 1920, // Larger for lightbox viewing
+  BLUR_PLACEHOLDER: 50, // Blur placeholder
+} as const;
 
 // Create a smaller version of LoadingSpinner for cards
 const CardLoadingSpinner = () => (
@@ -26,27 +31,43 @@ const ImageCard = ({
   imageCount,
   pictureTitle,
   onImageClick,
-  delay = 0,
+  isPriority = false,
 }: {
   imageUrl: string;
   index: number;
   imageCount: number;
   pictureTitle: string;
   onImageClick: (index: number) => void;
-  delay?: number;
+  isPriority?: boolean;
 }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
-  const [shouldShow, setShouldShow] = useState(false);
   const [imageDimensions, setImageDimensions] = useState<{
     width: number;
     height: number;
   } | null>(null);
-  const [isInView, setIsInView] = useState(false);
-  const cardRef = useRef<HTMLDivElement>(null);
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-50px" });
+
+  // Calculate cascading delay based on index (same as other cards)
+  const cascadingDelay = index * 0.1;
+
+  // Generate optimized image URLs for gallery (same size, different quality)
+  const optimizedImageUrl = useMemo(() => {
+    // Gallery: Same size for all images, optimized quality for better compression
+    const quality = isPriority ? 60 : 50; // Lower quality for better compression
+    return getOptimizedImageUrl(imageUrl, IMAGE_SIZES.GALLERY, quality);
+  }, [imageUrl, isPriority]);
+
+  // Generate blur placeholder URL (small, low quality version)
+  const blurImageUrl = useMemo(() => {
+    return getOptimizedImageUrl(imageUrl, IMAGE_SIZES.BLUR_PLACEHOLDER, 25);
+  }, [imageUrl]);
 
   // Pre-load image dimensions to prevent content shift
   useEffect(() => {
+    if (!isInView && !isPriority) return; // Don't load if not in view and not priority
+
     const img = new window.Image();
     img.onload = () => {
       setImageDimensions({
@@ -59,42 +80,17 @@ const ImageCard = ({
       setIsLoading(false);
     };
 
-    const optimizedUrl = imageUrl.includes("?")
-      ? imageUrl + "&w=800&q=85"
-      : imageUrl + "?auto=format&w=800&q=85";
-
-    img.src = optimizedUrl;
-  }, [imageUrl]);
-
-  // Intersection Observer for viewport-based loading
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsInView(true);
-          observer.disconnect();
-        }
-      },
-      { rootMargin: "100px" } // Start loading 100px before entering viewport
-    );
-
-    if (cardRef.current) observer.observe(cardRef.current);
-    return () => observer.disconnect();
-  }, []);
-
-  // Stagger the appearance of cards
-  useEffect(() => {
-    if (imageDimensions && isInView) {
+    // For priority images, start loading immediately
+    if (isPriority) {
+      img.src = optimizedImageUrl;
+    } else if (isInView) {
+      // For non-priority images, only load when in view
       const timer = setTimeout(() => {
-        setShouldShow(true);
-      }, delay);
+        img.src = optimizedImageUrl;
+      }, 100); // Small delay to let priority images load first
       return () => clearTimeout(timer);
     }
-  }, [delay, imageDimensions, isInView]);
-
-  const optimizedUrl = imageUrl.includes("?")
-    ? imageUrl + "&w=800&q=85"
-    : imageUrl + "?auto=format&w=800&q=85";
+  }, [optimizedImageUrl, isPriority, isInView]);
 
   const handleImageLoad = () => {
     setIsLoading(false);
@@ -106,40 +102,30 @@ const ImageCard = ({
     setHasError(true);
   };
 
+  // Cleanup effect to prevent memory leaks
+  useEffect(() => {
+    return () => {
+      // Cleanup any pending image loads
+      setIsLoading(false);
+      setHasError(false);
+    };
+  }, []);
+
   // Calculate aspect ratio for container
   const aspectRatio = imageDimensions
     ? imageDimensions.width / imageDimensions.height
     : 0.75; // Default 3:4 ratio
 
-  if (!shouldShow || !imageDimensions) {
-    return (
-      <div
-        ref={cardRef}
-        className="break-inside-avoid mb-4 rounded-lg overflow-hidden animate-pulse"
-      >
-        <div
-          className="bg-neutral-200 dark:bg-neutral-800 w-full flex items-center justify-center"
-          style={{
-            aspectRatio: imageDimensions ? aspectRatio : "3/4",
-            minHeight: "150px",
-          }}
-        >
-          <CardLoadingSpinner />
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div
-      ref={cardRef}
-      role="button"
-      tabIndex={0}
+    <motion.div
+      ref={ref}
       className="break-inside-avoid mb-4 rounded-lg overflow-hidden cursor-pointer transition-all duration-300 ease-out hover:opacity-90 hover:scale-[1.02] hover:shadow-lg focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black focus:outline-none group"
-      style={{
-        opacity: shouldShow ? 1 : 0,
-        transform: shouldShow ? "translateY(0)" : "translateY(20px)",
-        transition: "opacity 0.6s ease-out, transform 0.6s ease-out",
+      initial={{ opacity: 0, y: 20 }}
+      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+      transition={{
+        duration: 0.6,
+        ease: "easeOut",
+        delay: cascadingDelay,
       }}
       onClick={() => onImageClick(index)}
       onKeyDown={(e) => {
@@ -148,6 +134,8 @@ const ImageCard = ({
           onImageClick(index);
         }
       }}
+      role="button"
+      tabIndex={0}
       aria-label={`View image ${index + 1} of ${imageCount}: ${pictureTitle}`}
     >
       {/* Container with exact aspect ratio to prevent shift */}
@@ -159,19 +147,55 @@ const ImageCard = ({
           </div>
         )}
 
-        {/* Error state */}
+        {/* Error state with retry option */}
         {hasError && !isLoading && (
           <div className="absolute inset-0 bg-neutral-100 dark:bg-neutral-900 flex items-center justify-center text-neutral-500 rounded-lg">
             <div className="text-center">
               <div className="w-8 h-8 mx-auto mb-2 opacity-50">⚠</div>
-              <p className="text-xs">Failed to load</p>
+              <p className="text-xs mb-2">Failed to load</p>
+              <button
+                onClick={() => {
+                  setHasError(false);
+                  setIsLoading(true);
+                  // Retry loading the image
+                  const img = new window.Image();
+                  img.onload = () => {
+                    setImageDimensions({
+                      width: img.naturalWidth,
+                      height: img.naturalHeight,
+                    });
+                    setIsLoading(false);
+                  };
+                  img.onerror = () => {
+                    setHasError(true);
+                    setIsLoading(false);
+                  };
+                  img.src = optimizedImageUrl;
+                }}
+                className="text-xs underline hover:no-underline"
+              >
+                Retry
+              </button>
             </div>
           </div>
         )}
 
+        {/* Blur placeholder */}
+        {isLoading && (
+          <Image
+            src={blurImageUrl}
+            alt=""
+            fill
+            className="object-cover rounded-lg filter blur-sm scale-110"
+            sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 20vw"
+            unoptimized // Let Sanity handle optimization, not Next.js
+            priority={isPriority}
+          />
+        )}
+
         {/* Actual image */}
         <Image
-          src={optimizedUrl}
+          src={optimizedImageUrl}
           alt={`${pictureTitle} - Image ${index + 1} of ${imageCount}`}
           fill
           className={`
@@ -182,18 +206,27 @@ const ImageCard = ({
           sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
           onLoad={handleImageLoad}
           onError={handleImageError}
-          quality={85}
+          unoptimized // Let Sanity handle optimization, not Next.js
+          priority={isPriority} // Next.js priority loading
+          loading={isPriority ? "eager" : "lazy"} // Eager loading for priority images
+          fetchPriority={isPriority ? "high" : "auto"} // High priority for LCP images
         />
 
         {/* Overlay for better interaction feedback */}
         <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity duration-200 rounded-lg" />
       </div>
-    </div>
+    </motion.div>
   );
 };
 
+interface PictureGalleryContentProps {
+  picture: Pictures;
+  gallery: Gallery | null;
+}
+
 export default function PictureGalleryContent({
   picture,
+  gallery,
 }: PictureGalleryContentProps) {
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(
     null
@@ -206,20 +239,54 @@ export default function PictureGalleryContent({
   const [isGalleryLoaded, setIsGalleryLoaded] = useState(false);
   const sentinelRef = useRef<HTMLDivElement>(null);
 
-  // Use only gallery images (exclude thumbnail to avoid duplication)
+  // Use gallery images from the separate gallery data
   const allImages = useMemo(() => {
-    return (picture.gallery || []).filter(Boolean);
-  }, [picture.gallery]);
+    const galleryImages = (gallery?.gallery || []).filter(Boolean);
+    console.log("PictureGalleryContent - allImages:");
+    console.log("  gallery:", gallery?.gallery);
+    console.log("  galleryLength:", gallery?.gallery?.length || 0);
+    console.log("  allImages:", galleryImages);
+    console.log("  allImagesLength:", galleryImages.length);
+    return galleryImages;
+  }, [gallery?.gallery]);
 
   const imageCount = allImages.length;
 
+  // Preload first 6 images for faster initial display with optimized URLs
+  // LCP optimization: First 3 images get fetchpriority="high" for better LCP
+  useEffect(() => {
+    if (allImages.length > 0) {
+      const priorityImages = allImages.slice(0, 6); // Reduced to 6 for better performance
+      priorityImages.forEach((imageUrl, index) => {
+        // Preload optimized versions with LCP optimization
+        const optimizedUrl = getOptimizedImageUrl(
+          imageUrl,
+          IMAGE_SIZES.GALLERY,
+          60
+        );
+        const link = document.createElement("link");
+        link.rel = "preload";
+        link.as = "image";
+        link.href = optimizedUrl;
+        // LCP optimization: First 3 images get high priority
+        link.setAttribute("fetchpriority", index < 3 ? "high" : "low");
+        document.head.appendChild(link);
+      });
+    }
+  }, [allImages]);
+
   // Initialize gallery loading
   useEffect(() => {
+    console.log("PictureGalleryContent - useEffect loading:");
+    console.log("  isGalleryLoaded:", isGalleryLoaded);
+    console.log("  allImagesLength:", allImages.length);
+    console.log("  pictureTitle:", picture.title);
     const timer = setTimeout(() => {
+      console.log("PictureGalleryContent - setting isGalleryLoaded to true");
       setIsGalleryLoaded(true);
     }, 300); // Slightly longer delay for better UX
     return () => clearTimeout(timer);
-  }, []);
+  }, [isGalleryLoaded, allImages.length, picture.title]);
 
   const openLightbox = useCallback((index: number) => {
     setSelectedImageIndex(index);
@@ -425,20 +492,26 @@ export default function PictureGalleryContent({
               orphans: 1,
               widows: 1,
             }}
-            role="grid"
+            role="group"
             aria-label={`${picture.title} image gallery`}
           >
-            {allImages.map((imageUrl, index) => (
-              <ImageCard
-                key={index}
-                imageUrl={imageUrl}
-                index={index}
-                imageCount={imageCount}
-                pictureTitle={picture.title}
-                onImageClick={openLightbox}
-                delay={index * 30} // Reduced delay for smoother experience
-              />
-            ))}
+            {allImages.length > 0 ? (
+              allImages.map((imageUrl, index) => (
+                <ImageCard
+                  key={index}
+                  imageUrl={imageUrl}
+                  index={index}
+                  imageCount={imageCount}
+                  pictureTitle={picture.title}
+                  onImageClick={openLightbox}
+                  isPriority={index < 3} // First 3 images get priority loading for LCP optimization
+                />
+              ))
+            ) : (
+              <div className="col-span-full text-center text-gray-500 py-8">
+                No images found in gallery
+              </div>
+            )}
           </div>
         )}
       </main>
@@ -525,12 +598,11 @@ export default function PictureGalleryContent({
               )}
 
               <Image
-                src={(() => {
-                  const imageUrl = allImages[selectedImageIndex];
-                  // For lightbox, always use high quality regardless of existing params
-                  const baseUrl = imageUrl.split("?")[0]; // Remove any existing params
-                  return baseUrl + "?auto=format&w=2400&q=95";
-                })()}
+                src={getOptimizedImageUrl(
+                  allImages[selectedImageIndex],
+                  IMAGE_SIZES.LIGHTBOX, // Lightbox: Larger size for detailed viewing
+                  70 // Lightbox: Optimized quality for better compression
+                )}
                 alt={`${picture.title} - Image ${
                   selectedImageIndex + 1
                 } of ${imageCount}`}
@@ -543,6 +615,7 @@ export default function PictureGalleryContent({
                 sizes="(max-width: 640px) calc(100vw - 2rem), (max-width: 768px) calc(100vw - 4rem), 90vw"
                 onLoad={() => setIsImageLoading(false)}
                 onError={() => setIsImageLoading(false)}
+                unoptimized // Let Sanity handle optimization, not Next.js
               />
             </div>
           </div>

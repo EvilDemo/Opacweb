@@ -36,7 +36,7 @@
   --color-secondary: var(--neutral-100);
   --color-secondary-foreground: var(--black);
   --color-muted: var(--neutral-100);
-  --color-muted-foreground: var(--neutral-500);
+  --color-muted-foreground: var(--neutral-300);
   --color-accent: var(--neutral-200);
   --color-accent-foreground: var(--black);
   --color-destructive: #ef4444;
@@ -75,7 +75,7 @@
   --secondary: var(--neutral-100);
   --secondary-foreground: var(--black);
   --muted: var(--neutral-100);
-  --muted-foreground: var(--neutral-500);
+  --muted-foreground: var(--neutral-300);
   --accent: var(--neutral-200);
   --accent-foreground: var(--black);
   --destructive: #ef4444; /* Red for errors */
@@ -97,7 +97,7 @@
   --secondary: var(--neutral-200);
   --secondary-foreground: var(--black);
   --muted: var(--neutral-200);
-  --muted-foreground: var(--neutral-500);
+  --muted-foreground: var(--neutral-300);
   --accent: var(--neutral-300);
   --accent-foreground: var(--black);
   --destructive: #ef4444;
@@ -221,7 +221,7 @@
 
   /* Color Variants - Based on Figma neutral palette */
   .text-muted {
-    @apply text-neutral-500;
+    @apply text-neutral-300;
   }
 
   .text-accent {
