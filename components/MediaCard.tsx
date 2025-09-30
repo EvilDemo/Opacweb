@@ -71,11 +71,12 @@ export function MediaCard({ item, index = 0 }: MediaCardProps) {
           <Image
             src={item.thumbnailUrl}
             alt={`${item.title} - ${item.description}`}
-            width={200}
-            height={200}
+            width={400}
+            height={400}
             className="w-full h-full object-cover"
             unoptimized={true}
             priority={index === 0}
+            sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
           />
         );
 
@@ -88,11 +89,12 @@ export function MediaCard({ item, index = 0 }: MediaCardProps) {
           <Image
             src={item.thumbnailUrl}
             alt={`${item.title} - ${item.description}`}
-            width={200}
-            height={200}
+            width={400}
+            height={400}
             className="w-full h-full object-cover"
             unoptimized={true}
             priority={index === 0}
+            sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
           />
         );
 
@@ -101,11 +103,12 @@ export function MediaCard({ item, index = 0 }: MediaCardProps) {
           <Image
             src={item.thumbnailUrl}
             alt={`${item.title} cover`}
-            width={200}
-            height={200}
+            width={400}
+            height={400}
             className="w-full h-full object-cover"
             unoptimized={true}
             priority={index === 0}
+            sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
           />
         ) : (
           <MusicIcon className="h-16 w-16 text-muted-foreground" />

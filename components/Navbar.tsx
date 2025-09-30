@@ -27,7 +27,7 @@ const Logo = ({ className = "" }: { className?: string }) => (
     alt="OPAC Logo"
     width={125}
     height={62}
-    className={`object-contain w-auto h-auto  ${className}`}
+    className={`object-contain ${className}`}
     priority
     fetchPriority="high" // LCP optimization for logo
     quality={75} // Good quality for logo

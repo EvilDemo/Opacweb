@@ -6,6 +6,10 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { type Pictures, type Gallery } from "@/lib/mediaData";
+import {
+  getOptimizedImageUrl,
+  getResponsiveImageSrcSet,
+} from "@/sanity/lib/image";
 
 interface PictureGalleryContentProps {
   picture: Pictures;
@@ -169,13 +173,14 @@ export default function PictureGalleryContent({
                 onClick={() => openLightbox(index)}
               >
                 <Image
-                  src={imageUrl}
+                  src={getOptimizedImageUrl(imageUrl, 546, 75)}
                   alt={`${picture.title} - Image ${index + 1} of ${imageCount}`}
-                  width={400}
-                  height={400}
+                  width={546}
+                  height={546}
                   className="w-full h-full object-cover"
                   loading={index < 8 ? "eager" : "lazy"} // Eager load first 8 images
                   sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                  unoptimized
                 />
               </button>
             </div>
@@ -240,15 +245,20 @@ export default function PictureGalleryContent({
             {/* Main Image */}
             <div className="flex items-center justify-center h-full">
               <Image
-                src={allImages[selectedImageIndex]}
+                src={getOptimizedImageUrl(
+                  allImages[selectedImageIndex],
+                  1200,
+                  80
+                )}
                 alt={`${picture.title} - Image ${
                   selectedImageIndex + 1
                 } of ${imageCount}`}
                 width={1200}
-                height={1200}
-                className="max-w-full max-h-full object-contain"
+                height={900}
+                className="max-w-[95vw] max-h-[80vh] object-contain"
                 priority
                 sizes="95vw"
+                unoptimized
               />
             </div>
 

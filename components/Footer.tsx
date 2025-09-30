@@ -29,7 +29,6 @@ export default function Footer() {
             src="/opac-word-short.webp"
             alt="Opac background"
             fill
-            className="object-cover object-center"
             style={{
               objectPosition: "center bottom",
               objectFit: "cover",
@@ -46,18 +45,15 @@ export default function Footer() {
         {/* Left Column - Logo and Links */}
         <div className="flex flex-col gap-4 md:gap-6 lg:gap-4 lg:grow items-start justify-start relative w-full lg:w-auto">
           {/* Company Logo */}
-          <div className="content-stretch flex flex-col gap-2.5 h-9 items-center justify-center lg:justify-start overflow-clip relative shrink-0 w-21">
-            <div className="aspect-[84/36] bg-center bg-cover bg-no-repeat shrink-0 w-full">
-              <Image
-                src="/logo.webp"
-                alt="Opac Logo"
-                width={84}
-                height={36}
-                className="w-full h-auto object-cover"
-                loading="lazy"
-                quality={40}
-              />
-            </div>
+          <div>
+            <Image
+              src="/logo.webp"
+              alt="Opac Logo"
+              width={84}
+              height={36}
+              loading="lazy"
+              quality={40}
+            />
           </div>
 
           {/* Navigation Links */}

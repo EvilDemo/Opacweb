@@ -168,10 +168,6 @@ export async function getGallery(id: string): Promise<Gallery | null> {
         },
       }
     );
-    console.log("Fetched gallery data:");
-    console.log("  id:", id);
-    console.log("  galleryLength:", result?.gallery?.length || 0);
-    console.log("  gallery:", result?.gallery);
     return result;
   } catch (error) {
     console.error("Error fetching gallery:", error);
