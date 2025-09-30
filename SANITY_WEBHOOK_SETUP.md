@@ -63,10 +63,11 @@ curl -X POST "https://your-domain.com/api/revalidate?secret=your-manual-secret" 
 
 ## Cache Strategy
 
-- **Cache Duration**: 1 minute (`revalidate: 60`)
+- **Cache Duration**: 1 day (`revalidate: 86400`) for manual revalidation
+- **Webhook Revalidation**: Instant on Sanity publish events
 - **CDN**: Still enabled for performance
-- **Fresh Data**: Guaranteed within 1 minute of Sanity updates
-- **Performance**: Maintains fast loading with smart caching
+- **Fresh Data**: Guaranteed instantly on Sanity updates via webhook
+- **Performance**: Maintains fast loading with smart caching and instant updates
 
 ## Troubleshooting
 
@@ -79,15 +80,17 @@ curl -X POST "https://your-domain.com/api/revalidate?secret=your-manual-secret" 
 
 ### Content Still Not Updating
 
-1. Wait up to 1 minute for automatic revalidation
+1. Check if webhook is working (should be instant on Sanity publish)
 2. Use manual revalidation API
 3. Check browser cache (hard refresh)
 4. Verify document type is supported
+5. Wait up to 1 day for automatic revalidation (if webhook fails)
 
 ### Testing
 
 Test the webhook by:
 
 1. Adding new content in Sanity Studio
-2. Checking the webhook logs in Sanity dashboard
-3. Verifying content appears on your site within 1 minute
+2. Publishing the content (this triggers the webhook)
+3. Checking the webhook logs in Sanity dashboard
+4. Verifying content appears on your site instantly
