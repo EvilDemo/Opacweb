@@ -12,7 +12,24 @@ export async function POST(request: NextRequest) {
     }
 
     // Get the document type from the webhook payload
-    const { _type } = body;
+    const { _type, _id } = body;
+
+    // Handle delete operations (no _type field)
+    if (!_type && _id) {
+      console.log("Delete operation detected, revalidating all content types");
+
+      // Revalidate all content types for delete operations
+      const allTags = ["pictures", "videos", "music", "radio"];
+      allTags.forEach((tag) => revalidateTag(tag));
+
+      return NextResponse.json({
+        revalidated: true,
+        now: Date.now(),
+        tags: allTags,
+        operation: "delete",
+        documentId: _id,
+      });
+    }
 
     if (!_type) {
       return NextResponse.json(
@@ -40,6 +57,7 @@ export async function POST(request: NextRequest) {
         now: Date.now(),
         tag,
         documentType: _type,
+        documentId: _id,
       });
     }
 
