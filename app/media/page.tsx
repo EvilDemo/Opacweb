@@ -59,12 +59,33 @@ export const metadata: Metadata = {
 };
 
 export default async function MediaPage() {
+  // Debug: Log environment variables
+  console.log("=== SANITY DEBUG INFO ===");
+  console.log("Sanity Project ID:", process.env.NEXT_PUBLIC_SANITY_PROJECT_ID);
+  console.log("Sanity Dataset:", process.env.NEXT_PUBLIC_SANITY_DATASET);
+  console.log(
+    "Sanity API Version:",
+    process.env.NEXT_PUBLIC_SANITY_API_VERSION
+  );
+  console.log(
+    "Sanity Webhook Secret:",
+    process.env.SANITY_WEBHOOK_SECRET ? "SET" : "NOT SET"
+  );
+  console.log("========================");
+
   // Fetch all media data on the server
   const [pictures, videos, music] = await Promise.all([
     getPictures(),
     getVideos(),
     getMusic(),
   ]);
+
+  // Debug: Log data counts
+  console.log("=== DATA COUNTS ===");
+  console.log("Pictures count:", pictures.length);
+  console.log("Videos count:", videos.length);
+  console.log("Music count:", music.length);
+  console.log("==================");
 
   return (
     <MediaPageContent
