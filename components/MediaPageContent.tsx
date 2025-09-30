@@ -175,40 +175,117 @@ function MediaScrollContent({ allMediaData }: MediaScrollContentProps) {
   if (displayData.length === 0) {
     return (
       <div className="min-h-[calc(100vh-6rem)]">
-        <div className="pt-[6rem] padding-global">
-          <div className="mb-8">
-            <h1 className="heading-3 mb-6">
-              What can&apos;t be seen must be heard.
-            </h1>
-
-            {/* Filter Buttons */}
-            <div className="flex flex-wrap gap-3 mb-8">
-              {filterButtons.map(({ type, label, icon: Icon }) => (
-                <Button
-                  key={type}
-                  variant={activeFilter === type ? "default" : "secondary"}
-                  size="sm"
-                  onClick={() => setActiveFilter(type)}
+        <motion.div
+          ref={scrollRef}
+          className="w-full relative"
+          style={{
+            height: isLargeScreen
+              ? dimensions.sectionHeight || "100vh"
+              : "auto",
+          }}
+        >
+          {/* Sticky container that pins during vertical scroll */}
+          <div
+            className={`${
+              isLargeScreen ? "sticky top-0 h-screen -mt-[6rem]" : ""
+            }`}
+          >
+            <div
+              className={`${
+                isLargeScreen
+                  ? "h-full flex items-center pt-[6rem]"
+                  : "pt-[6rem]"
+              }`}
+            >
+              <motion.div
+                className={`overflow-hidden w-full relative ${
+                  isLargeScreen ? "h-full" : ""
+                }`}
+              >
+                <motion.div
+                  ref={contentRef}
+                  className={`flex flex-col lg:flex-row items-center lg:w-max padding-global ${
+                    isLargeScreen ? "h-full" : ""
+                  }`}
+                  style={{ x: isLargeScreen ? xTransform : 0 }}
                 >
-                  {Icon && <Icon className="h-4 w-4" />}
-                  {label}
-                </Button>
-              ))}
-            </div>
-          </div>
+                  {/* Fixed Title Section */}
+                  <div className="flex-shrink-0 w-full lg:max-w-[25vw]">
+                    <motion.div
+                      initial={{ opacity: 0, y: 50 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.8, ease: "easeOut" }}
+                    >
+                      <div>
+                        <motion.h1
+                          className="heading-3 mb-6"
+                          initial={{ opacity: 0, x: -30 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{
+                            delay: 0.5,
+                            duration: 0.8,
+                            ease: "easeOut",
+                          }}
+                        >
+                          What can&apos;t be seen must be heard.
+                        </motion.h1>
 
-          <div className="flex items-center justify-center h-[calc(100vh-12rem)]">
-            <div className="text-center">
-              <p className="body-text text-muted-foreground">
-                No {activeFilter === "all" ? "media" : activeFilter + "s"}{" "}
-                available yet.
-              </p>
-              <p className="body-text-sm text-muted-foreground mt-2">
-                Check back soon!
-              </p>
+                        {/* Filter Buttons */}
+                        <motion.div
+                          className="flex flex-wrap gap-3"
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{
+                            delay: 0.7,
+                            duration: 0.6,
+                            ease: "easeOut",
+                          }}
+                        >
+                          {filterButtons.map(({ type, label, icon: Icon }) => (
+                            <Button
+                              key={type}
+                              variant={
+                                activeFilter === type ? "default" : "secondary"
+                              }
+                              size="sm"
+                              onClick={() => setActiveFilter(type)}
+                            >
+                              {Icon && <Icon className="h-4 w-4" />}
+                              {label}
+                            </Button>
+                          ))}
+                        </motion.div>
+                      </div>
+                    </motion.div>
+                  </div>
+
+                  {/* Empty State Content Area */}
+                  <motion.div
+                    className="pb-20 pt-10 padding-global"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <div className="flex items-center justify-center">
+                      <div className="text-center lg:text-left">
+                        <p className="body-text text-muted">
+                          No{" "}
+                          {activeFilter === "all"
+                            ? "media"
+                            : activeFilter + "s"}{" "}
+                          available yet.
+                        </p>
+                        <p className="body-text-sm text-muted-foreground mt-2">
+                          Check back soon!
+                        </p>
+                      </div>
+                    </div>
+                  </motion.div>
+                </motion.div>
+              </motion.div>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     );
   }
