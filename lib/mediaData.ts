@@ -57,7 +57,7 @@ export async function getPictures(): Promise<Pictures[]> {
       {},
       {
         next: {
-          revalidate: 86400, // Cache for 1 day (webhook will revalidate instantly on publish)
+          revalidate: 3600, // 1 hour cache - webhook will revalidate instantly on publish
           tags: ["pictures"],
         },
       }
@@ -82,7 +82,7 @@ export async function getVideos(): Promise<Video[]> {
       {},
       {
         next: {
-          revalidate: 86400, // Cache for 1 day (webhook will revalidate instantly on publish)
+          revalidate: 3600, // 1 hour cache - webhook will revalidate instantly on publish
           tags: ["videos"],
         },
       }
@@ -107,7 +107,7 @@ export async function getMusic(): Promise<Music[]> {
       {},
       {
         next: {
-          revalidate: 86400, // Cache for 1 day (webhook will revalidate instantly on publish)
+          revalidate: 3600, // 1 hour cache - webhook will revalidate instantly on publish
           tags: ["music"],
         },
       }
@@ -132,7 +132,7 @@ export async function getRadio(): Promise<Radio[]> {
       {},
       {
         next: {
-          revalidate: 86400, // Cache for 1 day (webhook will revalidate instantly on publish)
+          revalidate: 3600, // 1 hour cache - webhook will revalidate instantly on publish
           tags: ["radio"],
         },
       }
