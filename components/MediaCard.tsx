@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ExternalLink, Music as MusicIcon, Images } from "lucide-react";
+import { ExternalLink, Images } from "lucide-react";
 import { motion, useInView } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";

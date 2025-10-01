@@ -12,11 +12,10 @@ export default function ContactCTA() {
   return (
     <motion.div
       ref={ref}
-      className="py-20"
+      className="py-20 padding-global mt-20"
       initial={{ opacity: 0 }}
       animate={isInView ? { opacity: 1 } : { opacity: 0 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
-      className="padding-global"
     >
       <div className="container mx-auto ">
         <div className="text-center md:mb-16">
