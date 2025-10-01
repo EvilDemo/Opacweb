@@ -172,17 +172,9 @@
     letter-spacing: var(--letter-spacing-wide);
   }
 
-  h5,
-  .heading-5 {
-    @apply text-sm sm:text-base md:text-lg lg:text-lg xl:text-lg 2xl:text-xl font-semibold text-white;
-    line-height: var(--line-height-snug);
-    letter-spacing: var(--letter-spacing-wide);
-  }
-
   /* Body Text - Using Tailwind utilities with custom properties */
   p,
-  .body-text,
-  .paragraph-regular {
+  .body-text {
     @apply text-base font-normal text-white;
     line-height: var(--line-height-normal);
   }
@@ -228,7 +220,6 @@
   .text-secondary {
     @apply text-neutral-500;
   }
-
 
   /* Page Padding - From Figma */
   .padding-global {
