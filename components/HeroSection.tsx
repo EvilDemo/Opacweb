@@ -44,7 +44,7 @@ export default function HeroSection() {
         {/* Right Column - 3D Sphere Video */}
         <div className="flex items-center justify-center flex-shrink-0 lg:ml-auto lg:-mt-32 order-1 lg:order-2">
           <motion.div
-            className="relative w-64 h-64 sm:w-80 sm:h-80 md:w-96 md:h-96 lg:w-[28rem] lg:h-[28rem] xl:w-[38rem] xl:h-[32rem] overflow-hidden rounded-full"
+            className="relative w-64 h-64 sm:w-80 sm:h-80 md:w-96 md:h-96  2xl:w-[30rem] 2xl:h-[30rem] overflow-hidden rounded-full"
             initial={{ opacity: 0, scale: 0.8, rotateY: -30 }}
             animate={{ opacity: 1, scale: 1, rotateY: 0 }}
             transition={{ duration: 1.2, ease: "easeOut", delay: 0.3 }}
