@@ -38,21 +38,21 @@ export function ContactCard({
     >
       {/* we can add a background color here of bg-neutral-900 */}
       <Card variant="contact">
-        <CardHeader>
-          <div className="flex items-center gap-4">
+        <CardHeader className="gap-1">
+          <div className="flex items-center gap-2">
             <div
-              className="w-8 h-8 rounded-full border-2 border-white flex items-center justify-center"
+              className="w-6 h-6 rounded-full border-2 border-white flex items-center justify-center"
               aria-hidden="true"
             >
               {icon}
             </div>
             <h3 className="text-white heading-4">{title}</h3>
           </div>
-          <CardDescription className="text-neutral-300 body-text">
+          <CardDescription className="text-neutral-300 body-text-sm">
             {description}
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-6 pt-1">
+        <CardContent className="space-y-4 pt-1">
           <div
             className="flex flex-wrap gap-2"
             role="list"

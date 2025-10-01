@@ -76,8 +76,9 @@ export function RadioCard({
               height={185}
               className="w-18 md:w-22 lg:w-30"
               sizes="(max-width: 768px) 72px, (max-width: 1024px) 88px, 120px"
-              loading={index < 6 ? "eager" : "lazy"}
-              unoptimized
+              loading={index < 4 ? "eager" : "lazy"}
+              fetchPriority={index < 4 ? "high" : undefined}
+              unoptimized={true}
             />
           </motion.div>
         ) : (

@@ -18,9 +18,7 @@ import { getOptimizedImageUrl } from "@/sanity/lib/image";
 // Image optimization constants
 const MEDIA_CARD_IMAGE_SIZES = {
   THUMBNAIL: 400, // Base thumbnail size for cards
-  THUMBNAIL_RETINA: 800, // 2x for retina displays
 } as const;
-
 const QUALITY_SETTINGS = {
   THUMBNAIL: 75, // Optimized quality for thumbnails
 } as const;
@@ -38,13 +36,11 @@ interface PictureItem extends BaseMediaItem {
   type: "picture";
   thumbnailUrl: string;
 }
-
 interface VideoItem extends BaseMediaItem {
   type: "video";
   thumbnailUrl?: string;
   videoUrl: string;
 }
-
 interface MusicItem extends BaseMediaItem {
   type: "music";
   thumbnailUrl?: string;
@@ -63,7 +59,7 @@ export function MediaCard({ item, index = 0 }: MediaCardProps) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-50px" });
 
-  // Calculate cascading delay based on index
+  // this adds delay on the default card animation
   const cascadingDelay = index * 0.1;
 
   // Common card classes for responsive design
@@ -76,152 +72,101 @@ export function MediaCard({ item, index = 0 }: MediaCardProps) {
 
   // Render image based on media type
   const renderImage = () => {
-    switch (item.type) {
-      case "picture":
-        return (
-          <Image
-            src={getOptimizedImageUrl(
-              item.thumbnailUrl,
-              MEDIA_CARD_IMAGE_SIZES.THUMBNAIL,
-              QUALITY_SETTINGS.THUMBNAIL
-            )}
-            alt={`${item.title} - ${item.description}`}
-            width={MEDIA_CARD_IMAGE_SIZES.THUMBNAIL}
-            height={MEDIA_CARD_IMAGE_SIZES.THUMBNAIL}
-            className="w-full h-full object-cover"
-            loading={index < 6 ? "eager" : "lazy"}
-            sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-            unoptimized
-          />
-        );
-
-      case "video":
-        if (!item.thumbnailUrl) {
-          return null;
-        }
-
-        return (
-          <Image
-            src={getOptimizedImageUrl(
-              item.thumbnailUrl,
-              MEDIA_CARD_IMAGE_SIZES.THUMBNAIL,
-              QUALITY_SETTINGS.THUMBNAIL
-            )}
-            alt={`${item.title} - ${item.description}`}
-            width={MEDIA_CARD_IMAGE_SIZES.THUMBNAIL}
-            height={MEDIA_CARD_IMAGE_SIZES.THUMBNAIL}
-            className="w-full h-full object-cover"
-            loading={index < 6 ? "eager" : "lazy"}
-            sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-            unoptimized
-          />
-        );
-
-      case "music":
-        return item.thumbnailUrl ? (
-          <Image
-            src={getOptimizedImageUrl(
-              item.thumbnailUrl,
-              MEDIA_CARD_IMAGE_SIZES.THUMBNAIL,
-              QUALITY_SETTINGS.THUMBNAIL
-            )}
-            alt={`${item.title} cover`}
-            width={MEDIA_CARD_IMAGE_SIZES.THUMBNAIL}
-            height={MEDIA_CARD_IMAGE_SIZES.THUMBNAIL}
-            className="w-full h-full object-cover"
-            loading={index < 6 ? "eager" : "lazy"}
-            sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-            unoptimized
-          />
-        ) : (
-          <MusicIcon className="h-16 w-16 text-muted-foreground" />
-        );
-
-      default:
-        return null;
+    // Handle cases without thumbnail
+    if (!item.thumbnailUrl) {
+      return null;
     }
+    // Render optimized image for all media types
+    return (
+      <Image
+        src={getOptimizedImageUrl(
+          item.thumbnailUrl,
+          MEDIA_CARD_IMAGE_SIZES.THUMBNAIL,
+          QUALITY_SETTINGS.THUMBNAIL
+        )}
+        alt={`${item.title} - ${item.description}`}
+        width={MEDIA_CARD_IMAGE_SIZES.THUMBNAIL}
+        height={MEDIA_CARD_IMAGE_SIZES.THUMBNAIL}
+        className="w-full h-full object-cover"
+        loading={index < 4 ? "eager" : "lazy"}
+        fetchPriority={index < 4 ? "high" : undefined}
+        sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+        unoptimized
+      />
+    );
   };
 
-  // Render title based on media type
+  // Render title
   const renderTitle = () => {
-    switch (item.type) {
-      case "music":
-        return (
-          <CardTitle
-            className={`${titleClasses} flex items-center gap-2`}
-            title={item.title}
-          >
-            <MusicIcon className="h-4 w-4 flex-shrink-0" />
-            <span>{item.title}</span>
-          </CardTitle>
-        );
-
-      default:
-        return (
-          <CardTitle className={titleClasses} title={item.title}>
-            {item.title}
-          </CardTitle>
-        );
-    }
+    return (
+      <CardTitle className={titleClasses} title={item.title}>
+        {item.title}
+      </CardTitle>
+    );
   };
 
   // Render action button based on media type
   const renderAction = () => {
-    switch (item.type) {
-      case "picture":
-        return (
-          <CardContent className={contentClasses}>
-            <Link
-              href={`/media/pictures/${item._id}`}
-              aria-label={`View gallery for ${item.title}`}
-            >
-              <Button variant="secondary" size="sm" className="w-full">
-                <Images className="mr-2 h-3 w-3" />
-                View Gallery
-              </Button>
-            </Link>
-          </CardContent>
-        );
+    const getActionConfig = () => {
+      switch (item.type) {
+        case "picture":
+          return {
+            href: `/media/pictures/${item._id}`,
+            label: `View gallery for ${item.title}`,
+            text: "View Gallery",
+            icon: <Images className="mr-2 h-3 w-3" />,
+            isExternal: false,
+          };
+        case "video":
+          return {
+            href: item.videoUrl,
+            label: `Watch ${item.title} video on external platform`,
+            text: "Watch Video",
+            icon: <ExternalLink className="ml-2 h-3 w-3" />,
+            isExternal: true,
+          };
+        case "music":
+          return {
+            href: item.spotifyUrl,
+            label: `Listen to ${item.title} on Spotify`,
+            text: "Listen on Spotify",
+            icon: <ExternalLink className="ml-2 h-3 w-3" />,
+            isExternal: true,
+          };
+        default:
+          return null;
+      }
+    };
 
-      case "video":
-        return (
-          <CardContent className={contentClasses}>
-            <a
-              href={item.videoUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block"
-              aria-label={`Watch ${item.title} video on external platform`}
-            >
-              <Button variant="secondary" size="sm" className="w-full">
-                Watch Video
-                <ExternalLink className="ml-2 h-3 w-3" />
-              </Button>
-            </a>
-          </CardContent>
-        );
+    const config = getActionConfig();
+    if (!config) return null;
 
-      case "music":
-        return (
-          <CardContent className={contentClasses}>
-            <a
-              href={item.spotifyUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block"
-              aria-label={`Listen to ${item.title} on Spotify`}
-            >
-              <Button variant="secondary" size="sm" className="w-full">
-                Listen on Spotify
-                <ExternalLink className="ml-2 h-3 w-3" />
-              </Button>
-            </a>
-          </CardContent>
-        );
+    const button = (
+      <Button variant="secondary" size="sm" className="w-full">
+        {config.icon}
+        {config.text}
+      </Button>
+    );
 
-      default:
-        return null;
-    }
+    return (
+      <CardContent className={contentClasses}>
+        {config.isExternal ? (
+          <a
+            href={config.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block"
+            aria-label={config.label}
+          >
+            {button}
+          </a>
+        ) : (
+          <Link href={config.href} aria-label={config.label}>
+            {button}
+          </Link>
+        )}
+      </CardContent>
+    );
   };
 
   // Default card layout for other media types
