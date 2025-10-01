@@ -93,7 +93,7 @@ export default function PictureGalleryContent({
       <div className="flex flex-col gap-4">
         {/* Breadcrumb Navigation */}
         <nav aria-label="Breadcrumb" className="mb-6">
-          <ol className="flex items-center space-x-2 paragraph-small-regular">
+          <ol className="flex items-center space-x-2 body-text-sm">
             <li>
               <Link
                 href="/media"
@@ -142,7 +142,7 @@ export default function PictureGalleryContent({
         <p className="body-text text-muted-foreground mb-2">
           {picture.description}
         </p>
-        <p className="paragraph-small-regular text-muted" aria-live="polite">
+        <p className="body-text-sm text-muted" aria-live="polite">
           {imageCount} {imageCount === 1 ? "image" : "images"} in this gallery
         </p>
       </header>
@@ -204,7 +204,7 @@ export default function PictureGalleryContent({
               <div className="bg-black bg-opacity-70 rounded-full px-3 py-1">
                 <span
                   id="lightbox-title"
-                  className="text-white paragraph-small-regular font-medium"
+                  className="text-white body-text-sm font-medium"
                   aria-live="polite"
                 >
                   {selectedImageIndex + 1} / {imageCount}

@@ -117,7 +117,7 @@ export default function ContactForm() {
 
   if (isSubmitted) {
     return (
-      <div className="w-full mx-auto spacing-6">
+      <div className="w-full mx-auto p-6">
         <div className="text-center space-y-4">
           <div className="w-16 h-16 mx-auto bg-green-500/20 rounded-full flex items-center justify-center">
             <svg
@@ -134,7 +134,7 @@ export default function ContactForm() {
               />
             </svg>
           </div>
-          <h3 className="heading-5 text-white">Message Sent Successfully!</h3>
+          <h3 className="heading-4 text-white">Message Sent Successfully!</h3>
           <p className="body-text text-white/70">
             Thank you for contacting us. We&apos;ll get back to you soon.
           </p>
@@ -150,7 +150,7 @@ export default function ContactForm() {
     );
   } else {
     return (
-      <div className="w-full mx-auto spacing-6">
+      <div className="w-full mx-auto p-6">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
             {/* Error message display */}

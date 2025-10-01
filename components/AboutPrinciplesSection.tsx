@@ -324,7 +324,7 @@ export function PrinciplesSection({
               }}
             >
               <motion.p
-                className="text-small-normal uppercase tracking-wide text-muted md:mb-1 lg:mb-2"
+                className="body-text-sm uppercase tracking-wide text-muted md:mb-1 lg:mb-2"
                 style={{
                   opacity: useTransform(
                     scrollYProgress,
@@ -365,7 +365,7 @@ export function PrinciplesSection({
 
               {/* Progress indicator */}
               <motion.div
-                className="text-small-normal text-muted mt-6"
+                className="body-text-sm text-muted mt-6"
                 style={{
                   opacity: useTransform(
                     scrollYProgress,

@@ -96,7 +96,7 @@ export default function Footer() {
 
             {/* Privacy Policy Text */}
             <div className="w-full text-center lg:text-left">
-              <p className="paragraph-mini-regular">
+              <p className="body-text-xs">
                 <span>By subscribing you agree to with our </span>
                 <span className="underline">Privacy Policy.</span>
               </p>
@@ -119,21 +119,21 @@ export default function Footer() {
             <Button
               variant="link"
               asChild
-              className="text-small-link hover:opacity-80 transition-opacity px-1 sm:px-2 py-0.5 h-6"
+              className="body-text-sm-link hover:opacity-80 transition-opacity px-1 sm:px-2 py-0.5 h-6"
             >
               <Link href="/privacy-policy">Privacy Policy</Link>
             </Button>
             <Button
               variant="link"
               asChild
-              className="text-small-link hover:opacity-80 transition-opacity px-1 sm:px-2 py-0.5 h-6"
+              className="body-text-sm-link hover:opacity-80 transition-opacity px-1 sm:px-2 py-0.5 h-6"
             >
               <Link href="/terms-of-service">Terms of Service</Link>
             </Button>
             <Button
               variant="link"
               asChild
-              className="text-small-link hover:opacity-80 transition-opacity px-1 sm:px-2 py-0.5 h-6"
+              className="body-text-sm-link hover:opacity-80 transition-opacity px-1 sm:px-2 py-0.5 h-6"
             >
               <Link href="/cookies-settings">Cookies Settings</Link>
             </Button>
@@ -141,7 +141,7 @@ export default function Footer() {
 
           {/* Copyright */}
           <div className="w-full text-center">
-            <p className="text-small-normal">© 2025. All rights reserved.</p>
+            <p className="body-text-sm">© 2025. All rights reserved.</p>
           </div>
         </div>
       </div>

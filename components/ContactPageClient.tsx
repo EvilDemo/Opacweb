@@ -55,7 +55,7 @@ export default function ContactPageClient() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.6, ease: "easeOut" }}
               >
-                <div className="paragraph-small-regular">
+                <div className="body-text-sm">
                   Tel:
                   <a
                     href="tel:+351915006659"
@@ -65,7 +65,7 @@ export default function ContactPageClient() {
                     +351 915 006 659
                   </a>
                 </div>
-                <div className="paragraph-small-regular">
+                <div className="body-text-sm">
                   Email:
                   <a
                     href="mailto:weareopac@gmail.com"

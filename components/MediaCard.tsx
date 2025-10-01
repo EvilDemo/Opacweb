@@ -67,7 +67,7 @@ export function MediaCard({ item, index = 0 }: MediaCardProps) {
   const headerClasses = "flex-1 flex flex-col min-h-0 pt-3 ";
   const titleClasses = "body-text-md !font-medium  line-clamp-1 leading-tight";
   const descriptionClasses =
-    "paragraph-mini-regular text-muted line-clamp-3 flex-1 min-h-[4.5rem]";
+    "body-text-xs text-muted line-clamp-3 flex-1 min-h-[4.5rem]";
   const contentClasses = "pb-4 pt-3";
 
   // Render image based on media type

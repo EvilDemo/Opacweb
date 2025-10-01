@@ -115,7 +115,7 @@ export function RadioCard({
             {/* Description and Play Button Container */}
             <div className="flex flex-row items-center justify-center gap-2 flex-1 ">
               <motion.p
-                className="paragraph-small-regular text-muted line-clamp-3 text-left flex-1"
+                className="body-text-sm text-muted line-clamp-3 text-left flex-1"
                 initial={{ x: -10, opacity: 0 }}
                 animate={{ x: 0, opacity: 0.7 }}
                 transition={{ delay: 0.2, duration: 0.4 }}
