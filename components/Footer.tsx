@@ -2,9 +2,9 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { getVisibleNavItems } from "@/lib/constants";
+import NewsletterForm from "@/components/NewsletterForm";
 
 export default function Footer() {
   const navItems = getVisibleNavItems();
@@ -23,7 +23,7 @@ export default function Footer() {
             objectPosition: "center bottom",
           }}
         >
-          <source src="/sphere-lowheight2_small.webm" type="video/webm" />
+          <source src="/opac-world-short.webm" type="video/webm" />
           {/* Fallback to WebP for browsers that don't support WebM */}
           <Image
             src="/opac-word-short.webp"
@@ -79,26 +79,20 @@ export default function Footer() {
 
           {/* Form Actions */}
           <div className="content-stretch flex flex-col gap-2 items-start justify-start relative shrink-0 w-full">
-            {/* Form */}
-            <div className="content-stretch flex flex-col sm:flex-row gap-4 items-center justify-start relative shrink-0 w-full">
-              <Input
-                type="email"
-                placeholder="Enter your email"
-                className="basis-0 grow min-h-9 min-w-px relative shrink-0 w-full sm:w-auto"
-              />
-              <Button
-                variant="default"
-                className="hover:bg-white/90 w-full sm:w-auto"
-              >
-                Subscribe
-              </Button>
-            </div>
+            {/* Newsletter Form */}
+            <NewsletterForm />
 
             {/* Privacy Policy Text */}
             <div className="w-full text-center lg:text-left">
               <p className="body-text-xs">
-                <span>By subscribing you agree to with our </span>
-                <span className="underline">Privacy Policy.</span>
+                <span>By subscribing you agree with our </span>
+                <Link
+                  href="/privacy-policy"
+                  className="underline hover:opacity-80 transition-opacity"
+                >
+                  Privacy Policy
+                </Link>
+                <span>.</span>
               </p>
             </div>
           </div>
@@ -129,13 +123,6 @@ export default function Footer() {
               className="body-text-sm-link hover:opacity-80 transition-opacity px-1 sm:px-2 py-0.5 h-6"
             >
               <Link href="/terms-of-service">Terms of Service</Link>
-            </Button>
-            <Button
-              variant="link"
-              asChild
-              className="body-text-sm-link hover:opacity-80 transition-opacity px-1 sm:px-2 py-0.5 h-6"
-            >
-              <Link href="/cookies-settings">Cookies Settings</Link>
             </Button>
           </div>
 

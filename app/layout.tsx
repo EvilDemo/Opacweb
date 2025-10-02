@@ -7,7 +7,6 @@ import { Analytics } from "@vercel/analytics/react";
 //Importing Components
 import Footer from "@/components/Footer";
 import { Navbar } from "@/components/Navbar";
-import Staging from "@/components/Staging";
 import RouteLoader from "@/components/RouteLoader";
 
 //Importing Font
