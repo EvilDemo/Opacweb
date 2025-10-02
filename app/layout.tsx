@@ -7,6 +7,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import Footer from "@/components/Footer";
 import { Navbar } from "@/components/Navbar";
 import Staging from "@/components/Staging";
+import RouteLoader from "@/components/RouteLoader";
 
 //Importing Font
 const geist = Geist({
@@ -103,10 +104,12 @@ export default function RootLayout({
       </head>
       <SpeedInsights />
       <body className={`${geist.variable} antialiased`}>
-        <Staging />
-        <Navbar />
-        <main>{children}</main>
-        <Footer />
+        <RouteLoader minimumLoadTime={1000}>
+          {/* <Staging /> */}
+          <Navbar />
+          <main>{children}</main>
+          <Footer />
+        </RouteLoader>
       </body>
     </html>
   );

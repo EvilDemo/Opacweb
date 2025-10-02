@@ -122,8 +122,10 @@ const ShopButton = () => {
 };
 
 const MobileMenuButton = ({
+  isOpen,
   setIsOpen,
 }: {
+  isOpen: boolean;
   setIsOpen: (open: boolean) => void;
 }) => (
   <motion.div
@@ -139,7 +141,7 @@ const MobileMenuButton = ({
       transition: { duration: 0.15, ease: "easeOut" },
     }}
   >
-    <Sheet onOpenChange={setIsOpen}>
+    <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
         <Button variant="secondary" className="lg:hidden">
           MENU
@@ -294,7 +296,7 @@ const MobileMenu = ({ setIsOpen }: { setIsOpen: (open: boolean) => void }) => {
 
 // Main Component
 export function Navbar() {
-  const [, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const visibleItems = getVisibleNavItems();
 
   return (
@@ -305,22 +307,24 @@ export function Navbar() {
       transition={{ duration: 0.6, ease: "easeOut" }}
     >
       <div className="mx-auto padding-global py-4">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between lg:justify-between">
           {/* Left side - Navigation items (hidden on mobile) */}
-          <NavigationLinks items={visibleItems} className="" />
+          <div className="hidden lg:flex flex-1 max-w-1/3">
+            <NavigationLinks items={visibleItems} className="" />
+          </div>
 
           {/* Center - Logo */}
           <Link
             href="/"
-            className="flex justify-center items-center bg-transparent hover:scale-105 hover:bg-transparent transition-all duration-300"
+            className="flex justify-center items-center bg-transparent hover:scale-105 hover:bg-transparent transition-all duration-300 lg:flex-1"
           >
             <Logo />
           </Link>
 
           {/* Right side - Shop button (desktop) and Mobile menu button */}
-          <div className="flex items-center justify-end space-x-2.5">
+          <div className="flex-1 max-w-1/3 flex items-center justify-end space-x-2.5">
             <ShopButton />
-            <MobileMenuButton setIsOpen={setIsOpen} />
+            <MobileMenuButton isOpen={isOpen} setIsOpen={setIsOpen} />
           </div>
         </div>
       </div>
