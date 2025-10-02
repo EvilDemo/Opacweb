@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/react";
 
 //Importing Components
 import Footer from "@/components/Footer";
@@ -103,6 +104,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://cdn.sanity.io" />
       </head>
       <SpeedInsights />
+      <Analytics />
       <body className={`${geist.variable} antialiased`}>
         <RouteLoader minimumLoadTime={1000}>
           {/* <Staging /> */}
