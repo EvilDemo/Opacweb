@@ -18,6 +18,12 @@ export const SHOP_CONFIG = {
       requiresShop: false,
     },
     {
+      label: "Shop",
+      href: "/shop",
+      icon: "/menu-shop.gif",
+      requiresShop: true,
+    },
+    {
       label: "About Us",
       href: "/about",
       icon: "/menu-about.gif",
@@ -39,11 +45,16 @@ export const SHOP_CONFIG = {
   },
 };
 
-// Helper function to get visible navigation items
+// Helper function to get visible navigation items (excluding shop)
 export const getVisibleNavItems = () => {
-  return SHOP_CONFIG.NAV_ITEMS.filter(
-    (item) => !item.requiresShop || SHOP_CONFIG.ENABLED
-  );
+  return SHOP_CONFIG.NAV_ITEMS.filter((item) => !item.requiresShop);
+};
+
+// Helper function to get shop item if enabled
+export const getShopItem = () => {
+  return SHOP_CONFIG.ENABLED
+    ? SHOP_CONFIG.NAV_ITEMS.find((item) => item.requiresShop)
+    : null;
 };
 
 // Helper function to check if shop features should be shown
