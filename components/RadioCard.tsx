@@ -5,19 +5,7 @@ import { Radio as RadioIcon, Play } from "lucide-react";
 import Image from "next/image";
 import { useRef } from "react";
 import { Card } from "@/components/ui/card";
-import { getOptimizedImageUrl } from "@/sanity/lib/image";
-
-// Image optimization constants - responsive sizing for radio cover images
-const RADIO_CARD_IMAGE_SIZES = {
-  MOBILE: 72, // w-18 = 72px
-  TABLET: 88, // w-22 = 88px
-  DESKTOP: 120, // w-30 = 120px
-  DESKTOP_RETINA: 240, // 2x for retina displays
-} as const;
-
-const QUALITY_SETTINGS = {
-  COVER: 80, // Higher quality for cover art (small images benefit from higher quality)
-} as const;
+import { imagePresets } from "@/sanity/lib/image";
 
 interface RadioCardProps {
   _id: string;
@@ -66,13 +54,9 @@ export function RadioCard({
             transition={{ duration: 0.15 }}
           >
             <Image
-              src={getOptimizedImageUrl(
-                thumbnailUrl,
-                RADIO_CARD_IMAGE_SIZES.DESKTOP_RETINA,
-                QUALITY_SETTINGS.COVER
-              )}
+              src={imagePresets.radio.coverRetina(thumbnailUrl)}
               alt={`${title} cover`}
-              width={RADIO_CARD_IMAGE_SIZES.DESKTOP}
+              width={120}
               height={185}
               className="w-18 md:w-22 lg:w-30"
               sizes="(max-width: 768px) 72px, (max-width: 1024px) 88px, 120px"

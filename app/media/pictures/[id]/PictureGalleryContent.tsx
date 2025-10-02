@@ -6,7 +6,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { type Pictures, type Gallery } from "@/lib/mediaData";
-import { getOptimizedImageUrl } from "@/sanity/lib/image";
+import { imagePresets } from "@/sanity/lib/image";
 
 interface PictureGalleryContentProps {
   picture: Pictures;
@@ -170,7 +170,7 @@ export default function PictureGalleryContent({
                 onClick={() => openLightbox(index)}
               >
                 <Image
-                  src={getOptimizedImageUrl(imageUrl, 546, 75)}
+                  src={imagePresets.gallery.thumb(imageUrl)}
                   alt={`${picture.title} - Image ${index + 1} of ${imageCount}`}
                   width={546}
                   height={546}
@@ -242,10 +242,8 @@ export default function PictureGalleryContent({
             {/* Main Image */}
             <div className="flex items-center justify-center h-full">
               <Image
-                src={getOptimizedImageUrl(
-                  allImages[selectedImageIndex],
-                  1200,
-                  80
+                src={imagePresets.gallery.lightbox(
+                  allImages[selectedImageIndex]
                 )}
                 alt={`${picture.title} - Image ${
                   selectedImageIndex + 1

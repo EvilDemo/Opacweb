@@ -15,7 +15,7 @@ export const getOptimizedImageUrl = (
   source: SanityImageSource,
   width?: number,
   quality: number = 80,
-  format?: "auto" | "webp" | "jpg" | "png"
+  format: "auto" | "webp" | "jpg" | "png" = "webp" // Default to WebP for better compression
 ) => {
   let imageBuilder = builder.image(source);
 
@@ -32,27 +32,45 @@ export const getOptimizedImageUrl = (
   return optimizedBuilder.auto("format").url(); // Automatically choose best format (WebP when supported)
 };
 
-// Responsive image presets optimized for actual display sizes
+// Unified image presets for all components - WebP optimized
 export const imagePresets = {
-  // Gallery thumbnails - optimized for actual display dimensions
-  galleryThumb: (source: SanityImageSource) =>
-    getOptimizedImageUrl(source, 546, 75), // Matches display size exactly
-  galleryThumbRetina: (source: SanityImageSource) =>
-    getOptimizedImageUrl(source, 1092, 75), // 2x for retina displays
+  // Media Card presets
+  mediaCard: {
+    thumbnail: (source: SanityImageSource) =>
+      getOptimizedImageUrl(source, 576, 80, "webp"), // MediaCard thumbnails
+  },
 
-  // Lightbox images - higher quality for detailed viewing
-  lightbox: (source: SanityImageSource) =>
-    getOptimizedImageUrl(source, 1200, 80),
-  lightboxRetina: (source: SanityImageSource) =>
-    getOptimizedImageUrl(source, 2400, 80), // 2x for retina displays
+  // Picture Gallery presets
+  gallery: {
+    thumb: (source: SanityImageSource) =>
+      getOptimizedImageUrl(source, 546, 75, "webp"), // Gallery grid thumbnails
+    thumbRetina: (source: SanityImageSource) =>
+      getOptimizedImageUrl(source, 1092, 75, "webp"), // 2x for retina
+    lightbox: (source: SanityImageSource) =>
+      getOptimizedImageUrl(source, 1200, 80, "webp"), // Lightbox view
+    lightboxRetina: (source: SanityImageSource) =>
+      getOptimizedImageUrl(source, 2400, 80, "webp"), // 2x retina lightbox
+  },
 
-  // Legacy presets for backward compatibility
-  thumbnail: (source: SanityImageSource) =>
-    getOptimizedImageUrl(source, 400, 75),
-  medium: (source: SanityImageSource) => getOptimizedImageUrl(source, 800, 75),
-  large: (source: SanityImageSource) => getOptimizedImageUrl(source, 1200, 75),
-  fullSize: (source: SanityImageSource) =>
-    getOptimizedImageUrl(source, 1920, 75),
+  // Radio Card presets
+  radio: {
+    cover: (source: SanityImageSource) =>
+      getOptimizedImageUrl(source, 240, 80, "webp"), // Radio cover art
+    coverRetina: (source: SanityImageSource) =>
+      getOptimizedImageUrl(source, 480, 80, "webp"), // 2x for retina
+  },
+
+  // General purpose presets
+  general: {
+    small: (source: SanityImageSource) =>
+      getOptimizedImageUrl(source, 400, 75, "webp"),
+    medium: (source: SanityImageSource) =>
+      getOptimizedImageUrl(source, 800, 75, "webp"),
+    large: (source: SanityImageSource) =>
+      getOptimizedImageUrl(source, 1200, 75, "webp"),
+    fullSize: (source: SanityImageSource) =>
+      getOptimizedImageUrl(source, 1920, 75, "webp"),
+  },
 };
 
 // Generate responsive srcset for different screen sizes

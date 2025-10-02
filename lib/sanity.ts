@@ -1,6 +1,4 @@
 import { createClient } from "next-sanity";
-import imageUrlBuilder from "@sanity/image-url";
-import { SanityImageSource } from "@sanity/image-url/lib/types/types";
 
 export const config = {
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || "production",
@@ -18,11 +16,7 @@ export const config = {
 
 export const sanityClient = createClient(config);
 
-const builder = imageUrlBuilder(sanityClient);
-
-export function urlFor(source: SanityImageSource) {
-  return builder.image(source);
-}
+// Note: Use imagePresets from @/sanity/lib/image instead of this urlFor function
 
 // GROQ queries for fetching content - return raw URLs for client-side optimization
 export const picturesQuery = `

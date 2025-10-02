@@ -6,28 +6,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import { type Pictures, type Gallery } from "@/lib/mediaData";
-import { getOptimizedImageUrl } from "@/sanity/lib/image";
-
-// Responsive image sizes optimized for actual display dimensions
-const RESPONSIVE_IMAGE_SIZES = {
-  // Gallery thumbnails - optimized for actual display size (546px)
-  GALLERY_SMALL: 400, // Mobile - smaller for faster loading
-  GALLERY_MEDIUM: 546, // Tablet/Desktop - matches actual display size
-  GALLERY_LARGE: 546, // Desktop - matches actual display size
-  GALLERY_RETINA: 1092, // Retina displays - 2x the display size
-
-  // Lightbox - higher quality but still optimized
-  LIGHTBOX_SMALL: 800, // Mobile lightbox
-  LIGHTBOX_MEDIUM: 1000, // Tablet lightbox
-  LIGHTBOX_LARGE: 1000, // Desktop lightbox
-  LIGHTBOX_RETINA: 1200, // Retina lightbox - 2x for crisp display
-} as const;
-
-// Quality settings optimized for performance and visual quality
-const QUALITY_SETTINGS = {
-  GALLERY: 75, // Balanced quality for gallery thumbnails
-  LIGHTBOX: 80, // Higher quality for detailed view
-} as const;
+import { imagePresets } from "@/sanity/lib/image";
 
 // Intersection observer hook for lazy loading
 const useIntersectionObserver = (threshold = 0.1) => {
@@ -83,11 +62,7 @@ const ImageCard = ({
     >
       {isVisible && (
         <Image
-          src={getOptimizedImageUrl(
-            imageUrl,
-            RESPONSIVE_IMAGE_SIZES.GALLERY_MEDIUM,
-            QUALITY_SETTINGS.GALLERY
-          )}
+          src={imagePresets.gallery.thumb(imageUrl)}
           alt={`Gallery image ${index + 1}`}
           width={546}
           height={400}
@@ -188,11 +163,7 @@ export default function PictureGalleryContent({
       // Create a link element to prefetch the image
       const link = document.createElement("link");
       link.rel = "prefetch";
-      link.href = getOptimizedImageUrl(
-        imageUrl,
-        RESPONSIVE_IMAGE_SIZES.LIGHTBOX_LARGE,
-        QUALITY_SETTINGS.LIGHTBOX
-      );
+      link.href = imagePresets.gallery.lightbox(imageUrl);
       link.as = "image";
       document.head.appendChild(link);
 
@@ -363,10 +334,8 @@ export default function PictureGalleryContent({
           {/* Main image with responsive sizing */}
           <div className="fixed inset-0 flex items-center justify-center p-8">
             <Image
-              src={getOptimizedImageUrl(
-                allImages[selectedImageIndex],
-                RESPONSIVE_IMAGE_SIZES.LIGHTBOX_RETINA,
-                QUALITY_SETTINGS.LIGHTBOX
+              src={imagePresets.gallery.lightboxRetina(
+                allImages[selectedImageIndex]
               )}
               alt={`${picture.title} - Image ${
                 selectedImageIndex + 1

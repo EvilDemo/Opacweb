@@ -294,7 +294,7 @@ const MobileMenu = ({ setIsOpen }: { setIsOpen: (open: boolean) => void }) => {
 
 // Main Component
 export function Navbar() {
-  const [isOpen, setIsOpen] = useState(false);
+  const [, setIsOpen] = useState(false);
   const visibleItems = getVisibleNavItems();
 
   return (

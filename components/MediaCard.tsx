@@ -13,15 +13,7 @@ import { motion, useInView } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRef } from "react";
-import { getOptimizedImageUrl } from "@/sanity/lib/image";
-
-// Image optimization constants
-const MEDIA_CARD_IMAGE_SIZES = {
-  THUMBNAIL: 400, // Base thumbnail size for cards
-} as const;
-const QUALITY_SETTINGS = {
-  THUMBNAIL: 75, // Optimized quality for thumbnails
-} as const;
+import { imagePresets } from "@/sanity/lib/image";
 
 // Base interface for all media items
 interface BaseMediaItem {
@@ -65,10 +57,8 @@ export function MediaCard({ item, index = 0 }: MediaCardProps) {
   // Common card classes for responsive design
   const cardClasses = "w-full flex flex-col";
   const headerClasses = "flex-1 flex flex-col min-h-0 pt-3 ";
-  const titleClasses = "body-text-md !font-medium  line-clamp-1 leading-tight";
-  const descriptionClasses =
-    "body-text-xs text-muted line-clamp-3 flex-1 min-h-[4.5rem]";
-  const contentClasses = "pb-4 pt-3";
+  const titleClasses = "body-text-sm-md line-clamp-1 leading-tight";
+  const contentClasses = "pb-1 pt-3";
 
   // Render image based on media type
   const renderImage = () => {
@@ -76,17 +66,13 @@ export function MediaCard({ item, index = 0 }: MediaCardProps) {
     if (!item.thumbnailUrl) {
       return null;
     }
-    // Render optimized image for all media types
+    // Render optimized image for all media types using unified preset
     return (
       <Image
-        src={getOptimizedImageUrl(
-          item.thumbnailUrl,
-          MEDIA_CARD_IMAGE_SIZES.THUMBNAIL,
-          QUALITY_SETTINGS.THUMBNAIL
-        )}
+        src={imagePresets.mediaCard.thumbnail(item.thumbnailUrl)}
         alt={`${item.title} - ${item.description}`}
-        width={MEDIA_CARD_IMAGE_SIZES.THUMBNAIL}
-        height={MEDIA_CARD_IMAGE_SIZES.THUMBNAIL}
+        width={400}
+        height={400}
         className="w-full h-full object-cover"
         loading={index < 4 ? "eager" : "lazy"}
         fetchPriority={index < 4 ? "high" : undefined}
@@ -183,16 +169,18 @@ export function MediaCard({ item, index = 0 }: MediaCardProps) {
       }}
     >
       <Card variant="media" background="media" className={cardClasses}>
-        <div className="aspect-square overflow-hidden -m-6 mb-0 rounded-t-xl">
+        <div className="aspect-[3/2] overflow-hidden -m-6 mb-0 rounded-t-xl">
           {renderImage()}
         </div>
         <CardHeader className={headerClasses}>
           {renderTitle()}
-          <CardDescription
-            className={descriptionClasses}
-            title={item.description}
-          >
-            {item.description}
+          <CardDescription title={item.description}>
+            <p
+              className="body-text-xs text-muted line-clamp-3"
+              style={{ minHeight: "calc(1em * var(--line-height-normal) * 3)" }}
+            >
+              {item.description}
+            </p>
           </CardDescription>
         </CardHeader>
         {renderAction()}
