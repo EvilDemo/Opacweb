@@ -19,12 +19,12 @@ const nextConfig: NextConfig = {
   // Enable compression
   compress: true,
   // Enable ISR with webhook revalidation for optimal performance
-  experimental: {
-    staleTimes: {
-      dynamic: 0, // Always fresh for dynamic content in development
-      static: 0, // Always fresh for static content in development
-    },
-  },
+  // experimental: {
+  //   staleTimes: {
+  //     dynamic: 0, // Always fresh for dynamic content in development
+  //     static: 0, // Always fresh for static content in development
+  //   },
+  // },
 };
 
 export default nextConfig;
