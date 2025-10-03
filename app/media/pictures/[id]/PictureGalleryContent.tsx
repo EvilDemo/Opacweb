@@ -176,6 +176,7 @@ export default function PictureGalleryContent({
                   height={546}
                   className="w-full h-full object-cover"
                   loading={index < 8 ? "eager" : "lazy"} // Eager load first 8 images
+                  fetchPriority={index < 4 ? "high" : undefined} // High priority for first 4 images
                   sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
                   unoptimized
                 />

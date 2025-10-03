@@ -68,7 +68,8 @@ const ImageCard = ({
           height={400}
           className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-300"
           sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-          loading="lazy"
+          loading={index < 4 ? "eager" : "lazy"}
+          fetchPriority={index < 4 ? "high" : undefined}
           unoptimized
         />
       )}
