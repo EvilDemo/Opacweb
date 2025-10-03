@@ -27,6 +27,11 @@ export default function RouteLoader({
       return;
     }
 
+    // Skip loader when navigating within the studio
+    if (pathname.startsWith("/studio")) {
+      return;
+    }
+
     // Show loader on route changes
     setIsLoading(true);
     setCounter(1);

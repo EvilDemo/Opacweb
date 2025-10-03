@@ -301,7 +301,7 @@ export function Navbar() {
 
   return (
     <motion.nav
-      className="sticky top-0 left-0 right-0 z-50 h-auto bg-background"
+      className="sticky top-0 left-0 right-0 z-[90] h-auto bg-background"
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
