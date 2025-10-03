@@ -375,7 +375,7 @@ function MediaScrollContent({ allMediaData }: MediaScrollContentProps) {
                 {/* Horizontal Scrollable Cards Container */}
                 <motion.div
                   key={activeFilter} // Force re-render on filter change
-                  className="relative pb-20 pt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:flex lg:flex-row lg:flex-nowrap lg:pt-0 lg:pb-0 md:gap-6 lg:gap-4 lg:min-w-max  xl:gap-5 2xl:gap-6 "
+                  className="relative pb-20 pt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:flex lg:flex-row lg:flex-nowrap lg:pt-0 lg:pb-0 lg:pl-10 md:gap-6 lg:gap-4 lg:min-w-max xl:gap-5 2xl:gap-6  "
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.3 }}
