@@ -15,10 +15,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-// Web3Forms public access key
-const WEB3FORMS_ACCESS_KEY = "2742f926-c113-498e-bfef-000d677b29c8";
-
-// Define the form schema with Zod - only email for newsletter
+// Define the form schema for newsletter form
 const newsletterSchema = z.object({
   email: z.string().email({ error: "Please enter a valid email address." }),
   // Honeypot field for spam protection
@@ -48,7 +45,11 @@ export default function NewsletterForm() {
     try {
       // Prepare form data for Web3Forms
       const formData = new FormData();
-      formData.append("access_key", WEB3FORMS_ACCESS_KEY);
+      formData.append(
+        "access_key",
+        process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY ||
+          "2742f926-c113-498e-bfef-000d677b29c8"
+      );
       formData.append("subject", `Newsletter: ${values.email}`);
       formData.append(
         "message",

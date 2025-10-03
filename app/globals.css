@@ -8,6 +8,16 @@
   --font-sans: var(--font-geist);
   --font-mono: var(--font-geist-mono);
 
+  /* Font sizes - Tailwind v4 custom properties */
+
+  /* --text-sm: 12px;
+  --text-base: 14px;
+  --text-lg: 16px;
+  --text-xl: 18px;
+  --text-2xl: 20px;
+  --text-3xl: 24px; */
+  /* --text-4xl: 32px; */
+
   /* Override Tailwind's default line heights to match Figma */
   --line-height-tight: 1;
   --line-height-snug: 1.2;
@@ -18,7 +28,7 @@
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
 
-  /* Letter Spacing - From Figma */
+  /* Letter Spacing  */
   --letter-spacing-tight: -0.76px; /* heading-1 */
   --letter-spacing-snug: -0.61px; /* heading-2 */
   --letter-spacing-normal: -0.98px; /* heading-3 */

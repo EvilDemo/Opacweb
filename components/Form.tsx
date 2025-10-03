@@ -17,9 +17,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
-// Web3Forms public access key
-const WEB3FORMS_ACCESS_KEY = "2742f926-c113-498e-bfef-000d677b29c8";
-
 // Define the form schema with Zod
 const formSchema = z.object({
   name: z
@@ -79,7 +76,11 @@ export default function ContactForm() {
     try {
       // Prepare form data for Web3Forms
       const formData = new FormData();
-      formData.append("access_key", WEB3FORMS_ACCESS_KEY);
+      formData.append(
+        "access_key",
+        process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY ||
+          "2742f926-c113-498e-bfef-000d677b29c8"
+      );
       formData.append("name", values.name);
       formData.append("email", values.email);
       if (values.phone) {

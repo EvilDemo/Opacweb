@@ -375,7 +375,7 @@ function MediaScrollContent({ allMediaData }: MediaScrollContentProps) {
                 {/* Horizontal Scrollable Cards Container */}
                 <motion.div
                   key={activeFilter} // Force re-render on filter change
-                  className="pb-20 pt-10 padding-global grid grid-cols-1 md:grid-cols-3 md:pt-36 lg:flex lg:flex-row lg:flex-nowrap lg:pt-0 lg:pb-0 gap-0 md:gap-6 md:gap-y-34 lg:gap-12 lg:min-w-max relative"
+                  className="relative pb-20 pt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:flex lg:flex-row lg:flex-nowrap lg:pt-0 lg:pb-0 md:gap-6 lg:gap-4 lg:min-w-max  xl:gap-5 2xl:gap-6 "
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.3 }}
@@ -384,7 +384,7 @@ function MediaScrollContent({ allMediaData }: MediaScrollContentProps) {
                     {displayData.map((item, index) => (
                       <motion.div
                         key={item._id}
-                        className="lg:flex-shrink-0 lg:w-80"
+                        className="lg:flex-shrink-0 lg:w-68 2xl:w-72"
                         initial={{ opacity: 0, y: 20, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: -10, scale: 0.95 }}
