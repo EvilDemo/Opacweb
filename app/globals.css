@@ -10,13 +10,13 @@
 
   /* Font sizes - Tailwind v4 custom properties */
 
-  --text-sm: 12px;
+  /* --text-sm: 12px;
   --text-base: 14px;
   --text-lg: 16px;
   --text-xl: 18px;
   --text-2xl: 20px;
   --text-3xl: 24px;
-  --text-4xl: 32px;
+  --text-4xl: 32px; */
 
   /* Override Tailwind's default line heights to match Figma */
   --line-height-tight: 1;
