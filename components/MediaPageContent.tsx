@@ -5,21 +5,15 @@ import { motion, useScroll, useTransform, AnimatePresence } from "motion/react";
 import { type Pictures, type Video, type Music } from "@/lib/mediaData";
 import { MediaCard, type MediaItem } from "@/components/MediaCard";
 import { Button } from "@/components/ui/button";
-import {
-  Image as ImageIcon,
-  Video as VideoIcon,
-  Music as MusicIcon,
-} from "lucide-react";
+import { Image as ImageIcon, Video as VideoIcon, Music as MusicIcon } from "lucide-react";
 
 // Helper functions to transform data to MediaCard format
 const transformPictures = (pictures: Pictures[]): MediaItem[] =>
   pictures.map((item) => ({ ...item, type: "picture" as const }));
 
-const transformVideos = (videos: Video[]): MediaItem[] =>
-  videos.map((item) => ({ ...item, type: "video" as const }));
+const transformVideos = (videos: Video[]): MediaItem[] => videos.map((item) => ({ ...item, type: "video" as const }));
 
-const transformMusic = (music: Music[]): MediaItem[] =>
-  music.map((item) => ({ ...item, type: "music" as const }));
+const transformMusic = (music: Music[]): MediaItem[] => music.map((item) => ({ ...item, type: "music" as const }));
 
 type FilterType = "all" | "picture" | "video" | "music";
 
@@ -37,10 +31,7 @@ export function MediaPageContent({ initialData }: MediaPageContentProps) {
     ...transformPictures(initialData.pictures),
     ...transformVideos(initialData.videos),
     ...transformMusic(initialData.music),
-  ].sort(
-    (a, b) =>
-      new Date(b._updatedAt).getTime() - new Date(a._updatedAt).getTime()
-  );
+  ].sort((a, b) => new Date(b._updatedAt).getTime() - new Date(a._updatedAt).getTime());
 
   return <MediaScrollContent allMediaData={allMediaData} />;
 }
@@ -82,10 +73,7 @@ function MediaScrollContent({ allMediaData }: MediaScrollContentProps) {
   );
 
   // Make displayData stable to prevent infinite loops
-  const displayData = useMemo(
-    () => getFilteredData(activeFilter),
-    [activeFilter, getFilteredData]
-  );
+  const displayData = useMemo(() => getFilteredData(activeFilter), [activeFilter, getFilteredData]);
 
   // Set up scroll tracking with sticky container
   const { scrollYProgress } = useScroll({
@@ -109,19 +97,14 @@ function MediaScrollContent({ allMediaData }: MediaScrollContentProps) {
       const cardGap = 48; // lg:gap-12 = 48px
       const titleSectionWidth = Math.min(viewportWidth * 0.4, 600); // 40vw max 600px
       const expectedContentWidth =
-        titleSectionWidth +
-        displayData.length * cardWidth +
-        (displayData.length - 1) * cardGap;
+        titleSectionWidth + displayData.length * cardWidth + (displayData.length - 1) * cardGap;
 
       // Use the larger of actual scrollWidth or expected width
       const finalContentWidth = Math.max(contentWidth, expectedContentWidth);
 
       // Add extra padding to ensure we can scroll past the last card
       const extraPadding = 500; // Additional pixels to scroll past the last card
-      const scrollDistance = Math.max(
-        0,
-        finalContentWidth - viewportWidth + extraPadding
-      );
+      const scrollDistance = Math.max(0, finalContentWidth - viewportWidth + extraPadding);
       const viewportHeight = window.innerHeight;
       const sectionHeight = viewportHeight + scrollDistance;
 
@@ -158,11 +141,7 @@ function MediaScrollContent({ allMediaData }: MediaScrollContentProps) {
   const xTransform = useTransform(
     scrollYProgress,
     [0, 0.8, 1],
-    [
-      0,
-      isLargeScreen ? -dimensions.scrollDistance : 0,
-      isLargeScreen ? -dimensions.scrollDistance : 0,
-    ]
+    [0, isLargeScreen ? -dimensions.scrollDistance : 0, isLargeScreen ? -dimensions.scrollDistance : 0]
   );
 
   const filterButtons = [
@@ -179,29 +158,13 @@ function MediaScrollContent({ allMediaData }: MediaScrollContentProps) {
           ref={scrollRef}
           className="w-full relative"
           style={{
-            height: isLargeScreen
-              ? dimensions.sectionHeight || "100vh"
-              : "auto",
+            height: isLargeScreen ? dimensions.sectionHeight || "100vh" : "auto",
           }}
         >
           {/* Sticky container that pins during vertical scroll */}
-          <div
-            className={`${
-              isLargeScreen ? "sticky top-0 h-screen -mt-[6rem]" : ""
-            }`}
-          >
-            <div
-              className={`${
-                isLargeScreen
-                  ? "h-full flex items-center pt-[6rem]"
-                  : "pt-[6rem]"
-              }`}
-            >
-              <motion.div
-                className={`overflow-hidden w-full relative ${
-                  isLargeScreen ? "h-full" : ""
-                }`}
-              >
+          <div className={`${isLargeScreen ? "sticky top-0 h-screen -mt-[6rem]" : ""}`}>
+            <div className={`${isLargeScreen ? "h-full flex items-center pt-[6rem]" : "pt-[6rem]"}`}>
+              <motion.div className={`overflow-hidden w-full relative ${isLargeScreen ? "h-full" : ""}`}>
                 <motion.div
                   ref={contentRef}
                   className={`flex flex-col lg:flex-row items-center lg:w-max padding-global ${
@@ -244,9 +207,7 @@ function MediaScrollContent({ allMediaData }: MediaScrollContentProps) {
                           {filterButtons.map(({ type, label, icon: Icon }) => (
                             <Button
                               key={type}
-                              variant={
-                                activeFilter === type ? "default" : "secondary"
-                              }
+                              variant={activeFilter === type ? "default" : "secondary"}
                               size="sm"
                               onClick={() => setActiveFilter(type)}
                             >
@@ -269,15 +230,9 @@ function MediaScrollContent({ allMediaData }: MediaScrollContentProps) {
                     <div className="flex items-center justify-center">
                       <div className="text-center lg:text-left">
                         <p className="body-text text-muted">
-                          No{" "}
-                          {activeFilter === "all"
-                            ? "media"
-                            : activeFilter + "s"}{" "}
-                          available yet.
+                          No {activeFilter === "all" ? "media" : activeFilter + "s"} available yet.
                         </p>
-                        <p className="body-text-sm text-muted-foreground mt-2">
-                          Check back soon!
-                        </p>
+                        <p className="body-text-sm text-muted-foreground mt-2">Check back soon!</p>
                       </div>
                     </div>
                   </motion.div>
@@ -300,21 +255,9 @@ function MediaScrollContent({ allMediaData }: MediaScrollContentProps) {
         }}
       >
         {/* Sticky container that pins during vertical scroll */}
-        <div
-          className={`${
-            isLargeScreen ? "sticky top-0 h-screen -mt-[6rem]" : ""
-          }`}
-        >
-          <div
-            className={`${
-              isLargeScreen ? "h-full flex items-center pt-[6rem]" : "pt-[6rem]"
-            }`}
-          >
-            <motion.div
-              className={`overflow-hidden w-full relative ${
-                isLargeScreen ? "h-full" : ""
-              }`}
-            >
+        <div className={`${isLargeScreen ? "sticky top-0 h-screen -mt-[6rem]" : ""}`}>
+          <div className={`${isLargeScreen ? "h-full flex items-center pt-[6rem]" : "pt-[6rem]"}`}>
+            <motion.div className={`overflow-hidden w-full relative ${isLargeScreen ? "h-full" : ""}`}>
               <motion.div
                 ref={contentRef}
                 className={`flex flex-col lg:flex-row items-center lg:w-max padding-global ${
@@ -357,9 +300,7 @@ function MediaScrollContent({ allMediaData }: MediaScrollContentProps) {
                         {filterButtons.map(({ type, label, icon: Icon }) => (
                           <Button
                             key={type}
-                            variant={
-                              activeFilter === type ? "default" : "secondary"
-                            }
+                            variant={activeFilter === type ? "default" : "secondary"}
                             size="sm"
                             onClick={() => setActiveFilter(type)}
                           >
@@ -375,7 +316,7 @@ function MediaScrollContent({ allMediaData }: MediaScrollContentProps) {
                 {/* Horizontal Scrollable Cards Container */}
                 <motion.div
                   key={activeFilter} // Force re-render on filter change
-                  className="relative pb-20 pt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:flex lg:flex-row lg:flex-nowrap lg:pt-0 lg:pb-0 lg:pl-10 md:gap-6 lg:gap-4 lg:min-w-max xl:gap-5 2xl:gap-6  "
+                  className="relative pb-20 pt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:flex lg:flex-row lg:flex-nowrap lg:pt-0 lg:pb-0 lg:pl-10 md:gap-6 lg:gap-4 lg:min-w-max xl:gap-5 2xl:gap-6 w-full"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.3 }}

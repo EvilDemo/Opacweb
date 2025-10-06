@@ -37,12 +37,6 @@ export function WaveLongevity() {
         strokeLinecap="round"
         animate={{
           opacity: [0.3, 0.7, 0.3],
-          d: [
-            "M0 100 Q200 80 400 100 Q600 80 800 100",
-            "M0 100 Q200 75 400 100 Q600 75 800 100",
-            "M0 100 Q200 85 400 100 Q600 85 800 100",
-            "M0 100 Q200 80 400 100 Q600 80 800 100",
-          ],
         }}
         transition={{
           duration: 10,
@@ -62,12 +56,6 @@ export function WaveLongevity() {
         strokeLinecap="round"
         animate={{
           opacity: [0.2, 0.4, 0.2],
-          d: [
-            "M0 100 Q200 120 400 100 Q600 120 800 100",
-            "M0 100 Q200 125 400 100 Q600 125 800 100",
-            "M0 100 Q200 115 400 100 Q600 115 800 100",
-            "M0 100 Q200 120 400 100 Q600 120 800 100",
-          ],
         }}
         transition={{
           duration: 12,

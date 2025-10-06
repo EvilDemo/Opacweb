@@ -17,9 +17,27 @@ import { Input } from "@/components/ui/input";
 
 // Define the form schema for newsletter form
 const newsletterSchema = z.object({
-  email: z.string().email({ error: "Please enter a valid email address." }),
+  email: z
+    .string()
+    .min(1, { message: "Email is required." })
+    .email({ message: "Please enter a valid email address." }),
   // Honeypot field for spam protection
   botcheck: z.string().optional(),
+});
+
+// Schema for blur validation (format only, no required check)
+const emailFormatSchema = z.object({
+  email: z
+    .string()
+    .refine((val) => val.length === 0 || val.includes("@"), {
+      message: "Please enter a valid email address.",
+    })
+    .refine(
+      (val) => val.length === 0 || z.string().email().safeParse(val).success,
+      {
+        message: "Please enter a valid email address.",
+      }
+    ),
 });
 
 type NewsletterData = z.infer<typeof newsletterSchema>;
@@ -30,8 +48,8 @@ export default function NewsletterForm() {
   const [error, setError] = useState<string | null>(null);
 
   const form = useForm<NewsletterData>({
-    resolver: zodResolver(newsletterSchema),
-    mode: "onTouched",
+    resolver: zodResolver(emailFormatSchema),
+    mode: "onBlur",
     defaultValues: {
       email: "",
       botcheck: "",
@@ -39,6 +57,14 @@ export default function NewsletterForm() {
   });
 
   async function onSubmit(values: NewsletterData) {
+    // Manual validation for required fields on submit
+    const submitValidation = newsletterSchema.safeParse(values);
+    if (!submitValidation.success) {
+      const firstError = submitValidation.error.issues[0];
+      form.setError("email", { message: firstError.message });
+      return;
+    }
+
     setIsSubmitting(true);
     setError(null);
 
@@ -147,7 +173,7 @@ export default function NewsletterForm() {
             />
           </div>
 
-          <div className="content-stretch flex flex-col sm:flex-row gap-4 items-center justify-start relative shrink-0 w-full">
+          <div className="content-stretch flex flex-col sm:flex-row gap-4 items-start justify-start relative shrink-0 w-full">
             <FormField
               control={form.control}
               name="email"
@@ -165,14 +191,16 @@ export default function NewsletterForm() {
                 </FormItem>
               )}
             />
-            <Button
-              type="submit"
-              variant="default"
-              disabled={isSubmitting}
-              className="hover:bg-white/90 w-full sm:w-auto"
-            >
-              {isSubmitting ? "Subscribing..." : "Subscribe"}
-            </Button>
+            <div className="flex-shrink-0 w-full sm:w-auto">
+              <Button
+                type="submit"
+                variant="default"
+                disabled={isSubmitting}
+                className="hover:bg-white/90 w-full sm:w-auto"
+              >
+                {isSubmitting ? "Subscribing..." : "Subscribe"}
+              </Button>
+            </div>
           </div>
         </form>
       </Form>

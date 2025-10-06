@@ -1,11 +1,7 @@
 "use client";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Image as ImageIcon,
-  Video as VideoIcon,
-  Music as MusicIcon,
-} from "lucide-react";
+import { Image as ImageIcon, Video as VideoIcon, Music as MusicIcon } from "lucide-react";
 import { type Pictures, type Video, type Music } from "@/lib/mediaData";
 import { MediaCard, type MediaItem } from "@/components/MediaCard";
 
@@ -19,11 +15,9 @@ interface MediaTabsProps {
 const transformPictures = (pictures: Pictures[]): MediaItem[] =>
   pictures.map((item) => ({ ...item, type: "picture" as const }));
 
-const transformVideos = (videos: Video[]): MediaItem[] =>
-  videos.map((item) => ({ ...item, type: "video" as const }));
+const transformVideos = (videos: Video[]): MediaItem[] => videos.map((item) => ({ ...item, type: "video" as const }));
 
-const transformMusic = (music: Music[]): MediaItem[] =>
-  music.map((item) => ({ ...item, type: "music" as const }));
+const transformMusic = (music: Music[]): MediaItem[] => music.map((item) => ({ ...item, type: "music" as const }));
 
 export function MediaTabs({ pictures, videos, music }: MediaTabsProps) {
   return (
@@ -50,9 +44,7 @@ export function MediaTabs({ pictures, videos, music }: MediaTabsProps) {
         {pictures.length === 0 ? (
           <div className="text-center py-12">
             <p className="body-text text-muted">No pictures available yet.</p>
-            <p className="body-text-sm text-muted-foreground mt-2">
-              Check back soon!
-            </p>
+            <p className="body-text-sm text-muted-foreground mt-2">Check back soon!</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  gap-4">
@@ -68,9 +60,7 @@ export function MediaTabs({ pictures, videos, music }: MediaTabsProps) {
         {videos.length === 0 ? (
           <div className="text-center py-12">
             <p className="body-text text-muted">No videos available yet.</p>
-            <p className="body-text-sm text-muted-foreground mt-2">
-              Add some videos through the Sanity Studio!
-            </p>
+            <p className="body-text-sm text-muted-foreground mt-2">Add some videos through the Sanity Studio!</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
@@ -87,12 +77,8 @@ export function MediaTabs({ pictures, videos, music }: MediaTabsProps) {
       <TabsContent value="by-us" className="mt-6">
         {music.length === 0 ? (
           <div className="text-center py-12">
-            <p className="body-text text-muted">
-              No music tracks available yet.
-            </p>
-            <p className="body-text-sm text-muted-foreground mt-2">
-              Add some tracks through the Sanity Studio!
-            </p>
+            <p className="body-text text-muted">No music tracks available yet.</p>
+            <p className="body-text-sm text-muted-foreground mt-2">Add some tracks through the Sanity Studio!</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">

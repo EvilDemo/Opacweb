@@ -1,19 +1,13 @@
 "use client";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ExternalLink, Images } from "lucide-react";
 import { motion, useInView } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRef } from "react";
-import { imagePresets } from "@/sanity/lib/image";
+import { imagePresets, getResponsiveImageProps } from "@/sanity/lib/image";
 
 // Base interface for all media items
 interface BaseMediaItem {
@@ -66,18 +60,16 @@ export function MediaCard({ item, index = 0 }: MediaCardProps) {
     if (!item.thumbnailUrl) {
       return null;
     }
-    // Render optimized image for all media types using unified preset
+    // Render optimized image for all media types using responsive preset
     return (
       <Image
-        src={imagePresets.mediaCard.thumbnail(item.thumbnailUrl)}
+        {...getResponsiveImageProps(item.thumbnailUrl, "mediaCard")}
         alt={`${item.title} - ${item.description}`}
         width={400}
         height={400}
         className="w-full h-full object-cover"
         loading={index < 4 ? "eager" : "lazy"}
         fetchPriority={index < 4 ? "high" : undefined}
-        sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-        unoptimized
       />
     );
   };
@@ -137,13 +129,7 @@ export function MediaCard({ item, index = 0 }: MediaCardProps) {
     return (
       <CardContent className={contentClasses}>
         {config.isExternal ? (
-          <a
-            href={config.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block"
-            aria-label={config.label}
-          >
+          <a href={config.href} target="_blank" rel="noopener noreferrer" className="block" aria-label={config.label}>
             {button}
           </a>
         ) : (
@@ -169,9 +155,7 @@ export function MediaCard({ item, index = 0 }: MediaCardProps) {
       }}
     >
       <Card variant="media" background="media" className={cardClasses}>
-        <div className="aspect-[3/2] overflow-hidden -m-6 mb-0 rounded-t-xl">
-          {renderImage()}
-        </div>
+        <div className="aspect-[3/2] overflow-hidden -m-6 mb-0 rounded-t-xl">{renderImage()}</div>
         <CardHeader className={headerClasses}>
           {renderTitle()}
           <CardDescription title={item.description}>

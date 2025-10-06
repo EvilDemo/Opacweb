@@ -6,7 +6,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import { type Pictures, type Gallery } from "@/lib/mediaData";
-import { imagePresets } from "@/sanity/lib/image";
+import { getResponsiveImageProps } from "@/sanity/lib/image";
 
 // Intersection observer hook for lazy loading
 const useIntersectionObserver = (threshold = 0.1) => {
@@ -61,16 +61,11 @@ const ImageCard = ({
       }}
     >
       {isVisible && (
-        <Image
-          src={imagePresets.gallery.thumb(imageUrl)}
+        <img
+          {...getResponsiveImageProps(imageUrl, "gallery")}
           alt={`Gallery image ${index + 1}`}
-          width={546}
-          height={400}
           className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-300"
-          sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
           loading={index < 4 ? "eager" : "lazy"}
-          fetchPriority={index < 4 ? "high" : undefined}
-          unoptimized
         />
       )}
     </div>
@@ -164,7 +159,8 @@ export default function PictureGalleryContent({
       // Create a link element to prefetch the image
       const link = document.createElement("link");
       link.rel = "prefetch";
-      link.href = imagePresets.gallery.lightbox(imageUrl);
+      const { src } = getResponsiveImageProps(imageUrl, "lightbox");
+      link.href = src;
       link.as = "image";
       document.head.appendChild(link);
 
@@ -334,19 +330,15 @@ export default function PictureGalleryContent({
 
           {/* Main image with responsive sizing */}
           <div className="fixed inset-0 flex items-center justify-center p-8">
-            <Image
-              src={imagePresets.gallery.lightboxRetina(
-                allImages[selectedImageIndex]
+            <img
+              {...getResponsiveImageProps(
+                allImages[selectedImageIndex],
+                "lightbox"
               )}
               alt={`${picture.title} - Image ${
                 selectedImageIndex + 1
               } of ${imageCount}`}
-              width={1200}
-              height={900}
               className="max-w-[95vw] max-h-[80vh] object-contain"
-              priority
-              unoptimized
-              sizes="95vw"
             />
           </div>
         </div>

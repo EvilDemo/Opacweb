@@ -50,6 +50,49 @@ const formSchema = z.object({
   botcheck: z.string().optional(),
 });
 
+// Schema for blur validation (format only, no required check)
+const formFormatSchema = z.object({
+  name: z
+    .string()
+    .min(2, { error: "Name must be at least 2 characters." })
+    .max(50, { error: "Name must be less than 50 characters." })
+    .regex(/^[a-zA-Z\s\-']+$/, {
+      error: "Name can only contain letters, spaces, hyphens, and apostrophes.",
+    }),
+  email: z
+    .string()
+    .refine((val) => val.length === 0 || val.includes("@"), {
+      message: "Please enter a valid email address.",
+    })
+    .refine(
+      (val) => val.length === 0 || z.string().email().safeParse(val).success,
+      {
+        message: "Please enter a valid email address.",
+      }
+    ),
+  phone: z
+    .string()
+    .optional()
+    .refine(
+      (val) => {
+        if (!val || val === "") return true; // Allow empty/undefined
+        if (val.length < 9) return false; // Must be at least 9 if provided
+        if (val.length > 20) return false; // Must be less than 20 if provided
+        return /^[+]?[\d\s\-\(\)]+$/.test(val); // Must match regex if provided
+      },
+      {
+        message:
+          "Phone number must be at least 9 digits and less than 20 characters if provided.",
+      }
+    ),
+  message: z
+    .string()
+    .min(10, { error: "Message must be at least 10 characters." })
+    .max(500, { error: "Message must be less than 500 characters." }),
+  // Honeypot field for spam protection
+  botcheck: z.string().optional(),
+});
+
 type FormData = z.infer<typeof formSchema>;
 
 export default function ContactForm() {
@@ -58,8 +101,8 @@ export default function ContactForm() {
   const [error, setError] = useState<string | null>(null);
 
   const form = useForm<FormData>({
-    resolver: zodResolver(formSchema),
-    mode: "onTouched",
+    resolver: zodResolver(formFormatSchema),
+    mode: "onBlur",
     defaultValues: {
       name: "",
       email: "",
@@ -70,6 +113,15 @@ export default function ContactForm() {
   });
 
   async function onSubmit(values: FormData) {
+    // Manual validation for required fields on submit
+    const submitValidation = formSchema.safeParse(values);
+    if (!submitValidation.success) {
+      const firstError = submitValidation.error.issues[0];
+      const fieldName = firstError.path[0] as keyof FormData;
+      form.setError(fieldName, { message: firstError.message });
+      return;
+    }
+
     setIsSubmitting(true);
     setError(null);
 

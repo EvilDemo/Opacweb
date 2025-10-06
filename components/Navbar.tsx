@@ -2,12 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "motion/react";
-import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-  SheetTitle,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
@@ -76,16 +71,8 @@ const AnimatedNavLink = ({ item, index }: { item: NavItem; index: number }) => {
   );
 };
 
-const NavigationLinks = ({
-  items,
-  className = "",
-}: {
-  items: NavItem[];
-  className?: string;
-}) => (
-  <div
-    className={`hidden lg:flex items-center justify-start space-x-2.5 ${className}`}
-  >
+const NavigationLinks = ({ items, className = "" }: { items: NavItem[]; className?: string }) => (
+  <div className={`hidden lg:flex items-center justify-start space-x-2.5 ${className}`}>
     {items.map((item, index) => (
       <AnimatedNavLink key={item.label} item={item} index={index} />
     ))}
@@ -121,13 +108,7 @@ const ShopButton = () => {
   );
 };
 
-const MobileMenuButton = ({
-  isOpen,
-  setIsOpen,
-}: {
-  isOpen: boolean;
-  setIsOpen: (open: boolean) => void;
-}) => (
+const MobileMenuButton = ({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (open: boolean) => void }) => (
   <motion.div
     initial={{ opacity: 0, x: 20 }}
     animate={{ opacity: 1, x: 0 }}
@@ -157,10 +138,7 @@ const MobileMenu = ({ setIsOpen }: { setIsOpen: (open: boolean) => void }) => {
   const shopItem = getShopItem();
 
   return (
-    <SheetContent
-      side="right"
-      className="w-full h-full bg-black border-none sm:max-w-none"
-    >
+    <SheetContent side="right" className="w-full h-full bg-black border-none sm:max-w-none z-[100]">
       <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
       <div className="flex flex-col h-full padding-global">
         {/* Mobile navigation */}

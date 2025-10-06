@@ -2,10 +2,9 @@
 
 import { motion, useInView } from "motion/react";
 import { Radio as RadioIcon, Play } from "lucide-react";
-import Image from "next/image";
 import { useRef } from "react";
 import { Card } from "@/components/ui/card";
-import { imagePresets } from "@/sanity/lib/image";
+import { getResponsiveImageProps } from "@/sanity/lib/image";
 
 interface RadioCardProps {
   _id: string;
@@ -17,13 +16,7 @@ interface RadioCardProps {
   index?: number;
 }
 
-export function RadioCard({
-  title,
-  description,
-  thumbnailUrl,
-  spotifyUrl,
-  index = 0,
-}: RadioCardProps) {
+export function RadioCard({ title, description, thumbnailUrl, spotifyUrl, index = 0 }: RadioCardProps) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-50px" });
 
@@ -36,11 +29,7 @@ export function RadioCard({
       <motion.div
         className="relative left-1/2  top-20 md:absolute z-20 md:left-1/2 md:transform md:-translate-x-1/2 md:-top-20 lg:-top-28"
         initial={{ scale: 0.8, opacity: 0, y: 20 }}
-        animate={
-          isInView
-            ? { scale: 1, opacity: 1, y: 0 }
-            : { scale: 0.8, opacity: 0, y: 20 }
-        }
+        animate={isInView ? { scale: 1, opacity: 1, y: 0 } : { scale: 0.8, opacity: 0, y: 20 }}
         transition={{
           duration: 0.6,
           ease: "easeOut",
@@ -49,20 +38,12 @@ export function RadioCard({
         whileHover={{ scale: 1.05, transition: { duration: 0.15 } }}
       >
         {thumbnailUrl ? (
-          <motion.div
-            whileHover={{ rotate: 5 }}
-            transition={{ duration: 0.15 }}
-          >
-            <Image
-              src={imagePresets.radio.coverRetina(thumbnailUrl)}
+          <motion.div whileHover={{ rotate: 5 }} transition={{ duration: 0.15 }}>
+            <img
+              {...getResponsiveImageProps(thumbnailUrl, "radio")}
               alt={`${title} cover`}
-              width={120}
-              height={185}
               className="w-18 md:w-22 lg:w-30"
-              sizes="(max-width: 768px) 72px, (max-width: 1024px) 88px, 120px"
               loading={index < 4 ? "eager" : "lazy"}
-              fetchPriority={index < 4 ? "high" : undefined}
-              unoptimized={true}
             />
           </motion.div>
         ) : (
@@ -119,9 +100,7 @@ export function RadioCard({
                 }}
               >
                 <motion.button
-                  onClick={() =>
-                    spotifyUrl && window.open(spotifyUrl, "_blank")
-                  }
+                  onClick={() => spotifyUrl && window.open(spotifyUrl, "_blank")}
                   className="w-16 h-16 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center hover:from-green-400 hover:to-emerald-500 relative overflow-hidden shadow-lg hover:shadow-green-500/25 transition-shadow duration-300 flex-shrink-0 cursor-pointer"
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
@@ -146,10 +125,7 @@ export function RadioCard({
                       ease: "easeOut",
                     }}
                   />
-                  <Play
-                    className="w-7 h-7 text-white ml-1 relative z-10"
-                    fill="currentColor"
-                  />
+                  <Play className="w-7 h-7 text-white ml-1 relative z-10" fill="currentColor" />
                 </motion.button>
               </motion.div>
             </div>

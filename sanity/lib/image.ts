@@ -10,12 +10,11 @@ export const urlFor = (source: SanityImageSource) => {
   return builder.image(source);
 };
 
-// Enhanced image optimization with responsive sizing
 export const getOptimizedImageUrl = (
   source: SanityImageSource,
-  width?: number,
-  quality: number = 80,
-  format: "auto" | "webp" | "jpg" | "png" = "webp" // Default to WebP for better compression
+  width: number | undefined,
+  quality: number,
+  format: "auto" | "webp" | "jpg" | "png" = "webp"
 ) => {
   let imageBuilder = builder.image(source);
 
@@ -32,55 +31,75 @@ export const getOptimizedImageUrl = (
   return optimizedBuilder.auto("format").url(); // Automatically choose best format (WebP when supported)
 };
 
-// Unified image presets for all components - WebP optimized
-export const imagePresets = {
-  // Media Card presets
-  mediaCard: {
-    thumbnail: (source: SanityImageSource) =>
-      getOptimizedImageUrl(source, 576, 80, "webp"), // MediaCard thumbnails
-  },
+const QUALITY = {
+  thumbnail: 75,
+  standard: 80,
+  high: 85,
+} as const;
 
-  // Picture Gallery presets
-  gallery: {
-    thumb: (source: SanityImageSource) =>
-      getOptimizedImageUrl(source, 546, 75, "webp"), // Gallery grid thumbnails
-    thumbRetina: (source: SanityImageSource) =>
-      getOptimizedImageUrl(source, 1092, 75, "webp"), // 2x for retina
-    lightbox: (source: SanityImageSource) =>
-      getOptimizedImageUrl(source, 1200, 80, "webp"), // Lightbox view
-    lightboxRetina: (source: SanityImageSource) =>
-      getOptimizedImageUrl(source, 2400, 80, "webp"), // 2x retina lightbox
-  },
-
-  // Radio Card presets
-  radio: {
-    cover: (source: SanityImageSource) =>
-      getOptimizedImageUrl(source, 240, 80, "webp"), // Radio cover art
-    coverRetina: (source: SanityImageSource) =>
-      getOptimizedImageUrl(source, 480, 80, "webp"), // 2x for retina
-  },
-
-  // General purpose presets
-  general: {
-    small: (source: SanityImageSource) =>
-      getOptimizedImageUrl(source, 400, 75, "webp"),
-    medium: (source: SanityImageSource) =>
-      getOptimizedImageUrl(source, 800, 75, "webp"),
-    large: (source: SanityImageSource) =>
-      getOptimizedImageUrl(source, 1200, 75, "webp"),
-    fullSize: (source: SanityImageSource) =>
-      getOptimizedImageUrl(source, 1920, 75, "webp"),
-  },
-};
-
-// Generate responsive srcset for different screen sizes
-export const getResponsiveImageSrcSet = (
+// Generate responsive srcSet directly from Sanity
+export const getResponsiveImageProps = (
   source: SanityImageSource,
-  baseWidth: number,
-  quality: number = 75
+  type: "gallery" | "lightbox" | "mediaCard" | "radio"
 ) => {
-  const sizes = [baseWidth, baseWidth * 2]; // 1x and 2x for retina
-  return sizes
-    .map((size) => `${getOptimizedImageUrl(source, size, quality)} ${size}w`)
-    .join(", ");
+  const baseProps = {
+    alt: "",
+  };
+
+  switch (type) {
+    case "gallery":
+      return {
+        ...baseProps,
+        src: getOptimizedImageUrl(source, 600, QUALITY.standard, "webp"),
+        srcSet: [
+          `${getOptimizedImageUrl(source, 600, QUALITY.standard, "webp")} 600w`,
+          `${getOptimizedImageUrl(source, 800, QUALITY.standard, "webp")} 800w`,
+        ].join(", "),
+        sizes: "(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw",
+      };
+
+    case "lightbox":
+      return {
+        ...baseProps,
+        src: getOptimizedImageUrl(source, 1200, QUALITY.high, "webp"),
+        srcSet: [
+          `${getOptimizedImageUrl(source, 800, QUALITY.high, "webp")} 800w`,
+          `${getOptimizedImageUrl(source, 1200, QUALITY.high, "webp")} 1200w`,
+          `${getOptimizedImageUrl(source, 1600, QUALITY.high, "webp")} 1600w`,
+        ].join(", "),
+        sizes: "(max-width: 768px) 95vw, (max-width: 1024px) 90vw, (max-width: 1440px) 80vw, 70vw",
+      };
+
+    case "mediaCard":
+      return {
+        ...baseProps,
+        src: getOptimizedImageUrl(source, 400, QUALITY.thumbnail, "webp"),
+        srcSet: [
+          `${getOptimizedImageUrl(source, 400, QUALITY.thumbnail, "webp")} 400w`,
+          `${getOptimizedImageUrl(source, 600, QUALITY.thumbnail, "webp")} 600w`,
+        ].join(", "),
+        sizes: "(max-width: 640px) 100vw, (max-width: 768px) 50vw, 25vw",
+      };
+
+    case "radio":
+      return {
+        ...baseProps,
+        src: getOptimizedImageUrl(source, 240, QUALITY.standard, "webp"), // 2x the max display size (120px)
+        srcSet: [
+          `${getOptimizedImageUrl(source, 144, QUALITY.standard, "webp")} 144w`, // 2x for 72px
+          `${getOptimizedImageUrl(source, 176, QUALITY.standard, "webp")} 176w`, // 2x for 88px
+          `${getOptimizedImageUrl(source, 240, QUALITY.standard, "webp")} 240w`, // 2x for 120px
+        ].join(", "),
+        sizes: "(max-width: 768px) 72px, (max-width: 1024px) 88px, 120px",
+      };
+
+    default:
+      return {
+        ...baseProps,
+        src: getOptimizedImageUrl(source, 500, QUALITY.standard, "webp"),
+      };
+  }
 };
+
+// Note: All image handling is now done through getResponsiveImageProps
+// This eliminates double transformations and uses Sanity's srcSet directly
