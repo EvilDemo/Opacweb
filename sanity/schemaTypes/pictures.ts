@@ -25,7 +25,7 @@ export default defineType({
         hotspot: true,
       },
       validation: (Rule) =>
-        Rule.required().custom((image) => {
+        Rule.required().custom((image: any) => {
           if (!image) return true;
           // Recommend optimal dimensions
           const width = image.asset?.metadata?.dimensions?.width;
@@ -61,7 +61,7 @@ export default defineType({
         },
       ],
       validation: (Rule) =>
-        Rule.custom((gallery) => {
+        Rule.custom((gallery: any) => {
           if (!gallery || gallery.length === 0) return true;
 
           // Check each image in the gallery

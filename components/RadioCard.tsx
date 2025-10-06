@@ -43,7 +43,7 @@ export function RadioCard({ title, description, thumbnailUrl, spotifyUrl, index 
               {...getResponsiveImageProps(thumbnailUrl, "radio")}
               alt={`${title} cover`}
               className="w-18 md:w-22 lg:w-30"
-              loading={index < 4 ? "eager" : "lazy"}
+              loading={index < 8 ? "eager" : "lazy"} // Eager load first 8 images
             />
           </motion.div>
         ) : (

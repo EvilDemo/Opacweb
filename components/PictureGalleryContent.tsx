@@ -39,10 +39,14 @@ const ImageCard = ({
   imageUrl,
   index,
   onImageClick,
+  pictureTitle,
+  imageCount,
 }: {
   imageUrl: string;
   index: number;
   onImageClick: (index: number) => void;
+  pictureTitle: string;
+  imageCount: number;
 }) => {
   const [ref, isVisible] = useIntersectionObserver();
 
@@ -63,9 +67,9 @@ const ImageCard = ({
       {isVisible && (
         <img
           {...getResponsiveImageProps(imageUrl, "gallery")}
-          alt={`Gallery image ${index + 1}`}
-          className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-300"
-          loading={index < 4 ? "eager" : "lazy"}
+          alt={`${pictureTitle} - Image ${index + 1} of ${imageCount}`}
+          className="w-full h-full object-cover"
+          loading={index < 8 ? "eager" : "lazy"} // Eager load first 8 images
         />
       )}
     </div>
@@ -77,13 +81,8 @@ interface PictureGalleryContentProps {
   gallery: Gallery | null;
 }
 
-export default function PictureGalleryContent({
-  picture,
-  gallery,
-}: PictureGalleryContentProps) {
-  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(
-    null
-  );
+export default function PictureGalleryContent({ picture, gallery }: PictureGalleryContentProps) {
+  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
 
   // Get gallery images
@@ -107,13 +106,9 @@ export default function PictureGalleryContent({
       if (selectedImageIndex === null) return;
 
       if (direction === "prev") {
-        setSelectedImageIndex(
-          selectedImageIndex > 0 ? selectedImageIndex - 1 : allImages.length - 1
-        );
+        setSelectedImageIndex(selectedImageIndex > 0 ? selectedImageIndex - 1 : allImages.length - 1);
       } else {
-        setSelectedImageIndex(
-          selectedImageIndex < allImages.length - 1 ? selectedImageIndex + 1 : 0
-        );
+        setSelectedImageIndex(selectedImageIndex < allImages.length - 1 ? selectedImageIndex + 1 : 0);
       }
     },
     [selectedImageIndex, allImages.length]
@@ -147,11 +142,7 @@ export default function PictureGalleryContent({
 
   // Prefetch previous and next images when lightbox is open
   useEffect(() => {
-    if (
-      !isLightboxOpen ||
-      selectedImageIndex === null ||
-      allImages.length === 0
-    ) {
+    if (!isLightboxOpen || selectedImageIndex === null || allImages.length === 0) {
       return;
     }
 
@@ -172,15 +163,13 @@ export default function PictureGalleryContent({
 
     // Prefetch previous image
     if (allImages.length > 1) {
-      const prevIndex =
-        selectedImageIndex > 0 ? selectedImageIndex - 1 : allImages.length - 1;
+      const prevIndex = selectedImageIndex > 0 ? selectedImageIndex - 1 : allImages.length - 1;
       if (prevIndex !== selectedImageIndex) {
         prefetchImage(allImages[prevIndex]);
       }
 
       // Prefetch next image
-      const nextIndex =
-        selectedImageIndex < allImages.length - 1 ? selectedImageIndex + 1 : 0;
+      const nextIndex = selectedImageIndex < allImages.length - 1 ? selectedImageIndex + 1 : 0;
       if (nextIndex !== selectedImageIndex) {
         prefetchImage(allImages[nextIndex]);
       }
@@ -201,10 +190,7 @@ export default function PictureGalleryContent({
         <nav aria-label="Breadcrumb">
           <ol className="flex items-center space-x-2 body-text-sm">
             <li>
-              <Link
-                href="/media"
-                className="text-muted hover:text-white transition-colors"
-              >
+              <Link href="/media" className="text-muted hover:text-white transition-colors">
                 Media
               </Link>
             </li>
@@ -212,10 +198,7 @@ export default function PictureGalleryContent({
               /
             </li>
             <li>
-              <Link
-                href="/media"
-                className="text-muted hover:text-white transition-colors"
-              >
+              <Link href="/media" className="text-muted hover:text-white transition-colors">
                 Pictures
               </Link>
             </li>
@@ -232,9 +215,7 @@ export default function PictureGalleryContent({
       {/* Header */}
       <header className="mb-8">
         <h1 className="heading-2 mb-4">{picture.title}</h1>
-        <p className="body-text text-muted-foreground mb-2">
-          {picture.description}
-        </p>
+        <p className="body-text text-muted-foreground mb-2">{picture.description}</p>
         <p className="body-text-sm text-muted">
           {imageCount} {imageCount === 1 ? "image" : "images"} in this gallery
         </p>
@@ -254,12 +235,12 @@ export default function PictureGalleryContent({
                 imageUrl={imageUrl}
                 index={index}
                 onImageClick={openLightbox}
+                pictureTitle={picture.title}
+                imageCount={imageCount}
               />
             ))
           ) : (
-            <div className="col-span-full text-center text-gray-500 py-8">
-              No images found in gallery
-            </div>
+            <div className="col-span-full text-center text-gray-500 py-8">No images found in gallery</div>
           )}
         </div>
       </main>
@@ -278,10 +259,7 @@ export default function PictureGalleryContent({
           {/* Header with counter and close button */}
           <div className="fixed top-4 left-4 z-20">
             <div className="bg-black bg-opacity-70 rounded-full px-3 py-1">
-              <span
-                id="lightbox-title"
-                className="text-white body-text-sm font-medium"
-              >
+              <span id="lightbox-title" className="text-white body-text-sm font-medium">
                 {selectedImageIndex + 1} / {imageCount}
               </span>
             </div>
@@ -331,13 +309,8 @@ export default function PictureGalleryContent({
           {/* Main image with responsive sizing */}
           <div className="fixed inset-0 flex items-center justify-center p-8">
             <img
-              {...getResponsiveImageProps(
-                allImages[selectedImageIndex],
-                "lightbox"
-              )}
-              alt={`${picture.title} - Image ${
-                selectedImageIndex + 1
-              } of ${imageCount}`}
+              {...getResponsiveImageProps(allImages[selectedImageIndex], "lightbox")}
+              alt={`${picture.title} - Image ${selectedImageIndex + 1} of ${imageCount}`}
               className="max-w-[95vw] max-h-[80vh] object-contain"
             />
           </div>

@@ -4,10 +4,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { ExternalLink, Images } from "lucide-react";
 import { motion, useInView } from "motion/react";
-import Image from "next/image";
 import Link from "next/link";
 import { useRef } from "react";
-import { imagePresets, getResponsiveImageProps } from "@/sanity/lib/image";
+import { getResponsiveImageProps } from "@/sanity/lib/image";
 
 // Base interface for all media items
 interface BaseMediaItem {
@@ -62,14 +61,11 @@ export function MediaCard({ item, index = 0 }: MediaCardProps) {
     }
     // Render optimized image for all media types using responsive preset
     return (
-      <Image
+      <img
         {...getResponsiveImageProps(item.thumbnailUrl, "mediaCard")}
         alt={`${item.title} - ${item.description}`}
-        width={400}
-        height={400}
         className="w-full h-full object-cover"
-        loading={index < 4 ? "eager" : "lazy"}
-        fetchPriority={index < 4 ? "high" : undefined}
+        loading={index < 8 ? "eager" : "lazy"} // Eager load first 8 images
       />
     );
   };

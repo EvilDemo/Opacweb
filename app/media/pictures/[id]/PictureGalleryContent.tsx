@@ -13,19 +13,12 @@ interface PictureGalleryContentProps {
   gallery: Gallery | null;
 }
 
-export default function PictureGalleryContent({
-  picture,
-  gallery,
-}: PictureGalleryContentProps) {
-  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(
-    null
-  );
+export default function PictureGalleryContent({ picture, gallery }: PictureGalleryContentProps) {
+  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
 
   // Combine thumbnail and gallery images
-  const allImages = [picture.thumbnailUrl, ...(gallery?.gallery || [])].filter(
-    Boolean
-  );
+  const allImages = [picture.thumbnailUrl, ...(gallery?.gallery || [])].filter(Boolean);
   const imageCount = allImages.length;
 
   const openLightbox = useCallback((index: number) => {
@@ -47,13 +40,9 @@ export default function PictureGalleryContent({
       if (selectedImageIndex === null) return;
 
       if (direction === "prev") {
-        setSelectedImageIndex(
-          selectedImageIndex > 0 ? selectedImageIndex - 1 : allImages.length - 1
-        );
+        setSelectedImageIndex(selectedImageIndex > 0 ? selectedImageIndex - 1 : allImages.length - 1);
       } else {
-        setSelectedImageIndex(
-          selectedImageIndex < allImages.length - 1 ? selectedImageIndex + 1 : 0
-        );
+        setSelectedImageIndex(selectedImageIndex < allImages.length - 1 ? selectedImageIndex + 1 : 0);
       }
     },
     [selectedImageIndex, allImages.length]
@@ -95,10 +84,7 @@ export default function PictureGalleryContent({
         <nav aria-label="Breadcrumb" className="mb-6">
           <ol className="flex items-center space-x-2 body-text-sm">
             <li>
-              <Link
-                href="/media"
-                className="text-muted hover:text-white transition-colors"
-              >
+              <Link href="/media" className="text-muted hover:text-white transition-colors">
                 Media
               </Link>
             </li>
@@ -106,10 +92,7 @@ export default function PictureGalleryContent({
               /
             </li>
             <li>
-              <Link
-                href="/media"
-                className="text-muted hover:text-white transition-colors"
-              >
+              <Link href="/media" className="text-muted hover:text-white transition-colors">
                 Pictures
               </Link>
             </li>
@@ -125,11 +108,7 @@ export default function PictureGalleryContent({
         {/* Back Button */}
         <div className="mb-8">
           <Link href="/media">
-            <Button
-              variant="ghost"
-              className="mb-4"
-              aria-label="Go back to media page"
-            >
+            <Button variant="ghost" className="mb-4" aria-label="Go back to media page">
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back to Media
             </Button>
@@ -139,9 +118,7 @@ export default function PictureGalleryContent({
       {/* Header */}
       <header className="mb-8">
         <h1 className="heading-2 mb-4">{picture.title}</h1>
-        <p className="body-text text-muted-foreground mb-2">
-          {picture.description}
-        </p>
+        <p className="body-text text-muted-foreground mb-2">{picture.description}</p>
         <p className="body-text-sm text-muted" aria-live="polite">
           {imageCount} {imageCount === 1 ? "image" : "images"} in this gallery
         </p>
@@ -164,9 +141,7 @@ export default function PictureGalleryContent({
             >
               <button
                 className="w-full h-full focus:outline-none"
-                aria-label={`View image ${index + 1} of ${imageCount}: ${
-                  picture.title
-                }`}
+                aria-label={`View image ${index + 1} of ${imageCount}: ${picture.title}`}
                 onClick={() => openLightbox(index)}
               >
                 <img
@@ -191,18 +166,11 @@ export default function PictureGalleryContent({
           aria-describedby="lightbox-description"
           onClick={closeLightbox}
         >
-          <div
-            className="relative max-w-[95vw] max-h-[95vh] p-4"
-            onClick={(e) => e.stopPropagation()}
-          >
+          <div className="relative max-w-[95vw] max-h-[95vh] p-4" onClick={(e) => e.stopPropagation()}>
             {/* Lightbox Header */}
             <div className="absolute top-4 left-4 right-4 z-10 flex justify-between items-center">
               <div className="bg-black bg-opacity-70 rounded-full px-3 py-1">
-                <span
-                  id="lightbox-title"
-                  className="text-white body-text-sm font-medium"
-                  aria-live="polite"
-                >
+                <span id="lightbox-title" className="text-white body-text-sm font-medium" aria-live="polite">
                   {selectedImageIndex + 1} / {imageCount}
                 </span>
               </div>
@@ -238,21 +206,16 @@ export default function PictureGalleryContent({
             {/* Main Image */}
             <div className="flex items-center justify-center h-full">
               <img
-                {...getResponsiveImageProps(
-                  allImages[selectedImageIndex],
-                  "lightbox"
-                )}
-                alt={`${picture.title} - Image ${
-                  selectedImageIndex + 1
-                } of ${imageCount}`}
+                {...getResponsiveImageProps(allImages[selectedImageIndex], "lightbox")}
+                alt={`${picture.title} - Image ${selectedImageIndex + 1} of ${imageCount}`}
                 className="max-w-[95vw] max-h-[80vh] object-contain"
               />
             </div>
 
             {/* Hidden description for screen readers */}
             <span id="lightbox-description" className="sr-only">
-              Image {selectedImageIndex + 1} of {imageCount} from{" "}
-              {picture.title}. Use arrow keys to navigate, escape to close.
+              Image {selectedImageIndex + 1} of {imageCount} from {picture.title}. Use arrow keys to navigate, escape to
+              close.
             </span>
           </div>
         </div>

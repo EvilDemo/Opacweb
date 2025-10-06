@@ -52,10 +52,13 @@ export const getResponsiveImageProps = (
         ...baseProps,
         src: getOptimizedImageUrl(source, 600, QUALITY.standard, "webp"),
         srcSet: [
+          `${getOptimizedImageUrl(source, 400, QUALITY.standard, "webp")} 400w`,
           `${getOptimizedImageUrl(source, 600, QUALITY.standard, "webp")} 600w`,
           `${getOptimizedImageUrl(source, 800, QUALITY.standard, "webp")} 800w`,
+          `${getOptimizedImageUrl(source, 1200, QUALITY.standard, "webp")} 1200w`,
         ].join(", "),
-        sizes: "(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw",
+        sizes:
+          "(max-width: 640px) calc(100vw - 2rem), (max-width: 768px) calc(50vw - 1.5rem), (max-width: 1024px) calc(33.333vw - 1rem), calc(25vw - 0.75rem)",
       };
 
     case "lightbox":
@@ -66,8 +69,10 @@ export const getResponsiveImageProps = (
           `${getOptimizedImageUrl(source, 800, QUALITY.high, "webp")} 800w`,
           `${getOptimizedImageUrl(source, 1200, QUALITY.high, "webp")} 1200w`,
           `${getOptimizedImageUrl(source, 1600, QUALITY.high, "webp")} 1600w`,
+          `${getOptimizedImageUrl(source, 2000, QUALITY.high, "webp")} 2000w`,
         ].join(", "),
-        sizes: "(max-width: 768px) 95vw, (max-width: 1024px) 90vw, (max-width: 1440px) 80vw, 70vw",
+        sizes:
+          "(max-width: 768px) calc(95vw - 2rem), (max-width: 1024px) calc(90vw - 3rem), (max-width: 1440px) calc(80vw - 4rem), calc(70vw - 5rem)",
       };
 
     case "mediaCard":
@@ -75,10 +80,12 @@ export const getResponsiveImageProps = (
         ...baseProps,
         src: getOptimizedImageUrl(source, 400, QUALITY.thumbnail, "webp"),
         srcSet: [
+          `${getOptimizedImageUrl(source, 300, QUALITY.thumbnail, "webp")} 300w`,
           `${getOptimizedImageUrl(source, 400, QUALITY.thumbnail, "webp")} 400w`,
           `${getOptimizedImageUrl(source, 600, QUALITY.thumbnail, "webp")} 600w`,
+          `${getOptimizedImageUrl(source, 800, QUALITY.thumbnail, "webp")} 800w`,
         ].join(", "),
-        sizes: "(max-width: 640px) 100vw, (max-width: 768px) 50vw, 25vw",
+        sizes: "(max-width: 640px) calc(100vw - 2rem), (max-width: 768px) calc(50vw - 1.5rem), calc(25vw - 0.75rem)",
       };
 
     case "radio":
@@ -89,6 +96,7 @@ export const getResponsiveImageProps = (
           `${getOptimizedImageUrl(source, 144, QUALITY.standard, "webp")} 144w`, // 2x for 72px
           `${getOptimizedImageUrl(source, 176, QUALITY.standard, "webp")} 176w`, // 2x for 88px
           `${getOptimizedImageUrl(source, 240, QUALITY.standard, "webp")} 240w`, // 2x for 120px
+          `${getOptimizedImageUrl(source, 320, QUALITY.standard, "webp")} 320w`, // 2x for 160px
         ].join(", "),
         sizes: "(max-width: 768px) 72px, (max-width: 1024px) 88px, 120px",
       };
