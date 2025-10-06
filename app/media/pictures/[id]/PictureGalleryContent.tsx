@@ -144,7 +144,7 @@ export default function PictureGalleryContent({ picture, gallery }: PictureGalle
                 aria-label={`View image ${index + 1} of ${imageCount}: ${picture.title}`}
                 onClick={() => openLightbox(index)}
               >
-                <img
+                <Image
                   {...getResponsiveImageProps(imageUrl, "gallery")}
                   alt={`${picture.title} - Image ${index + 1} of ${imageCount}`}
                   className="w-full h-full object-cover"
@@ -205,7 +205,7 @@ export default function PictureGalleryContent({ picture, gallery }: PictureGalle
 
             {/* Main Image */}
             <div className="flex items-center justify-center h-full">
-              <img
+              <Image
                 {...getResponsiveImageProps(allImages[selectedImageIndex], "lightbox")}
                 alt={`${picture.title} - Image ${selectedImageIndex + 1} of ${imageCount}`}
                 className="max-w-[95vw] max-h-[80vh] object-contain"

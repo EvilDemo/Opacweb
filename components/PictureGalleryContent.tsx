@@ -65,7 +65,7 @@ const ImageCard = ({
       }}
     >
       {isVisible && (
-        <img
+        <Image
           {...getResponsiveImageProps(imageUrl, "gallery")}
           alt={`${pictureTitle} - Image ${index + 1} of ${imageCount}`}
           className="w-full h-full object-cover"
@@ -308,7 +308,7 @@ export default function PictureGalleryContent({ picture, gallery }: PictureGalle
 
           {/* Main image with responsive sizing */}
           <div className="fixed inset-0 flex items-center justify-center p-8">
-            <img
+            <Image
               {...getResponsiveImageProps(allImages[selectedImageIndex], "lightbox")}
               alt={`${picture.title} - Image ${selectedImageIndex + 1} of ${imageCount}`}
               className="max-w-[95vw] max-h-[80vh] object-contain"

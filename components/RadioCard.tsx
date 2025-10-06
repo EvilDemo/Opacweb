@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, useInView } from "motion/react";
+import Image from "next/image";
 import { Radio as RadioIcon, Play } from "lucide-react";
 import { useRef } from "react";
 import { Card } from "@/components/ui/card";
@@ -39,7 +40,7 @@ export function RadioCard({ title, description, thumbnailUrl, spotifyUrl, index 
       >
         {thumbnailUrl ? (
           <motion.div whileHover={{ rotate: 5 }} transition={{ duration: 0.15 }}>
-            <img
+            <Image
               {...getResponsiveImageProps(thumbnailUrl, "radio")}
               alt={`${title} cover`}
               className="w-18 md:w-22 lg:w-30"
