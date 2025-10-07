@@ -11,10 +11,7 @@ interface RouteLoaderProps {
 // 3D Sphere video from your public folder
 const sphereVideo = "/esfera3D_optimized.webm";
 
-export default function RouteLoader({
-  children,
-  minimumLoadTime = 1000,
-}: RouteLoaderProps) {
+export default function RouteLoader({ children, minimumLoadTime = 1000 }: RouteLoaderProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [isFirstLoad, setIsFirstLoad] = useState(true);
   const [counter, setCounter] = useState(1);
@@ -74,23 +71,16 @@ export default function RouteLoader({
 
   if (isLoading) {
     return (
-      <div className="fixed inset-0 z-50 bg-black flex">
-        {/* Left side - Video (bigger) */}
+      <div className="fixed flex flex-col lg:flex-row padding-global inset-0 z-50 bg-black">
+        {/* Video - takes remaining space and centers content */}
         <div className="flex-1 flex items-center justify-center overflow-hidden">
           <div className="relative w-96 h-96 lg:w-[32rem] lg:h-[32rem] xl:w-[40rem] xl:h-[40rem] overflow-hidden rounded-full">
-            <video
-              src={sphereVideo}
-              autoPlay
-              loop
-              muted
-              playsInline
-              className="w-full h-full object-cover"
-            />
+            <video src={sphereVideo} autoPlay loop muted playsInline className="w-full h-full object-contain" />
           </div>
         </div>
 
-        {/* Right side - Text and Counter */}
-        <div className="flex-1 flex items-end justify-end p-8 lg:p-16">
+        {/* Text and Counter - full width on mobile, 50/50 split on desktop */}
+        <div className="flex-0 w-full lg:flex-1 flex items-end justify-end p-8 lg:p-16">
           <div className="text-right">
             {/* Brand Text */}
             <h1 className="heading-1 text-white tracking-wider mb-2">opac</h1>
