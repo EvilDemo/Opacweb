@@ -32,7 +32,7 @@ const Logo = ({ className = "" }: { className?: string }) => (
       rotateY: 5,
       transition: { duration: 0.2, ease: "easeOut" },
     }}
-    className="relative"
+    className="relative w-[125px] h-[62px]"
   >
     <Image
       src="/logo.webp"
