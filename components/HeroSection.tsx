@@ -124,7 +124,7 @@ export default function HeroSection() {
             onCheckedChange={setAotyMode}
             className="data-[state=checked]:bg-white border-neutral-200"
           />
-          <p className="font-medium leading-[1.5] body-text-sm  text-white whitespace-nowrap">AOTY MODE</p>
+          <p className="font-medium leading-[1.5] body-text-sm  text-white whitespace-nowrap">A0TY MODE</p>
         </div>
       </motion.div>
     </section>

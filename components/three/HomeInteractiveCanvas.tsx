@@ -11,6 +11,7 @@ import { HomeInteractiveMusic } from "./HomeInteractiveMusic";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import { Effect } from "postprocessing";
 import { Uniform } from "three";
+import { Button } from "@/components/ui/button";
 
 // Custom Chromatic Aberration Shader
 const chromaticAberrationShader = `
@@ -25,13 +26,13 @@ const chromaticAberrationShader = `
     
     // Create radial falloff
     float falloff = smoothstep(0.3, 0.0, dist);
-    float aberration = intensity * falloff * 0.01;
+    float aberration = intensity * falloff * 0.005;
     
     // Sample RGB channels with offset
     vec2 direction = normalize(uv - center);
-    vec2 redOffset = direction * aberration * 1.5;
-    vec2 greenOffset = direction * aberration * 0.5;
-    vec2 blueOffset = direction * aberration * -1.0;
+    vec2 redOffset = direction * aberration * 0.8;
+    vec2 greenOffset = direction * aberration * 0.3;
+    vec2 blueOffset = direction * aberration * -0.5;
     
     float r = texture2D(inputBuffer, uv + redOffset).r;
     float g = texture2D(inputBuffer, uv + greenOffset).g;
@@ -73,7 +74,7 @@ function ChromaticRipple() {
       impactPointRef.current.set((vec3.x + 1) / 2, (vec3.y + 1) / 2);
 
       // Set initial intensity (stronger impacts = stronger effect)
-      intensityRef.current = Math.min(event.detail.velocity * 0.15, 1.0);
+      intensityRef.current = Math.min(event.detail.velocity * 0.08, 1.0);
     };
 
     window.addEventListener("wallImpact", handleImpact as EventListener);
@@ -117,11 +118,35 @@ function InteractiveCross() {
       if (velChange > 3) {
         const pos = rigidBodyRef.current.translation();
 
+        // Detect which wall was hit based on position
+        const distance = 15;
+        const fov = 60;
+        const vFOV = (fov * Math.PI) / 180;
+        const visibleHeight = 2 * Math.tan(vFOV / 2) * distance;
+        const visibleWidth = visibleHeight * (window.innerWidth / window.innerHeight);
+        const halfWidth = visibleWidth / 2;
+        const halfHeight = visibleHeight / 2;
+        const ceilingHeight = halfHeight * 0.5;
+
+        let wallType: string | null = null;
+        const threshold = 0.5; // Threshold to detect wall proximity
+
+        if (Math.abs(pos.x - halfWidth) < threshold) {
+          wallType = "right";
+        } else if (Math.abs(pos.x + halfWidth) < threshold) {
+          wallType = "left";
+        } else if (Math.abs(pos.y + halfHeight) < threshold) {
+          wallType = "floor";
+        } else if (Math.abs(pos.y - ceilingHeight) < threshold) {
+          wallType = "ceiling";
+        }
+
         window.dispatchEvent(
           new CustomEvent("wallImpact", {
             detail: {
               position: { x: pos.x, y: pos.y, z: pos.z },
               velocity: currentVel.length(),
+              wallType,
             },
           })
         );
@@ -380,6 +405,8 @@ export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }
   const [showCross, setShowCross] = useState(false);
   const [animateText, setAnimateText] = useState(false);
   const [showInstructions, setShowInstructions] = useState(false);
+  const [showSideWallButton, setShowSideWallButton] = useState(false);
+  const sideWallTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     // Start text animation immediately
@@ -401,11 +428,44 @@ export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }
     };
   }, []);
 
+  // Listen for side wall impacts
+  useEffect(() => {
+    const handleWallImpact = (event: CustomEvent) => {
+      const { wallType } = event.detail;
+
+      // Only show button for side walls (left or right)
+      if (wallType === "left" || wallType === "right") {
+        // Show button and restart timer every time a side wall is hit
+        setShowSideWallButton(true);
+
+        // Clear any existing timer
+        if (sideWallTimerRef.current) {
+          clearTimeout(sideWallTimerRef.current);
+        }
+
+        // Set new timer to hide button after 10 seconds
+        sideWallTimerRef.current = setTimeout(() => {
+          setShowSideWallButton(false);
+          sideWallTimerRef.current = null;
+        }, 10000);
+      }
+    };
+
+    window.addEventListener("wallImpact", handleWallImpact as EventListener);
+
+    return () => {
+      window.removeEventListener("wallImpact", handleWallImpact as EventListener);
+      if (sideWallTimerRef.current) {
+        clearTimeout(sideWallTimerRef.current);
+      }
+    };
+  }, []);
+
   return (
     <div className="w-full relative" style={{ height: "calc(100vh - 6rem)" }}>
       {/* Background Text Content */}
       <div
-        className="absolute inset-0 flex flex-col items-center justify-center text-white pointer-events-none"
+        className="absolute inset-0 flex flex-col items-center justify-center text-white pointer-events-none z-10"
         style={{
           transform: animateText ? "perspective(1000px) translateZ(0px)" : "perspective(1000px) translateZ(-500px)",
           opacity: animateText ? 1 : 0,
@@ -414,10 +474,27 @@ export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }
       >
         <h1 className=" display-text font-bold mb-4">A0TY</h1>
         <h4 className="heading-4  lg:heading-3 xl:heading-2">Out Now!</h4>
+
+        {/* Side Wall Impact Button - below "Out Now!" - space always reserved */}
+        <div className="mt-8 z-20 relative" style={{ minHeight: "40px" }}>
+          {showSideWallButton && (
+            <Button
+              variant="secondary"
+              size="lg"
+              className="animate-[fadeIn_0.3s_ease-out] pointer-events-auto"
+              onClick={() => {
+                // Add your button action here
+                console.log("Take me to the page button clicked!");
+              }}
+            >
+              Take me to the page
+            </Button>
+          )}
+        </div>
       </div>
 
       {/* 3D Canvas Layer */}
-      <div className="absolute inset-0">
+      <div className="absolute inset-0 z-0">
         {/* Instructions - centered at bottom */}
         {showInstructions && (
           <div className="absolute bottom-8 md:bottom-12 lg:bottom-16 left-1/2 -translate-x-1/2 z-10 text-white pointer-events-none">
