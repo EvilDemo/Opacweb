@@ -19,7 +19,7 @@ export const getOptimizedImageUrl = (
   let imageBuilder = builder.image(source);
 
   if (width) {
-    imageBuilder = imageBuilder.width(width);
+    imageBuilder = imageBuilder.width(width).fit("max");
   }
 
   const optimizedBuilder = imageBuilder.quality(quality);
@@ -50,58 +50,68 @@ export const getResponsiveImageProps = (
     case "gallery":
       return {
         ...baseProps,
-        src: getOptimizedImageUrl(source, 600, QUALITY.standard, "webp"),
+        src: getOptimizedImageUrl(source, 800, QUALITY.standard),
         srcSet: [
-          `${getOptimizedImageUrl(source, 400, QUALITY.standard, "webp")} 400w`,
-          `${getOptimizedImageUrl(source, 600, QUALITY.standard, "webp")} 600w`,
-          `${getOptimizedImageUrl(source, 800, QUALITY.standard, "webp")} 800w`,
+          `${getOptimizedImageUrl(source, 400, QUALITY.standard)} 400w`,
+          `${getOptimizedImageUrl(source, 800, QUALITY.standard)} 800w`,
+          `${getOptimizedImageUrl(source, 1200, QUALITY.standard)} 1200w`,
+          `${getOptimizedImageUrl(source, 1600, QUALITY.standard)} 1600w`,
         ].join(", "),
-        sizes:
-          "(max-width: 640px) calc(100vw - 2rem), (max-width: 768px) calc(50vw - 1.5rem), (max-width: 1024px) calc(33.333vw - 1rem), calc(25vw - 0.75rem)",
+        // Tailwind breakpoints: sm=640px (2 cols), md=768px (3 cols), lg=1024px (4 cols)
+        // Conservative on mobile to save bandwidth on cellular networks
+        sizes: "(max-width: 639px) 50vw, (max-width: 767px) 50vw, (max-width: 1023px) 33vw, 25vw",
+        width: 800,
+        height: 600,
       };
 
     case "lightbox":
       return {
         ...baseProps,
-        src: getOptimizedImageUrl(source, 1200, QUALITY.high, "webp"),
+        src: getOptimizedImageUrl(source, 1200, QUALITY.high),
         srcSet: [
-          `${getOptimizedImageUrl(source, 800, QUALITY.high, "webp")} 800w`,
-          `${getOptimizedImageUrl(source, 1200, QUALITY.high, "webp")} 1200w`,
-          `${getOptimizedImageUrl(source, 1600, QUALITY.high, "webp")} 1600w`,
+          `${getOptimizedImageUrl(source, 800, QUALITY.high)} 800w`,
+          `${getOptimizedImageUrl(source, 1200, QUALITY.high)} 1200w`,
+          `${getOptimizedImageUrl(source, 1600, QUALITY.high)} 1600w`,
         ].join(", "),
-        sizes:
-          "(max-width: 768px) calc(95vw - 2rem), (max-width: 1024px) calc(90vw - 3rem), (max-width: 1440px) calc(80vw - 4rem), calc(70vw - 5rem)",
+        sizes: "(max-width: 768px) calc(95vw - 2rem), (max-width: 1024px) calc(90vw - 3rem), calc(80vw - 4rem)",
+        width: 1600,
+        height: 1200,
       };
 
     case "mediaCard":
       return {
         ...baseProps,
-        src: getOptimizedImageUrl(source, 400, QUALITY.thumbnail, "webp"),
+        src: getOptimizedImageUrl(source, 400, QUALITY.thumbnail),
         srcSet: [
-          `${getOptimizedImageUrl(source, 300, QUALITY.thumbnail, "webp")} 300w`,
-          `${getOptimizedImageUrl(source, 400, QUALITY.thumbnail, "webp")} 400w`,
-          `${getOptimizedImageUrl(source, 600, QUALITY.thumbnail, "webp")} 600w`,
+          `${getOptimizedImageUrl(source, 300, QUALITY.thumbnail)} 300w`,
+          `${getOptimizedImageUrl(source, 400, QUALITY.thumbnail)} 400w`,
+          `${getOptimizedImageUrl(source, 600, QUALITY.thumbnail)} 600w`,
         ].join(", "),
         sizes: "(max-width: 640px) calc(100vw - 2rem), (max-width: 768px) calc(50vw - 1.5rem), calc(25vw - 0.75rem)",
+        width: 400,
+        height: 600,
       };
 
     case "radio":
       return {
         ...baseProps,
-        src: getOptimizedImageUrl(source, 240, QUALITY.standard, "webp"), // 2x the max display size (120px)
+        src: getOptimizedImageUrl(source, 240, QUALITY.standard), // 2x the max display size (120px)
         srcSet: [
-          `${getOptimizedImageUrl(source, 144, QUALITY.standard, "webp")} 144w`, // 2x for 72px
-          `${getOptimizedImageUrl(source, 176, QUALITY.standard, "webp")} 176w`, // 2x for 88px
-          `${getOptimizedImageUrl(source, 240, QUALITY.standard, "webp")} 240w`, // 2x for 120px
-          `${getOptimizedImageUrl(source, 320, QUALITY.standard, "webp")} 320w`, // 2x for 160px
+          `${getOptimizedImageUrl(source, 144, QUALITY.standard)} 144w`, // 2x for 72px
+          `${getOptimizedImageUrl(source, 176, QUALITY.standard)} 176w`, // 2x for 88px
+          `${getOptimizedImageUrl(source, 240, QUALITY.standard)} 240w`, // 2x for 120px
         ].join(", "),
         sizes: "(max-width: 768px) 72px, (max-width: 1024px) 88px, 120px",
+        width: 120,
+        height: 120,
       };
 
     default:
       return {
         ...baseProps,
-        src: getOptimizedImageUrl(source, 500, QUALITY.standard, "webp"),
+        src: getOptimizedImageUrl(source, 500, QUALITY.standard),
+        width: 500,
+        height: 500,
       };
   }
 };

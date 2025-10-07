@@ -1,12 +1,10 @@
 "use client";
 
 import { useState, useCallback, useEffect, useRef } from "react";
-import Image from "next/image";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import { type Pictures, type Gallery } from "@/lib/mediaData";
 import { getResponsiveImageProps } from "@/sanity/lib/image";
+import Lightbox from "@/components/Lightbox";
 
 // Intersection observer hook for lazy loading
 const useIntersectionObserver = (threshold = 0.1) => {
@@ -65,10 +63,10 @@ const ImageCard = ({
       }}
     >
       {isVisible && (
-        <Image
+        <img
           {...getResponsiveImageProps(imageUrl, "gallery")}
           alt={`${pictureTitle} - Image ${index + 1} of ${imageCount}`}
-          className="w-full h-full object-cover"
+          className="w-full h-auto object-contain"
           loading={index < 8 ? "eager" : "lazy"} // Eager load first 8 images
         />
       )}
@@ -245,77 +243,15 @@ export default function PictureGalleryContent({ picture, gallery }: PictureGalle
         </div>
       </main>
 
-      {/* Lightbox Modal with responsive sizing */}
-      {isLightboxOpen && selectedImageIndex !== null && (
-        <div
-          className="fixed inset-0 z-50 bg-black bg-opacity-90"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="lightbox-title"
-        >
-          {/* Background click to close */}
-          <div className="absolute inset-0" onClick={closeLightbox} />
-
-          {/* Header with counter and close button */}
-          <div className="fixed top-4 left-4 z-20">
-            <div className="bg-black bg-opacity-70 rounded-full px-3 py-1">
-              <span id="lightbox-title" className="text-white body-text-sm font-medium">
-                {selectedImageIndex + 1} / {imageCount}
-              </span>
-            </div>
-          </div>
-
-          <div className="fixed top-4 right-4 z-20">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={closeLightbox}
-              className="bg-black bg-opacity-70 text-white hover:bg-black hover:bg-opacity-90 rounded-full"
-              aria-label="Close image viewer"
-            >
-              <X className="h-6 w-6" />
-            </Button>
-          </div>
-
-          {/* Navigation buttons */}
-          {imageCount > 1 && (
-            <>
-              <div className="fixed left-4 top-1/2 transform -translate-y-1/2 z-20">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => navigateImage("prev")}
-                  className="bg-black bg-opacity-70 text-white hover:bg-black hover:bg-opacity-90 rounded-full"
-                  aria-label="Previous image"
-                >
-                  <ChevronLeft className="h-6 w-6" />
-                </Button>
-              </div>
-
-              <div className="fixed right-4 top-1/2 transform -translate-y-1/2 z-20">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => navigateImage("next")}
-                  className="bg-black bg-opacity-70 text-white hover:bg-black hover:bg-opacity-90 rounded-full"
-                  aria-label="Next image"
-                >
-                  <ChevronRight className="h-6 w-6" />
-                </Button>
-              </div>
-            </>
-          )}
-
-          {/* Main image with responsive sizing */}
-          <div className="fixed inset-0 flex items-center justify-center p-8">
-            <Image
-              {...getResponsiveImageProps(allImages[selectedImageIndex], "lightbox")}
-              alt={`${picture.title} - Image ${selectedImageIndex + 1} of ${imageCount}`}
-              className="max-w-[95vw] max-h-[80vh] object-contain"
-            />
-          </div>
-        </div>
-      )}
+      {/* Lightbox Modal */}
+      <Lightbox
+        isOpen={isLightboxOpen}
+        images={allImages}
+        currentIndex={selectedImageIndex ?? 0}
+        onClose={closeLightbox}
+        onNavigate={navigateImage}
+        title={picture.title}
+      />
     </div>
   );
 }

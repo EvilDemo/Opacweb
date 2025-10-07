@@ -1,12 +1,12 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { type Pictures, type Gallery } from "@/lib/mediaData";
 import { getResponsiveImageProps } from "@/sanity/lib/image";
+import Lightbox from "@/components/Lightbox";
 
 interface PictureGalleryContentProps {
   picture: Pictures;
@@ -144,11 +144,11 @@ export default function PictureGalleryContent({ picture, gallery }: PictureGalle
                 aria-label={`View image ${index + 1} of ${imageCount}: ${picture.title}`}
                 onClick={() => openLightbox(index)}
               >
-                <Image
+                <img
                   {...getResponsiveImageProps(imageUrl, "gallery")}
                   alt={`${picture.title} - Image ${index + 1} of ${imageCount}`}
                   className="w-full h-full object-cover"
-                  loading={index < 8 ? "eager" : "lazy"} // Eager load first 8 images
+                  loading={index < 8 ? "eager" : "lazy"}
                 />
               </button>
             </div>
@@ -157,69 +157,14 @@ export default function PictureGalleryContent({ picture, gallery }: PictureGalle
       </main>
 
       {/* Lightbox Modal */}
-      {isLightboxOpen && selectedImageIndex !== null && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-95 z-[110] flex items-center justify-center h-screen w-screen"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="lightbox-title"
-          aria-describedby="lightbox-description"
-          onClick={closeLightbox}
-        >
-          <div className="relative w-full h-full p-4 flex flex-col" onClick={(e) => e.stopPropagation()}>
-            {/* Lightbox Header */}
-            <div className="absolute top-4 left-4 right-4 z-10 flex justify-between items-center">
-              <div className="bg-black bg-opacity-70 rounded-full px-3 py-1">
-                <span id="lightbox-title" className="text-white body-text-sm font-medium" aria-live="polite">
-                  {selectedImageIndex + 1} / {imageCount}
-                </span>
-              </div>
-              <button
-                onClick={closeLightbox}
-                className="bg-black bg-opacity-90 text-white p-3 rounded-full hover:bg-opacity-100 transition-colors focus:outline-none focus:ring-2 focus:ring-white shadow-lg"
-                aria-label="Close image viewer"
-              >
-                <X className="h-6 w-6" />
-              </button>
-            </div>
-
-            {/* Navigation buttons */}
-            {imageCount > 1 && (
-              <>
-                <button
-                  onClick={() => navigateImage("prev")}
-                  className="absolute left-4 top-1/2 transform -translate-y-1/2 z-10 bg-black bg-opacity-90 text-white p-4 rounded-full hover:bg-opacity-100 transition-colors focus:outline-none focus:ring-2 focus:ring-white shadow-lg"
-                  aria-label="Previous image"
-                >
-                  <ChevronLeft className="h-6 w-6" />
-                </button>
-                <button
-                  onClick={() => navigateImage("next")}
-                  className="absolute right-4 top-1/2 transform -translate-y-1/2 z-10 bg-black bg-opacity-90 text-white p-4 rounded-full hover:bg-opacity-100 transition-colors focus:outline-none focus:ring-2 focus:ring-white shadow-lg"
-                  aria-label="Next image"
-                >
-                  <ChevronRight className="h-6 w-6" />
-                </button>
-              </>
-            )}
-
-            {/* Main Image */}
-            <div className="flex items-center justify-center flex-1 mt-16">
-              <Image
-                {...getResponsiveImageProps(allImages[selectedImageIndex], "lightbox")}
-                alt={`${picture.title} - Image ${selectedImageIndex + 1} of ${imageCount}`}
-                className="max-w-[95vw] max-h-[calc(100vh-8rem)] object-contain"
-              />
-            </div>
-
-            {/* Hidden description for screen readers */}
-            <span id="lightbox-description" className="sr-only">
-              Image {selectedImageIndex + 1} of {imageCount} from {picture.title}. Use arrow keys to navigate, escape to
-              close.
-            </span>
-          </div>
-        </div>
-      )}
+      <Lightbox
+        isOpen={isLightboxOpen}
+        images={allImages}
+        currentIndex={selectedImageIndex ?? 0}
+        onClose={closeLightbox}
+        onNavigate={navigateImage}
+        title={picture.title}
+      />
     </div>
   );
 }
