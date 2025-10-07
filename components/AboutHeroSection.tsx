@@ -23,13 +23,9 @@ export const AboutHeroSection = ({
         <div className="h-full flex items-end justify-end">
           <motion.div className="overflow-hidden">
             <motion.h1
-              className="display-text w-[450vw] uppercase padding-global"
+              className="display-text w-[450vw] uppercase padding-global whitespace-nowrap"
               style={{
-                x: useTransform(
-                  horizontalScrollProgress,
-                  [0, 1],
-                  ["0%", "-100%"]
-                ),
+                x: useTransform(horizontalScrollProgress, [0, 1], ["0%", "-100%"]),
               }}
             >
               {text}
