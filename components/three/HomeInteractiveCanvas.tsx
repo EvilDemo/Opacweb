@@ -94,6 +94,8 @@ interface InteractiveCanvasConfig {
       luminanceThreshold: number;
       /** Luminance smoothing */
       luminanceSmoothing: number;
+      /** Use mipmap blur for better performance */
+      mipmapBlur: boolean;
     };
   };
   lighting: {
@@ -111,8 +113,10 @@ interface InteractiveCanvasConfig {
   boundary: {
     /** Ceiling height as multiplier of full height */
     ceilingHeightMultiplier: number;
-    /** Padding from viewport edges */
+    /** Padding from viewport edges (left, right, top) */
     padding: number;
+    /** Padding from bottom edge (smaller = lower floor) */
+    bottomPadding: number;
     /** Minimum velocity change to register impact */
     velocityChangeThreshold: number;
     /** Velocity below which object "sleeps" on floor */
@@ -148,15 +152,15 @@ const CONFIG: InteractiveCanvasConfig = {
   physics: {
     gravity: [0, -9.81, 0],
     cross: {
-      restitution: 0.4,
+      restitution: 0.75,
       friction: 0.1,
-      linearDamping: 0.5,
+      linearDamping: 0.3,
       angularDamping: 0.3,
       initialRotation: [Math.PI, 0, 0],
       scale: 1,
     },
     walls: {
-      restitution: 0.4,
+      restitution: 0.75,
       depth: 7,
     },
     interaction: {
@@ -167,8 +171,8 @@ const CONFIG: InteractiveCanvasConfig = {
   materials: {
     cross: {
       metalness: 0.9,
-      roughness: 0.1,
-      envMapIntensity: 1.5,
+      roughness: 0.2,
+      envMapIntensity: 1.0,
       emissiveColor: 0x222222,
       emissiveIntensity: 0.2,
     },
@@ -187,9 +191,10 @@ const CONFIG: InteractiveCanvasConfig = {
       },
     },
     bloom: {
-      intensity: 0.3,
-      luminanceThreshold: 0.25,
+      intensity: 0.2,
+      luminanceThreshold: 0.3,
       luminanceSmoothing: 0.9,
+      mipmapBlur: true,
     },
   },
   lighting: {
@@ -204,8 +209,9 @@ const CONFIG: InteractiveCanvasConfig = {
   boundary: {
     ceilingHeightMultiplier: 0.5,
     padding: 1,
+    bottomPadding: 0.3, // Smaller padding = lower floor with more room
     velocityChangeThreshold: 6,
-    sleepVelocityThreshold: 0.5, // Velocity below which object "sleeps" on floor
+    sleepVelocityThreshold: 0.15, // Velocity below which object "sleeps" on floor
   },
   timing: {
     crossAppearDelay: 1600,
@@ -257,7 +263,7 @@ function InteractiveCross() {
     boundsRef.current = {
       maxX: bounds.halfWidth - CONFIG.boundary.padding,
       maxYTop: bounds.halfHeight * CONFIG.boundary.ceilingHeightMultiplier - CONFIG.boundary.padding,
-      maxYBottom: bounds.halfHeight - CONFIG.boundary.padding,
+      maxYBottom: bounds.halfHeight - CONFIG.boundary.bottomPadding,
     };
   }, [bounds]);
 
@@ -321,8 +327,8 @@ function InteractiveCross() {
       // If moving slowly on floor, stop completely (sleep)
       if (speed < CONFIG.boundary.sleepVelocityThreshold) {
         newVel.y = 0;
-        newVel.x *= 0.8; // Also dampen horizontal movement when sleeping
-        newVel.z *= 0.8;
+        newVel.x *= 0.9; // Also dampen horizontal movement when sleeping (reduced dampening)
+        newVel.z *= 0.9;
       } else {
         newVel.y = -vel.y * CONFIG.physics.walls.restitution;
       }
@@ -498,7 +504,7 @@ function InteractiveCross() {
       boundsRef.current = {
         maxX: bounds.halfWidth - CONFIG.boundary.padding,
         maxYTop: bounds.halfHeight * CONFIG.boundary.ceilingHeightMultiplier - CONFIG.boundary.padding,
-        maxYBottom: bounds.halfHeight - CONFIG.boundary.padding,
+        maxYBottom: bounds.halfHeight - CONFIG.boundary.bottomPadding,
       };
 
       setIsGrabbed(true);
@@ -538,7 +544,6 @@ function InteractiveCross() {
       lockTranslations={false}
       lockRotations={false}
       enabledTranslations={[true, true, false]}
-      ccd={true}
     >
       <group onPointerDown={handlePointerDown}>
         <primitive object={scene} scale={CONFIG.physics.cross.scale} />
@@ -562,7 +567,7 @@ function SceneContent() {
       />
 
       {/* Environment - simplified for performance */}
-      <Environment preset="sunset" resolution={256} />
+      <Environment preset="sunset" resolution={128} />
 
       {/* Physics World */}
       <Physics gravity={CONFIG.physics.gravity}>
@@ -570,11 +575,12 @@ function SceneContent() {
       </Physics>
 
       {/* Post-Processing Effects */}
-      <EffectComposer>
+      <EffectComposer multisampling={0}>
         <Bloom
           intensity={CONFIG.effects.bloom.intensity}
           luminanceThreshold={CONFIG.effects.bloom.luminanceThreshold}
           luminanceSmoothing={CONFIG.effects.bloom.luminanceSmoothing}
+          mipmapBlur={CONFIG.effects.bloom.mipmapBlur}
         />
         <ChromaticRipple config={CONFIG.effects.chromaticAberration} />
       </EffectComposer>
@@ -722,12 +728,14 @@ export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }
         <Canvas
           gl={{
             alpha: true,
-            antialias: true,
+            antialias: false,
             powerPreference: "high-performance",
             preserveDrawingBuffer: false,
             failIfMajorPerformanceCaveat: false,
+            stencil: false,
+            depth: true,
           }}
-          dpr={[1, 2]}
+          dpr={[1, 1.5]}
           performance={{ min: 0.5 }}
           frameloop="always"
         >
