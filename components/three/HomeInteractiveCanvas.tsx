@@ -2,7 +2,7 @@
 
 import { Canvas, useThree } from "@react-three/fiber";
 import { Physics, RigidBody } from "@react-three/rapier";
-import { Environment, PerspectiveCamera, useGLTF } from "@react-three/drei";
+import { Environment, PerspectiveCamera, useGLTF, Stats } from "@react-three/drei";
 import { useRef, useState, useEffect } from "react";
 import * as THREE from "three";
 import type { RapierRigidBody } from "@react-three/rapier";
@@ -169,7 +169,7 @@ const CONFIG: InteractiveCanvasConfig = {
       restitution: 0.8,
       friction: 0.5,
       thickness: 0.5,
-      depth: 3,
+      depth: 7,
     },
     interaction: {
       throwForceMultiplier: 50,
@@ -187,20 +187,20 @@ const CONFIG: InteractiveCanvasConfig = {
   },
   effects: {
     chromaticAberration: {
-      velocityIntensityMultiplier: 0.08,
-      maxIntensity: 1.0,
-      decayRate: 0.92,
-      baseMultiplier: 0.005,
+      velocityIntensityMultiplier: 0.04,
+      maxIntensity: 0.5,
+      decayRate: 0.95,
+      baseMultiplier: 0.003,
       falloffRange: [0.3, 0.0],
       channelOffsets: {
-        red: 0.8,
-        green: 0.3,
-        blue: -0.5,
+        red: 0.5,
+        green: 0.2,
+        blue: -0.3,
       },
     },
     bloom: {
-      intensity: 1.2,
-      luminanceThreshold: 0.15,
+      intensity: 0.3,
+      luminanceThreshold: 0.25,
       luminanceSmoothing: 0.9,
     },
   },
@@ -211,7 +211,7 @@ const CONFIG: InteractiveCanvasConfig = {
     directional: {
       position: [5, 5, 5],
       intensity: 1,
-      shadowMapSize: 2048,
+      shadowMapSize: 1024,
     },
     point: {
       position: [-5, 5, 5],
@@ -340,9 +340,6 @@ function InteractiveCross() {
         rigidBodyRef.current.setAngvel({ x: torque.x, y: torque.y, z: torque.z }, true);
 
         setIsGrabbed(false);
-
-        // Emit release event for sound
-        window.dispatchEvent(new CustomEvent("crossReleased"));
       }
     };
 
@@ -378,9 +375,6 @@ function InteractiveCross() {
       };
 
       setIsGrabbed(true);
-
-      // Emit grab event for sound
-      window.dispatchEvent(new CustomEvent("crossGrabbed"));
     }
   };
 
@@ -388,8 +382,8 @@ function InteractiveCross() {
   useEffect(() => {
     scene.traverse((child) => {
       if (child instanceof THREE.Mesh) {
-        child.castShadow = true;
-        child.receiveShadow = true;
+        child.castShadow = false;
+        child.receiveShadow = false;
         if (child.material instanceof THREE.MeshStandardMaterial) {
           // Make it metallic and reflective
           child.material.metalness = CONFIG.materials.cross.metalness;
@@ -417,6 +411,8 @@ function InteractiveCross() {
       lockTranslations={false}
       lockRotations={false}
       onCollisionEnter={handleCollision}
+      enabledTranslations={[true, true, false]}
+      ccd={true}
     >
       <group onPointerDown={handlePointerDown}>
         <primitive object={scene} scale={CONFIG.physics.cross.scale} />
@@ -447,10 +443,12 @@ function BoundaryWalls() {
         friction={CONFIG.physics.walls.friction}
         colliders="cuboid"
         userData={{ wallType: "floor" }}
+        ccd={false}
+        canSleep={false}
       >
-        <mesh position={[0, -halfHeight, 0]}>
-          <boxGeometry args={[visibleWidth + 2, CONFIG.physics.walls.thickness, 10]} />
-          <meshStandardMaterial visible={false} />
+        <mesh position={[0, -halfHeight, 0]} renderOrder={-1}>
+          <boxGeometry args={[visibleWidth + 2, CONFIG.physics.walls.thickness, 14]} />
+          <meshBasicMaterial visible={false} />
         </mesh>
       </RigidBody>
 
@@ -461,10 +459,12 @@ function BoundaryWalls() {
         friction={CONFIG.physics.walls.friction}
         colliders="cuboid"
         userData={{ wallType: "ceiling" }}
+        ccd={false}
+        canSleep={false}
       >
-        <mesh position={[0, ceilingHeight, 0]}>
-          <boxGeometry args={[visibleWidth + 2, CONFIG.physics.walls.thickness, 6]} />
-          <meshStandardMaterial visible={false} />
+        <mesh position={[0, ceilingHeight, 0]} renderOrder={-1}>
+          <boxGeometry args={[visibleWidth + 2, CONFIG.physics.walls.thickness, 14]} />
+          <meshBasicMaterial visible={false} />
         </mesh>
       </RigidBody>
 
@@ -475,10 +475,12 @@ function BoundaryWalls() {
         friction={CONFIG.physics.walls.friction}
         colliders="cuboid"
         userData={{ wallType: "left" }}
+        ccd={false}
+        canSleep={false}
       >
-        <mesh position={[-halfWidth, (-halfHeight + ceilingHeight) / 2, 0]}>
-          <boxGeometry args={[CONFIG.physics.walls.thickness, wallHeight, 6]} />
-          <meshStandardMaterial visible={false} />
+        <mesh position={[-halfWidth, (-halfHeight + ceilingHeight) / 2, 0]} renderOrder={-1}>
+          <boxGeometry args={[CONFIG.physics.walls.thickness, wallHeight, 12]} />
+          <meshBasicMaterial visible={false} />
         </mesh>
       </RigidBody>
 
@@ -489,10 +491,12 @@ function BoundaryWalls() {
         friction={CONFIG.physics.walls.friction}
         colliders="cuboid"
         userData={{ wallType: "right" }}
+        ccd={false}
+        canSleep={false}
       >
-        <mesh position={[halfWidth, (-halfHeight + ceilingHeight) / 2, 0]}>
-          <boxGeometry args={[CONFIG.physics.walls.thickness, wallHeight, 6]} />
-          <meshStandardMaterial visible={false} />
+        <mesh position={[halfWidth, (-halfHeight + ceilingHeight) / 2, 0]} renderOrder={-1}>
+          <boxGeometry args={[CONFIG.physics.walls.thickness, wallHeight, 12]} />
+          <meshBasicMaterial visible={false} />
         </mesh>
       </RigidBody>
 
@@ -503,10 +507,18 @@ function BoundaryWalls() {
         friction={CONFIG.physics.walls.friction}
         colliders="cuboid"
         userData={{ wallType: "back" }}
+        ccd={false}
+        canSleep={false}
       >
-        <mesh position={[0, (-halfHeight + ceilingHeight) / 2, -CONFIG.physics.walls.depth]}>
-          <boxGeometry args={[visibleWidth + 2, wallHeight, CONFIG.physics.walls.thickness]} />
-          <meshStandardMaterial visible={false} />
+        <mesh position={[0, (-halfHeight + ceilingHeight) / 2, -CONFIG.physics.walls.depth]} renderOrder={-1}>
+          <boxGeometry
+            args={[
+              visibleWidth + 2 + CONFIG.physics.walls.thickness * 2,
+              wallHeight + CONFIG.physics.walls.thickness * 2,
+              CONFIG.physics.walls.thickness,
+            ]}
+          />
+          <meshBasicMaterial visible={false} />
         </mesh>
       </RigidBody>
 
@@ -517,10 +529,18 @@ function BoundaryWalls() {
         friction={CONFIG.physics.walls.friction}
         colliders="cuboid"
         userData={{ wallType: "front" }}
+        ccd={false}
+        canSleep={false}
       >
-        <mesh position={[0, (-halfHeight + ceilingHeight) / 2, CONFIG.physics.walls.depth]}>
-          <boxGeometry args={[visibleWidth + 2, wallHeight, CONFIG.physics.walls.thickness]} />
-          <meshStandardMaterial visible={false} />
+        <mesh position={[0, (-halfHeight + ceilingHeight) / 2, CONFIG.physics.walls.depth]} renderOrder={-1}>
+          <boxGeometry
+            args={[
+              visibleWidth + 2 + CONFIG.physics.walls.thickness * 2,
+              wallHeight + CONFIG.physics.walls.thickness * 2,
+              CONFIG.physics.walls.thickness,
+            ]}
+          />
+          <meshBasicMaterial visible={false} />
         </mesh>
       </RigidBody>
     </>
@@ -531,19 +551,18 @@ function BoundaryWalls() {
 function SceneContent() {
   return (
     <>
+      {/* FPS Counter */}
+      <Stats />
+
       {/* Lighting */}
       <ambientLight intensity={CONFIG.lighting.ambient.intensity} />
       <directionalLight
         position={CONFIG.lighting.directional.position}
         intensity={CONFIG.lighting.directional.intensity}
-        castShadow
-        shadow-mapSize-width={CONFIG.lighting.directional.shadowMapSize}
-        shadow-mapSize-height={CONFIG.lighting.directional.shadowMapSize}
       />
-      <pointLight position={CONFIG.lighting.point.position} intensity={CONFIG.lighting.point.intensity} />
 
-      {/* Environment */}
-      <Environment preset="city" />
+      {/* Environment - simplified for performance */}
+      <Environment preset="sunset" resolution={256} />
 
       {/* Physics World */}
       <Physics gravity={CONFIG.physics.gravity}>
@@ -557,7 +576,6 @@ function SceneContent() {
           intensity={CONFIG.effects.bloom.intensity}
           luminanceThreshold={CONFIG.effects.bloom.luminanceThreshold}
           luminanceSmoothing={CONFIG.effects.bloom.luminanceSmoothing}
-          mipmapBlur
         />
         <ChromaticRipple config={CONFIG.effects.chromaticAberration} />
       </EffectComposer>
@@ -702,7 +720,18 @@ export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }
         {/* Interactive Music Player (reacts to physics) */}
         <HomeInteractiveMusic audioSrc="/aoty-mode.m4a" autoPlay={true} isMuted={isMuted} />
 
-        <Canvas shadows gl={{ alpha: true, antialias: true }}>
+        <Canvas
+          gl={{
+            alpha: true,
+            antialias: true,
+            powerPreference: "high-performance",
+            preserveDrawingBuffer: false,
+            failIfMajorPerformanceCaveat: false,
+          }}
+          dpr={[1, 2]}
+          performance={{ min: 0.5 }}
+          frameloop="always"
+        >
           <PerspectiveCamera makeDefault position={CONFIG.camera.position} fov={CONFIG.camera.fov} />
           {showCross && <SceneContent />}
         </Canvas>

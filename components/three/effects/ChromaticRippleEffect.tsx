@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useMemo } from "react";
 import { useThree, useFrame } from "@react-three/fiber";
 import { Effect } from "postprocessing";
 import { Uniform } from "three";
@@ -101,7 +101,7 @@ export function ChromaticRipple({ config }: { config?: Partial<ChromaticRippleCo
   const { size, camera } = useThree();
 
   // Merge provided config with defaults
-  const finalConfig = { ...DEFAULT_CHROMATIC_CONFIG, ...config };
+  const finalConfig = useMemo(() => ({ ...DEFAULT_CHROMATIC_CONFIG, ...config }), [config]);
 
   useEffect(() => {
     const handleImpact = (event: CustomEvent) => {
