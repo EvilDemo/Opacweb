@@ -1,172 +1,48 @@
 "use client";
 
 import { Canvas, useThree, useFrame } from "@react-three/fiber";
-import { Physics, RigidBody } from "@react-three/rapier";
-import { Environment, PerspectiveCamera, useGLTF } from "@react-three/drei";
-import { useRef, useState, useEffect, useMemo } from "react";
+import { Physics, RigidBody, CuboidCollider } from "@react-three/rapier";
+import { Environment, PerspectiveCamera, useGLTF, Stats } from "@react-three/drei";
+import { useRef, useState, useEffect } from "react";
 import * as THREE from "three";
 import type { RapierRigidBody } from "@react-three/rapier";
 import type { ThreeEvent } from "@react-three/fiber";
 import { HomeInteractiveMusic } from "./HomeInteractiveMusic";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import { Button } from "@/components/ui/button";
-import { ChromaticRipple } from "./effects/ChromaticRippleEffect";
 
 /**
- * Configuration interface for the Interactive Canvas
+ * Configuration for the Interactive Canvas
  */
-interface InteractiveCanvasConfig {
+const CONFIG = {
   camera: {
-    /** Camera position [x, y, z] */
-    position: [number, number, number];
-    /** Field of view in degrees */
-    fov: number;
-    /** Distance used for boundary calculations (camera Z position) */
-    boundaryDistance: number;
-  };
-  physics: {
-    /** Gravity vector [x, y, z] */
-    gravity: [number, number, number];
-    cross: {
-      /** Bounciness of the cross (0-1) */
-      restitution: number;
-      /** Surface friction (0-1) */
-      friction: number;
-      /** Linear velocity damping (0-1) */
-      linearDamping: number;
-      /** Angular velocity damping (0-1) */
-      angularDamping: number;
-      /** Initial rotation [x, y, z] in radians */
-      initialRotation: [number, number, number];
-      /** Scale multiplier */
-      scale: number;
-    };
-    walls: {
-      /** Bounciness of walls (0-1) */
-      restitution: number;
-      /** Depth of front/back walls */
-      depth: number;
-    };
-    interaction: {
-      /** Force multiplier when throwing the cross */
-      throwForceMultiplier: number;
-      /** Torque multipliers [x, y, z] */
-      torqueMultipliers: [number, number, number];
-    };
-  };
-  materials: {
-    cross: {
-      /** Metallic appearance (0-1) */
-      metalness: number;
-      /** Surface roughness (0-1) */
-      roughness: number;
-      /** Environment map intensity */
-      envMapIntensity: number;
-      /** Emissive color (hex) */
-      emissiveColor: number;
-      /** Emissive intensity */
-      emissiveIntensity: number;
-    };
-  };
-  effects: {
-    chromaticAberration: {
-      /** Intensity multiplier based on velocity */
-      velocityIntensityMultiplier: number;
-      /** Maximum intensity cap */
-      maxIntensity: number;
-      /** Decay rate per frame (0-1) */
-      decayRate: number;
-      /** Base aberration multiplier */
-      baseMultiplier: number;
-      /** Falloff smoothstep range [max, min] */
-      falloffRange: [number, number];
-      /** RGB channel offsets */
-      channelOffsets: {
-        red: number;
-        green: number;
-        blue: number;
-      };
-    };
-    bloom: {
-      /** Overall bloom intensity */
-      intensity: number;
-      /** Luminance threshold for bloom */
-      luminanceThreshold: number;
-      /** Luminance smoothing */
-      luminanceSmoothing: number;
-      /** Use mipmap blur for better performance */
-      mipmapBlur: boolean;
-    };
-  };
-  lighting: {
-    ambient: {
-      /** Ambient light intensity */
-      intensity: number;
-    };
-    directional: {
-      /** Directional light position [x, y, z] */
-      position: [number, number, number];
-      /** Light intensity */
-      intensity: number;
-    };
-  };
-  boundary: {
-    /** Ceiling height as multiplier of full height */
-    ceilingHeightMultiplier: number;
-    /** Padding from viewport edges (left, right, top) */
-    padding: number;
-    /** Padding from bottom edge (smaller = lower floor) */
-    bottomPadding: number;
-    /** Minimum velocity change to register impact */
-    velocityChangeThreshold: number;
-    /** Velocity below which object "sleeps" on floor */
-    sleepVelocityThreshold: number;
-  };
-  timing: {
-    /** Delay before cross appears (ms) */
-    crossAppearDelay: number;
-    /** Delay before instructions appear (ms) */
-    instructionsAppearDelay: number;
-    /** Text animation duration (seconds) */
-    textAnimationDuration: number;
-    /** Side wall button visibility duration (ms) */
-    sideWallButtonDuration: number;
-  };
-  animation: {
-    /** Initial Z depth for text animation */
-    textInitialDepth: string;
-    /** Final Z depth for text animation */
-    textFinalDepth: string;
-  };
-}
-
-/**
- * Centralized configuration for all Interactive Canvas parameters
- */
-const CONFIG: InteractiveCanvasConfig = {
-  camera: {
-    position: [0, -3, 17],
-    fov: 50,
-    boundaryDistance: 15,
+    position: [0, -3, 12] as [number, number, number],
+    fov: 70,
   },
   physics: {
-    gravity: [0, -9.81, 0],
+    gravity: [0, -9.81, 0] as [number, number, number],
     cross: {
-      restitution: 0.75,
+      restitution: 0.8,
       friction: 0.1,
-      linearDamping: 0.3,
-      angularDamping: 0.3,
-      initialRotation: [Math.PI, 0, 0],
+      linearDamping: 0.2,
+      angularDamping: 0.2,
+      initialRotation: [Math.PI, 0, 0] as [number, number, number],
       scale: 1,
     },
     walls: {
-      restitution: 0.75,
-      depth: 7,
+      restitution: 0.8,
+      thickness: 0.5,
     },
     interaction: {
       throwForceMultiplier: 50,
-      torqueMultipliers: [0.3, 0.3, 0.2],
+      torqueMultipliers: [0.3, 0.3, 0.2] as [number, number, number],
     },
+  },
+  boundaries: {
+    width: 32, // Wider to cover full viewport width
+    height: 20, // Taller to ensure floor catches everything
+    depth: 14,
+    ceilingHeightMultiplier: 0.5,
   },
   materials: {
     cross: {
@@ -178,22 +54,10 @@ const CONFIG: InteractiveCanvasConfig = {
     },
   },
   effects: {
-    chromaticAberration: {
-      velocityIntensityMultiplier: 0.04,
-      maxIntensity: 0.5,
-      decayRate: 0.95,
-      baseMultiplier: 0.003,
-      falloffRange: [0.3, 0.0],
-      channelOffsets: {
-        red: 0.5,
-        green: 0.2,
-        blue: -0.3,
-      },
-    },
     bloom: {
-      intensity: 0.2,
-      luminanceThreshold: 0.3,
-      luminanceSmoothing: 0.9,
+      intensity: 0.1,
+      luminanceThreshold: 0.2,
+      luminanceSmoothing: 0.2,
       mipmapBlur: true,
     },
   },
@@ -202,16 +66,9 @@ const CONFIG: InteractiveCanvasConfig = {
       intensity: 0.5,
     },
     directional: {
-      position: [5, 5, 5],
+      position: [5, 5, 5] as [number, number, number],
       intensity: 1,
     },
-  },
-  boundary: {
-    ceilingHeightMultiplier: 0.5,
-    padding: 1,
-    bottomPadding: 0.3, // Smaller padding = lower floor with more room
-    velocityChangeThreshold: 6,
-    sleepVelocityThreshold: 0.15, // Velocity below which object "sleeps" on floor
   },
   timing: {
     crossAppearDelay: 1600,
@@ -225,21 +82,67 @@ const CONFIG: InteractiveCanvasConfig = {
   },
 };
 
-/**
- * Calculate viewport boundaries based on camera settings and aspect ratio
- */
-function calculateViewportBounds(camera: { boundaryDistance: number; fov: number }, aspectRatio: number) {
-  const distance = camera.boundaryDistance;
-  const vFOV = (camera.fov * Math.PI) / 180;
-  const visibleHeight = 2 * Math.tan(vFOV / 2) * distance;
-  const visibleWidth = visibleHeight * aspectRatio;
+// Invisible Walls Component
+function BoundaryWalls() {
+  const { width, height, depth, ceilingHeightMultiplier } = CONFIG.boundaries;
+  const { thickness, restitution } = CONFIG.physics.walls;
 
-  return {
-    halfWidth: visibleWidth / 2,
-    halfHeight: visibleHeight / 2,
-    visibleWidth,
-    visibleHeight,
+  const ceilingHeight = (height / 2) * ceilingHeightMultiplier;
+  const floorHeight = height / 2;
+  const wallHeight = height * 1.5; // Make walls taller to ensure they catch everything
+
+  const handleWallCollision = (wallType: string, position: { x: number; y: number; z: number }) => {
+    console.log("Collision with:", wallType);
+    window.dispatchEvent(
+      new CustomEvent("wallImpact", {
+        detail: {
+          wallType,
+          position,
+          velocity: 10, // Default velocity for the effect
+        },
+      })
+    );
   };
+
+  return (
+    <>
+      {/* Left Wall */}
+      <CuboidCollider
+        position={[-width / 2, -3, 0]}
+        args={[thickness / 2, wallHeight / 2, depth / 2]}
+        restitution={restitution}
+        friction={0.1}
+        onCollisionEnter={() => handleWallCollision("left", { x: -width / 2, y: -3, z: 0 })}
+      />
+
+      {/* Right Wall */}
+      <CuboidCollider
+        position={[width / 2, -3, 0]}
+        args={[thickness / 2, wallHeight / 2, depth / 2]}
+        restitution={restitution}
+        friction={0.1}
+        onCollisionEnter={() => handleWallCollision("right", { x: width / 2, y: -3, z: 0 })}
+      />
+
+      {/* Floor */}
+      <CuboidCollider
+        position={[0, -8, 0]}
+        args={[width, thickness / 2, depth]}
+        restitution={restitution}
+        friction={0.1}
+        onCollisionEnter={() => handleWallCollision("floor", { x: 0, y: -8, z: 0 })}
+      />
+
+      {/* Ceiling */}
+      <CuboidCollider
+        position={[0, ceilingHeight, 0]}
+        args={[width / 2, thickness / 2, depth / 2]}
+        restitution={restitution}
+        friction={0.1}
+        onCollisionEnter={() => handleWallCollision("ceiling", { x: 0, y: ceilingHeight, z: 0 })}
+      />
+    </>
+  );
 }
 
 // Interactive Cross Component
@@ -248,183 +151,13 @@ function InteractiveCross() {
   const rigidBodyRef = useRef<RapierRigidBody>(null);
   const [isGrabbed, setIsGrabbed] = useState(false);
   const currentMousePos = useRef<THREE.Vector3>(new THREE.Vector3());
-  const boundsRef = useRef({ maxX: 0, maxYTop: 0, maxYBottom: 0 });
-  const lastImpactTime = useRef(0);
-  const { camera, size } = useThree();
-
-  // Calculate bounds with useMemo
-  const bounds = useMemo(
-    () => calculateViewportBounds(CONFIG.camera, size.width / size.height),
-    [size.width, size.height]
-  );
-
-  // Update boundsRef with useEffect
-  useEffect(() => {
-    boundsRef.current = {
-      maxX: bounds.halfWidth - CONFIG.boundary.padding,
-      maxYTop: bounds.halfHeight * CONFIG.boundary.ceilingHeightMultiplier - CONFIG.boundary.padding,
-      maxYBottom: bounds.halfHeight - CONFIG.boundary.bottomPadding,
-    };
-  }, [bounds]);
-
-  // Manual position clamping with bounce using useFrame
-  useFrame(() => {
-    if (!rigidBodyRef.current || isGrabbed) return;
-
-    const pos = rigidBodyRef.current.translation();
-    const vel = rigidBodyRef.current.linvel();
-    const newPos = { x: pos.x, y: pos.y, z: pos.z };
-    const newVel = { x: vel.x, y: vel.y, z: vel.z };
-    let positionChanged = false;
-    let velocityChanged = false;
-
-    // Check X axis boundaries
-    if (pos.x < -boundsRef.current.maxX) {
-      newPos.x = -boundsRef.current.maxX;
-      newVel.x = -vel.x * CONFIG.physics.walls.restitution;
-      positionChanged = true;
-      velocityChanged = true;
-
-      const speed = Math.abs(vel.x);
-      if (speed > CONFIG.boundary.velocityChangeThreshold && Date.now() - lastImpactTime.current > 100) {
-        lastImpactTime.current = Date.now();
-        window.dispatchEvent(
-          new CustomEvent("wallImpact", {
-            detail: {
-              position: { x: newPos.x, y: newPos.y, z: newPos.z },
-              velocity: speed,
-              wallType: "left",
-            },
-          })
-        );
-      }
-    } else if (pos.x > boundsRef.current.maxX) {
-      newPos.x = boundsRef.current.maxX;
-      newVel.x = -vel.x * CONFIG.physics.walls.restitution;
-      positionChanged = true;
-      velocityChanged = true;
-
-      const speed = Math.abs(vel.x);
-      if (speed > CONFIG.boundary.velocityChangeThreshold && Date.now() - lastImpactTime.current > 100) {
-        lastImpactTime.current = Date.now();
-        window.dispatchEvent(
-          new CustomEvent("wallImpact", {
-            detail: {
-              position: { x: newPos.x, y: newPos.y, z: newPos.z },
-              velocity: speed,
-              wallType: "right",
-            },
-          })
-        );
-      }
-    }
-
-    // Check Y axis boundaries
-    if (pos.y < -boundsRef.current.maxYBottom) {
-      newPos.y = -boundsRef.current.maxYBottom;
-
-      const speed = Math.abs(vel.y);
-      // If moving slowly on floor, stop completely (sleep)
-      if (speed < CONFIG.boundary.sleepVelocityThreshold) {
-        newVel.y = 0;
-        newVel.x *= 0.9; // Also dampen horizontal movement when sleeping (reduced dampening)
-        newVel.z *= 0.9;
-      } else {
-        newVel.y = -vel.y * CONFIG.physics.walls.restitution;
-      }
-
-      positionChanged = true;
-      velocityChanged = true;
-
-      if (speed > CONFIG.boundary.velocityChangeThreshold && Date.now() - lastImpactTime.current > 100) {
-        lastImpactTime.current = Date.now();
-        window.dispatchEvent(
-          new CustomEvent("wallImpact", {
-            detail: {
-              position: { x: newPos.x, y: newPos.y, z: newPos.z },
-              velocity: speed,
-              wallType: "floor",
-            },
-          })
-        );
-      }
-    } else if (pos.y > boundsRef.current.maxYTop) {
-      newPos.y = boundsRef.current.maxYTop;
-      newVel.y = -vel.y * CONFIG.physics.walls.restitution;
-      positionChanged = true;
-      velocityChanged = true;
-
-      const speed = Math.abs(vel.y);
-      if (speed > CONFIG.boundary.velocityChangeThreshold && Date.now() - lastImpactTime.current > 100) {
-        lastImpactTime.current = Date.now();
-        window.dispatchEvent(
-          new CustomEvent("wallImpact", {
-            detail: {
-              position: { x: newPos.x, y: newPos.y, z: newPos.z },
-              velocity: speed,
-              wallType: "ceiling",
-            },
-          })
-        );
-      }
-    }
-
-    // Check Z axis boundaries
-    if (pos.z < -CONFIG.physics.walls.depth) {
-      newPos.z = -CONFIG.physics.walls.depth;
-      newVel.z = -vel.z * CONFIG.physics.walls.restitution;
-      positionChanged = true;
-      velocityChanged = true;
-
-      const speed = Math.abs(vel.z);
-      if (speed > CONFIG.boundary.velocityChangeThreshold && Date.now() - lastImpactTime.current > 100) {
-        lastImpactTime.current = Date.now();
-        window.dispatchEvent(
-          new CustomEvent("wallImpact", {
-            detail: {
-              position: { x: newPos.x, y: newPos.y, z: newPos.z },
-              velocity: speed,
-              wallType: "back",
-            },
-          })
-        );
-      }
-    } else if (pos.z > CONFIG.physics.walls.depth) {
-      newPos.z = CONFIG.physics.walls.depth;
-      newVel.z = -vel.z * CONFIG.physics.walls.restitution;
-      positionChanged = true;
-      velocityChanged = true;
-
-      const speed = Math.abs(vel.z);
-      if (speed > CONFIG.boundary.velocityChangeThreshold && Date.now() - lastImpactTime.current > 100) {
-        lastImpactTime.current = Date.now();
-        window.dispatchEvent(
-          new CustomEvent("wallImpact", {
-            detail: {
-              position: { x: newPos.x, y: newPos.y, z: newPos.z },
-              velocity: speed,
-              wallType: "front",
-            },
-          })
-        );
-      }
-    }
-
-    // Apply changes if needed
-    if (positionChanged) {
-      rigidBodyRef.current.setTranslation(newPos, true);
-    }
-    if (velocityChanged) {
-      rigidBodyRef.current.setLinvel(newVel, true);
-    }
-  });
+  const { camera, viewport } = useThree();
 
   // Global pointer move handler
   useEffect(() => {
     if (!isGrabbed) return;
 
     const handleMove = (event: PointerEvent) => {
-      // Prevent default touch behaviors during drag
       event.preventDefault();
 
       if (rigidBodyRef.current) {
@@ -439,12 +172,15 @@ function InteractiveCross() {
         const intersectPoint = new THREE.Vector3();
         raycaster.ray.intersectPlane(plane, intersectPoint);
 
-        // Clamp position to boundaries using cached values
-        intersectPoint.x = Math.max(-boundsRef.current.maxX, Math.min(boundsRef.current.maxX, intersectPoint.x));
-        intersectPoint.y = Math.max(
-          -boundsRef.current.maxYBottom,
-          Math.min(boundsRef.current.maxYTop, intersectPoint.y)
-        );
+        // Clamp position to boundaries - match the actual wall positions
+        const wallPadding = 1; // Keep cross slightly away from walls
+        const { width, height, ceilingHeightMultiplier } = CONFIG.boundaries;
+        const halfWidth = width / 2 - wallPadding; // Match wall positions at width/2
+        const ceilingY = (height / 2) * ceilingHeightMultiplier;
+        const floorY = -8; // Match the floor position
+
+        intersectPoint.x = Math.max(-halfWidth, Math.min(halfWidth, intersectPoint.x));
+        intersectPoint.y = Math.max(floorY + 1, Math.min(ceilingY - 1, intersectPoint.y)); // Keep away from floor/ceiling
         intersectPoint.z = 0;
 
         // Store current position for throw velocity calculation
@@ -476,7 +212,6 @@ function InteractiveCross() {
       }
     };
 
-    // Use passive: false to allow preventDefault() for touch events
     window.addEventListener("pointermove", handleMove, { passive: false });
     window.addEventListener("pointerup", handleRelease);
 
@@ -488,7 +223,6 @@ function InteractiveCross() {
 
   const handlePointerDown = (event: ThreeEvent<PointerEvent>) => {
     event.stopPropagation();
-    // Note: preventDefault not needed here - parent div has touchAction: "none"
 
     if (rigidBodyRef.current) {
       // Freeze the cross
@@ -499,26 +233,17 @@ function InteractiveCross() {
       const pos = rigidBodyRef.current.translation();
       currentMousePos.current.set(pos.x, pos.y, pos.z);
 
-      // Calculate and cache boundaries for dragging
-      const bounds = calculateViewportBounds(CONFIG.camera, window.innerWidth / window.innerHeight);
-      boundsRef.current = {
-        maxX: bounds.halfWidth - CONFIG.boundary.padding,
-        maxYTop: bounds.halfHeight * CONFIG.boundary.ceilingHeightMultiplier - CONFIG.boundary.padding,
-        maxYBottom: bounds.halfHeight - CONFIG.boundary.bottomPadding,
-      };
-
       setIsGrabbed(true);
     }
   };
 
-  // Modify the cached scene once on mount
+  // Setup material once on mount
   useEffect(() => {
     scene.traverse((child) => {
       if (child instanceof THREE.Mesh) {
         child.castShadow = false;
         child.receiveShadow = false;
         if (child.material instanceof THREE.MeshStandardMaterial) {
-          // Make it metallic and reflective
           child.material.metalness = CONFIG.materials.cross.metalness;
           child.material.roughness = CONFIG.materials.cross.roughness;
           child.material.envMapIntensity = CONFIG.materials.cross.envMapIntensity;
@@ -541,8 +266,7 @@ function InteractiveCross() {
       linearDamping={CONFIG.physics.cross.linearDamping}
       angularDamping={CONFIG.physics.cross.angularDamping}
       gravityScale={isGrabbed ? 0 : 1}
-      lockTranslations={false}
-      lockRotations={false}
+      ccd={true}
       enabledTranslations={[true, true, false]}
     >
       <group onPointerDown={handlePointerDown}>
@@ -566,11 +290,12 @@ function SceneContent() {
         intensity={CONFIG.lighting.directional.intensity}
       />
 
-      {/* Environment - simplified for performance */}
+      {/* Environment */}
       <Environment preset="sunset" resolution={128} />
 
       {/* Physics World */}
       <Physics gravity={CONFIG.physics.gravity}>
+        <BoundaryWalls />
         <InteractiveCross />
       </Physics>
 
@@ -582,7 +307,6 @@ function SceneContent() {
           luminanceSmoothing={CONFIG.effects.bloom.luminanceSmoothing}
           mipmapBlur={CONFIG.effects.bloom.mipmapBlur}
         />
-        <ChromaticRipple config={CONFIG.effects.chromaticAberration} />
       </EffectComposer>
     </>
   );
@@ -635,9 +359,11 @@ export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }
   useEffect(() => {
     const handleWallImpact = (event: CustomEvent) => {
       const { wallType } = event.detail;
+      console.log("handleWallImpact received:", wallType);
 
       // Only show button for side walls (left or right)
       if (wallType === "left" || wallType === "right") {
+        console.log("Showing side wall button!");
         // Show button and restart timer every time a side wall is hit
         setShowSideWallButton(true);
 
@@ -669,14 +395,14 @@ export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }
       className="w-full relative"
       style={{
         height: "calc(100vh - 6rem)",
-        touchAction: "none", // Prevent all browser touch gestures
-        WebkitUserSelect: "none", // Prevent text selection on touch
+        touchAction: "none",
+        WebkitUserSelect: "none",
         userSelect: "none",
       }}
     >
       {/* Background Text Content */}
       <div
-        className="absolute inset-0 flex flex-col items-center justify-center text-white pointer-events-none z-10"
+        className="absolute inset-0 flex flex-col items-center justify-start pt-4 text-white pointer-events-none z-10"
         style={{
           transform: animateText
             ? `perspective(1000px) translateZ(${CONFIG.animation.textFinalDepth})`
@@ -685,8 +411,8 @@ export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }
           transition: `transform ${CONFIG.timing.textAnimationDuration}s ease-out, opacity ${CONFIG.timing.textAnimationDuration}s ease-out`,
         }}
       >
-        <h1 className=" display-text font-bold mb-4">A0TY</h1>
-        <h4 className="heading-4  lg:heading-3 xl:heading-2">Out Now!</h4>
+        <h1 className="heading-1 font-bold">A0TY</h1>
+        <h4 className="body-text-lg">Out Now!</h4>
 
         {/* Side Wall Impact Button - below "Out Now!" - space always reserved */}
         <div className="mt-8 z-20 relative" style={{ minHeight: "40px" }}>
@@ -740,6 +466,7 @@ export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }
           frameloop="always"
         >
           <PerspectiveCamera makeDefault position={CONFIG.camera.position} fov={CONFIG.camera.fov} />
+          <Stats />
           {showCross && <SceneContent />}
         </Canvas>
       </div>
