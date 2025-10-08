@@ -273,8 +273,8 @@ function InteractiveCross() {
 
     const pos = rigidBodyRef.current.translation();
     const vel = rigidBodyRef.current.linvel();
-    let newPos = { x: pos.x, y: pos.y, z: pos.z };
-    let newVel = { x: vel.x, y: vel.y, z: vel.z };
+    const newPos = { x: pos.x, y: pos.y, z: pos.z };
+    const newVel = { x: vel.x, y: vel.y, z: vel.z };
     let positionChanged = false;
     let velocityChanged = false;
 
