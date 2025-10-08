@@ -1,9 +1,9 @@
 "use client";
 
-import { Canvas, useThree } from "@react-three/fiber";
+import { Canvas, useThree, useFrame } from "@react-three/fiber";
 import { Physics, RigidBody } from "@react-three/rapier";
-import { Environment, PerspectiveCamera, useGLTF, Stats } from "@react-three/drei";
-import { useRef, useState, useEffect } from "react";
+import { Environment, PerspectiveCamera, useGLTF } from "@react-three/drei";
+import { useRef, useState, useEffect, useMemo } from "react";
 import * as THREE from "three";
 import type { RapierRigidBody } from "@react-three/rapier";
 import type { ThreeEvent } from "@react-three/fiber";
@@ -259,32 +259,166 @@ function InteractiveCross() {
   const [isGrabbed, setIsGrabbed] = useState(false);
   const currentMousePos = useRef<THREE.Vector3>(new THREE.Vector3());
   const boundsRef = useRef({ maxX: 0, maxYTop: 0, maxYBottom: 0 });
-  const { camera } = useThree();
+  const lastImpactTime = useRef(0);
+  const { camera, size } = useThree();
 
-  // Handle collisions using Rapier's built-in collision detection
-  const handleCollision = ({ other }: { other: { rigidBodyObject?: { userData?: { wallType?: string } } } }) => {
-    if (rigidBodyRef.current && !isGrabbed) {
-      const velocity = rigidBodyRef.current.linvel();
-      const position = rigidBodyRef.current.translation();
-      const speed = Math.sqrt(velocity.x ** 2 + velocity.y ** 2 + velocity.z ** 2);
+  // Calculate bounds with useMemo
+  const bounds = useMemo(
+    () => calculateViewportBounds(CONFIG.camera, size.width / size.height),
+    [size.width, size.height]
+  );
 
-      // Only emit event for significant impacts
-      if (speed > CONFIG.boundary.velocityChangeThreshold) {
-        // Get wall type from the collided object's userData
-        const wallType = other.rigidBodyObject?.userData?.wallType || null;
+  // Update boundsRef with useEffect
+  useEffect(() => {
+    boundsRef.current = {
+      maxX: bounds.halfWidth - CONFIG.boundary.padding,
+      maxYTop: bounds.halfHeight * CONFIG.boundary.ceilingHeightMultiplier - CONFIG.boundary.padding,
+      maxYBottom: bounds.halfHeight - CONFIG.boundary.padding,
+    };
+  }, [bounds]);
 
+  // Manual position clamping with bounce using useFrame
+  useFrame(() => {
+    if (!rigidBodyRef.current || isGrabbed) return;
+
+    const pos = rigidBodyRef.current.translation();
+    const vel = rigidBodyRef.current.linvel();
+    let newPos = { x: pos.x, y: pos.y, z: pos.z };
+    let newVel = { x: vel.x, y: vel.y, z: vel.z };
+    let positionChanged = false;
+    let velocityChanged = false;
+
+    // Check X axis boundaries
+    if (pos.x < -boundsRef.current.maxX) {
+      newPos.x = -boundsRef.current.maxX;
+      newVel.x = -vel.x * CONFIG.physics.walls.restitution;
+      positionChanged = true;
+      velocityChanged = true;
+
+      const speed = Math.abs(vel.x);
+      if (speed > CONFIG.boundary.velocityChangeThreshold && Date.now() - lastImpactTime.current > 100) {
+        lastImpactTime.current = Date.now();
         window.dispatchEvent(
           new CustomEvent("wallImpact", {
             detail: {
-              position: { x: position.x, y: position.y, z: position.z },
+              position: { x: newPos.x, y: newPos.y, z: newPos.z },
               velocity: speed,
-              wallType,
+              wallType: "left",
+            },
+          })
+        );
+      }
+    } else if (pos.x > boundsRef.current.maxX) {
+      newPos.x = boundsRef.current.maxX;
+      newVel.x = -vel.x * CONFIG.physics.walls.restitution;
+      positionChanged = true;
+      velocityChanged = true;
+
+      const speed = Math.abs(vel.x);
+      if (speed > CONFIG.boundary.velocityChangeThreshold && Date.now() - lastImpactTime.current > 100) {
+        lastImpactTime.current = Date.now();
+        window.dispatchEvent(
+          new CustomEvent("wallImpact", {
+            detail: {
+              position: { x: newPos.x, y: newPos.y, z: newPos.z },
+              velocity: speed,
+              wallType: "right",
             },
           })
         );
       }
     }
-  };
+
+    // Check Y axis boundaries
+    if (pos.y < -boundsRef.current.maxYBottom) {
+      newPos.y = -boundsRef.current.maxYBottom;
+      newVel.y = -vel.y * CONFIG.physics.walls.restitution;
+      positionChanged = true;
+      velocityChanged = true;
+
+      const speed = Math.abs(vel.y);
+      if (speed > CONFIG.boundary.velocityChangeThreshold && Date.now() - lastImpactTime.current > 100) {
+        lastImpactTime.current = Date.now();
+        window.dispatchEvent(
+          new CustomEvent("wallImpact", {
+            detail: {
+              position: { x: newPos.x, y: newPos.y, z: newPos.z },
+              velocity: speed,
+              wallType: "floor",
+            },
+          })
+        );
+      }
+    } else if (pos.y > boundsRef.current.maxYTop) {
+      newPos.y = boundsRef.current.maxYTop;
+      newVel.y = -vel.y * CONFIG.physics.walls.restitution;
+      positionChanged = true;
+      velocityChanged = true;
+
+      const speed = Math.abs(vel.y);
+      if (speed > CONFIG.boundary.velocityChangeThreshold && Date.now() - lastImpactTime.current > 100) {
+        lastImpactTime.current = Date.now();
+        window.dispatchEvent(
+          new CustomEvent("wallImpact", {
+            detail: {
+              position: { x: newPos.x, y: newPos.y, z: newPos.z },
+              velocity: speed,
+              wallType: "ceiling",
+            },
+          })
+        );
+      }
+    }
+
+    // Check Z axis boundaries
+    if (pos.z < -CONFIG.physics.walls.depth) {
+      newPos.z = -CONFIG.physics.walls.depth;
+      newVel.z = -vel.z * CONFIG.physics.walls.restitution;
+      positionChanged = true;
+      velocityChanged = true;
+
+      const speed = Math.abs(vel.z);
+      if (speed > CONFIG.boundary.velocityChangeThreshold && Date.now() - lastImpactTime.current > 100) {
+        lastImpactTime.current = Date.now();
+        window.dispatchEvent(
+          new CustomEvent("wallImpact", {
+            detail: {
+              position: { x: newPos.x, y: newPos.y, z: newPos.z },
+              velocity: speed,
+              wallType: "back",
+            },
+          })
+        );
+      }
+    } else if (pos.z > CONFIG.physics.walls.depth) {
+      newPos.z = CONFIG.physics.walls.depth;
+      newVel.z = -vel.z * CONFIG.physics.walls.restitution;
+      positionChanged = true;
+      velocityChanged = true;
+
+      const speed = Math.abs(vel.z);
+      if (speed > CONFIG.boundary.velocityChangeThreshold && Date.now() - lastImpactTime.current > 100) {
+        lastImpactTime.current = Date.now();
+        window.dispatchEvent(
+          new CustomEvent("wallImpact", {
+            detail: {
+              position: { x: newPos.x, y: newPos.y, z: newPos.z },
+              velocity: speed,
+              wallType: "front",
+            },
+          })
+        );
+      }
+    }
+
+    // Apply changes if needed
+    if (positionChanged) {
+      rigidBodyRef.current.setTranslation(newPos, true);
+    }
+    if (velocityChanged) {
+      rigidBodyRef.current.setLinvel(newVel, true);
+    }
+  });
 
   // Global pointer move handler
   useEffect(() => {
@@ -410,7 +544,6 @@ function InteractiveCross() {
       gravityScale={isGrabbed ? 0 : 1}
       lockTranslations={false}
       lockRotations={false}
-      onCollisionEnter={handleCollision}
       enabledTranslations={[true, true, false]}
       ccd={true}
     >
@@ -424,136 +557,10 @@ function InteractiveCross() {
 // Preload the model
 useGLTF.preload("/cross.glb");
 
-// Boundary Walls Component
-function BoundaryWalls() {
-  const { size } = useThree();
-
-  // Calculate visible area at Z=0 (where the cross is)
-  const bounds = calculateViewportBounds(CONFIG.camera, size.width / size.height);
-  const { halfWidth, halfHeight, visibleWidth } = bounds;
-  const ceilingHeight = halfHeight * CONFIG.boundary.ceilingHeightMultiplier;
-  const wallHeight = halfHeight + ceilingHeight; // Wall from floor to ceiling
-
-  return (
-    <>
-      {/* Floor */}
-      <RigidBody
-        type="fixed"
-        restitution={CONFIG.physics.walls.restitution}
-        friction={CONFIG.physics.walls.friction}
-        colliders="cuboid"
-        userData={{ wallType: "floor" }}
-        ccd={false}
-        canSleep={false}
-      >
-        <mesh position={[0, -halfHeight, 0]} renderOrder={-1}>
-          <boxGeometry args={[visibleWidth + 2, CONFIG.physics.walls.thickness, 14]} />
-          <meshBasicMaterial visible={false} />
-        </mesh>
-      </RigidBody>
-
-      {/* Ceiling (lowered) */}
-      <RigidBody
-        type="fixed"
-        restitution={CONFIG.physics.walls.restitution}
-        friction={CONFIG.physics.walls.friction}
-        colliders="cuboid"
-        userData={{ wallType: "ceiling" }}
-        ccd={false}
-        canSleep={false}
-      >
-        <mesh position={[0, ceilingHeight, 0]} renderOrder={-1}>
-          <boxGeometry args={[visibleWidth + 2, CONFIG.physics.walls.thickness, 14]} />
-          <meshBasicMaterial visible={false} />
-        </mesh>
-      </RigidBody>
-
-      {/* Left wall */}
-      <RigidBody
-        type="fixed"
-        restitution={CONFIG.physics.walls.restitution}
-        friction={CONFIG.physics.walls.friction}
-        colliders="cuboid"
-        userData={{ wallType: "left" }}
-        ccd={false}
-        canSleep={false}
-      >
-        <mesh position={[-halfWidth, (-halfHeight + ceilingHeight) / 2, 0]} renderOrder={-1}>
-          <boxGeometry args={[CONFIG.physics.walls.thickness, wallHeight, 12]} />
-          <meshBasicMaterial visible={false} />
-        </mesh>
-      </RigidBody>
-
-      {/* Right wall */}
-      <RigidBody
-        type="fixed"
-        restitution={CONFIG.physics.walls.restitution}
-        friction={CONFIG.physics.walls.friction}
-        colliders="cuboid"
-        userData={{ wallType: "right" }}
-        ccd={false}
-        canSleep={false}
-      >
-        <mesh position={[halfWidth, (-halfHeight + ceilingHeight) / 2, 0]} renderOrder={-1}>
-          <boxGeometry args={[CONFIG.physics.walls.thickness, wallHeight, 12]} />
-          <meshBasicMaterial visible={false} />
-        </mesh>
-      </RigidBody>
-
-      {/* Back wall */}
-      <RigidBody
-        type="fixed"
-        restitution={CONFIG.physics.walls.restitution}
-        friction={CONFIG.physics.walls.friction}
-        colliders="cuboid"
-        userData={{ wallType: "back" }}
-        ccd={false}
-        canSleep={false}
-      >
-        <mesh position={[0, (-halfHeight + ceilingHeight) / 2, -CONFIG.physics.walls.depth]} renderOrder={-1}>
-          <boxGeometry
-            args={[
-              visibleWidth + 2 + CONFIG.physics.walls.thickness * 2,
-              wallHeight + CONFIG.physics.walls.thickness * 2,
-              CONFIG.physics.walls.thickness,
-            ]}
-          />
-          <meshBasicMaterial visible={false} />
-        </mesh>
-      </RigidBody>
-
-      {/* Front wall */}
-      <RigidBody
-        type="fixed"
-        restitution={CONFIG.physics.walls.restitution}
-        friction={CONFIG.physics.walls.friction}
-        colliders="cuboid"
-        userData={{ wallType: "front" }}
-        ccd={false}
-        canSleep={false}
-      >
-        <mesh position={[0, (-halfHeight + ceilingHeight) / 2, CONFIG.physics.walls.depth]} renderOrder={-1}>
-          <boxGeometry
-            args={[
-              visibleWidth + 2 + CONFIG.physics.walls.thickness * 2,
-              wallHeight + CONFIG.physics.walls.thickness * 2,
-              CONFIG.physics.walls.thickness,
-            ]}
-          />
-          <meshBasicMaterial visible={false} />
-        </mesh>
-      </RigidBody>
-    </>
-  );
-}
-
 // Scene Content
 function SceneContent() {
   return (
     <>
-      {/* FPS Counter */}
-      <Stats />
-
       {/* Lighting */}
       <ambientLight intensity={CONFIG.lighting.ambient.intensity} />
       <directionalLight
@@ -567,7 +574,6 @@ function SceneContent() {
       {/* Physics World */}
       <Physics gravity={CONFIG.physics.gravity}>
         <InteractiveCross />
-        <BoundaryWalls />
       </Physics>
 
       {/* Post-Processing Effects */}
