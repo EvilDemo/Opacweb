@@ -131,6 +131,14 @@
     -webkit-overflow-scrolling: touch;
   }
 
+  /* Canvas touch optimization for mobile */
+  canvas {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
   /* Hide scrollbar for webkit browsers */
   ::-webkit-scrollbar {
     display: none;

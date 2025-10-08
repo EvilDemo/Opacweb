@@ -46,14 +46,7 @@ export default function Footer() {
         <div className="flex flex-col gap-4 md:gap-6 lg:gap-4 lg:grow items-start justify-start relative w-full lg:w-auto">
           {/* Company Logo */}
           <div>
-            <Image
-              src="/logo.webp"
-              alt="Opac Logo"
-              width={84}
-              height={36}
-              loading="lazy"
-              quality={40}
-            />
+            <Image src="/logo.webp" alt="Opac Logo" width={84} height={36} loading="lazy" quality={40} />
           </div>
 
           {/* Navigation Links */}
@@ -86,10 +79,7 @@ export default function Footer() {
             <div className="w-full text-center lg:text-left">
               <p className="body-text-xs">
                 <span>By subscribing you agree with our </span>
-                <Link
-                  href="/privacy-policy"
-                  className="underline hover:opacity-80 transition-opacity"
-                >
+                <Link href="/privacy-policy" className="underline hover:opacity-80 transition-opacity">
                   Privacy Policy
                 </Link>
                 <span>.</span>

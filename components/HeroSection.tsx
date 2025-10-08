@@ -20,7 +20,7 @@ export default function HeroSection() {
     >
       {aotyMode ? (
         /* AOTY Mode - Interactive 3D Cross */
-        <HomeInteractiveCanvas isMuted={isMuted} />
+        <HomeInteractiveCanvas key="aoty-canvas" isMuted={isMuted} />
       ) : (
         /* Normal Mode - Original Hero Content */
         <>

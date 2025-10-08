@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 interface RouteLoaderProps {
   children: React.ReactNode;
@@ -16,6 +16,70 @@ export default function RouteLoader({ children, minimumLoadTime = 1000 }: RouteL
   const [isFirstLoad, setIsFirstLoad] = useState(true);
   const [counter, setCounter] = useState(1);
   const pathname = usePathname();
+  const router = useRouter();
+
+  // Handle programmatic navigation requests
+  useEffect(() => {
+    const handleNavigationRequest = (event: CustomEvent<{ href: string }>) => {
+      const { href } = event.detail;
+
+      // Skip loader when navigating within the studio
+      if (href.startsWith("/studio")) {
+        router.push(href);
+        return;
+      }
+
+      // Show loader
+      setIsLoading(true);
+      setCounter(1);
+
+      // Smooth counter animation with easing
+      const startTime = Date.now();
+      const counterInterval = setInterval(() => {
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min(elapsed / minimumLoadTime, 0.99);
+
+        // Easing function for smoother progression (ease-out)
+        const easedProgress = 1 - Math.pow(1 - progress, 3);
+        const counterValue = Math.floor(easedProgress * 100) + 1;
+
+        if (counterValue <= 99) {
+          setCounter(counterValue);
+        }
+      }, 50);
+
+      // Navigate after animation completes
+      const navigationTimer = setTimeout(() => {
+        clearInterval(counterInterval);
+        router.push(href);
+
+        // Go directly from 99 to 000, then hide
+        setCounter(0);
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 200);
+      }, minimumLoadTime);
+
+      // Cleanup function
+      const cleanup = () => {
+        if (counterInterval) {
+          clearInterval(counterInterval);
+        }
+        if (navigationTimer) {
+          clearTimeout(navigationTimer);
+        }
+      };
+
+      // Store cleanup in a way that can be accessed if component unmounts
+      return cleanup;
+    };
+
+    window.addEventListener("requestNavigation", handleNavigationRequest as EventListener);
+
+    return () => {
+      window.removeEventListener("requestNavigation", handleNavigationRequest as EventListener);
+    };
+  }, [router, minimumLoadTime]);
 
   useEffect(() => {
     // Skip loader on very first page load
@@ -29,7 +93,7 @@ export default function RouteLoader({ children, minimumLoadTime = 1000 }: RouteL
       return;
     }
 
-    // Show loader on route changes
+    // Show loader on route changes (for direct navigation via browser)
     setIsLoading(true);
     setCounter(1);
 
