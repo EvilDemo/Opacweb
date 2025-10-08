@@ -44,10 +44,6 @@ interface InteractiveCanvasConfig {
     walls: {
       /** Bounciness of walls (0-1) */
       restitution: number;
-      /** Surface friction (0-1) */
-      friction: number;
-      /** Thickness of wall colliders */
-      thickness: number;
       /** Depth of front/back walls */
       depth: number;
     };
@@ -110,14 +106,6 @@ interface InteractiveCanvasConfig {
       position: [number, number, number];
       /** Light intensity */
       intensity: number;
-      /** Shadow map resolution */
-      shadowMapSize: number;
-    };
-    point: {
-      /** Point light position [x, y, z] */
-      position: [number, number, number];
-      /** Light intensity */
-      intensity: number;
     };
   };
   boundary: {
@@ -127,6 +115,8 @@ interface InteractiveCanvasConfig {
     padding: number;
     /** Minimum velocity change to register impact */
     velocityChangeThreshold: number;
+    /** Velocity below which object "sleeps" on floor */
+    sleepVelocityThreshold: number;
   };
   timing: {
     /** Delay before cross appears (ms) */
@@ -158,17 +148,15 @@ const CONFIG: InteractiveCanvasConfig = {
   physics: {
     gravity: [0, -9.81, 0],
     cross: {
-      restitution: 0.8,
+      restitution: 0.4,
       friction: 0.1,
-      linearDamping: 0.3,
+      linearDamping: 0.5,
       angularDamping: 0.3,
       initialRotation: [Math.PI, 0, 0],
       scale: 1,
     },
     walls: {
-      restitution: 0.8,
-      friction: 0.5,
-      thickness: 0.5,
+      restitution: 0.4,
       depth: 7,
     },
     interaction: {
@@ -211,17 +199,13 @@ const CONFIG: InteractiveCanvasConfig = {
     directional: {
       position: [5, 5, 5],
       intensity: 1,
-      shadowMapSize: 1024,
-    },
-    point: {
-      position: [-5, 5, 5],
-      intensity: 0.5,
     },
   },
   boundary: {
     ceilingHeightMultiplier: 0.5,
     padding: 1,
     velocityChangeThreshold: 6,
+    sleepVelocityThreshold: 0.5, // Velocity below which object "sleeps" on floor
   },
   timing: {
     crossAppearDelay: 1600,
@@ -332,11 +316,20 @@ function InteractiveCross() {
     // Check Y axis boundaries
     if (pos.y < -boundsRef.current.maxYBottom) {
       newPos.y = -boundsRef.current.maxYBottom;
-      newVel.y = -vel.y * CONFIG.physics.walls.restitution;
+
+      const speed = Math.abs(vel.y);
+      // If moving slowly on floor, stop completely (sleep)
+      if (speed < CONFIG.boundary.sleepVelocityThreshold) {
+        newVel.y = 0;
+        newVel.x *= 0.8; // Also dampen horizontal movement when sleeping
+        newVel.z *= 0.8;
+      } else {
+        newVel.y = -vel.y * CONFIG.physics.walls.restitution;
+      }
+
       positionChanged = true;
       velocityChanged = true;
 
-      const speed = Math.abs(vel.y);
       if (speed > CONFIG.boundary.velocityChangeThreshold && Date.now() - lastImpactTime.current > 100) {
         lastImpactTime.current = Date.now();
         window.dispatchEvent(
