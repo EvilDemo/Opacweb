@@ -12,11 +12,11 @@ import { EffectComposer, Bloom } from "@react-three/postprocessing";
  */
 const CONFIG = {
   camera: {
-    position: [0, 0, 8] as [number, number, number],
+    position: [0, 0, 12] as [number, number, number],
     fov: 50,
   },
   rotation: {
-    baseSpeed: 0.01, // Base rotation speed on X axis
+    baseSpeed: 0.01, // Base rotation speed on Y axis (horizontal)
     maxSpeed: 0.2, // Maximum rotation speed
     dragMultiplier: 0.005, // How much dragging affects speed
     decayRate: 0.98, // How quickly extra speed decays back to base
@@ -57,12 +57,12 @@ function RotatingCross() {
   const rotationSpeedRef = useRef(CONFIG.rotation.baseSpeed);
   const lastMouseY = useRef(0);
 
-  // Animation loop - rotate on X axis
+  // Animation loop - rotate on Y axis (horizontal)
   useFrame(() => {
     if (!groupRef.current) return;
 
-    // Apply rotation on X axis
-    groupRef.current.rotation.x += rotationSpeedRef.current;
+    // Apply rotation on Y axis for horizontal spinning
+    groupRef.current.rotation.y += rotationSpeedRef.current;
 
     // Decay extra speed back to base speed if not dragging
     if (!isDragging && rotationSpeedRef.current > CONFIG.rotation.baseSpeed) {
@@ -168,7 +168,7 @@ function SceneContent() {
 // Main Component
 export function A0TYRotatingCross() {
   return (
-    <div className="w-full h-full relative">
+    <div className="absolute inset-0">
       <Canvas
         gl={{
           alpha: true, // Transparent background

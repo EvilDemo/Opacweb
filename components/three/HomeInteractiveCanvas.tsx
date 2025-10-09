@@ -158,7 +158,10 @@ function InteractiveCross() {
     if (!isGrabbed) return;
 
     const handleMove = (event: PointerEvent) => {
-      event.preventDefault();
+      // Only prevent default when we're actively dragging to allow normal scrolling
+      if (isGrabbed) {
+        event.preventDefault();
+      }
 
       if (rigidBodyRef.current) {
         const x = (event.clientX / window.innerWidth) * 2 - 1;
@@ -212,7 +215,7 @@ function InteractiveCross() {
       }
     };
 
-    window.addEventListener("pointermove", handleMove, { passive: false });
+    window.addEventListener("pointermove", handleMove);
     window.addEventListener("pointerup", handleRelease);
 
     return () => {
@@ -334,24 +337,9 @@ export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }
       setShowInstructions(true);
     }, CONFIG.timing.instructionsAppearDelay);
 
-    // Prevent body scroll on mobile when AOTY mode is active
-    const originalOverflow = document.body.style.overflow;
-    const originalPosition = document.body.style.position;
-    const originalTouchAction = document.body.style.touchAction;
-
-    document.body.style.overflow = "hidden";
-    document.body.style.position = "fixed";
-    document.body.style.width = "100%";
-    document.body.style.touchAction = "none";
-
     return () => {
       clearTimeout(crossTimer);
       clearTimeout(instructionsTimer);
-
-      // Restore original body styles
-      document.body.style.overflow = originalOverflow;
-      document.body.style.position = originalPosition;
-      document.body.style.touchAction = originalTouchAction;
     };
   }, []);
 
@@ -395,14 +383,14 @@ export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }
       className="w-full relative"
       style={{
         height: "calc(100vh - 6rem)",
-        touchAction: "none",
+        touchAction: "pan-y",
         WebkitUserSelect: "none",
         userSelect: "none",
       }}
     >
       {/* Background Text Content */}
       <div
-        className="absolute inset-0 flex flex-col items-center justify-start pt-4 text-white pointer-events-none z-10"
+        className="absolute inset-0 flex flex-col items-center justify-center padding-global  text-white pointer-events-none z-10"
         style={{
           transform: animateText
             ? `perspective(1000px) translateZ(${CONFIG.animation.textFinalDepth})`
@@ -411,8 +399,8 @@ export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }
           transition: `transform ${CONFIG.timing.textAnimationDuration}s ease-out, opacity ${CONFIG.timing.textAnimationDuration}s ease-out`,
         }}
       >
-        <h1 className="heading-1 font-bold">A0TY</h1>
-        <h4 className="body-text-lg">Out Now!</h4>
+        {/* <h1 className="heading-1 font-bold">A0TY</h1>
+        <h4 className="heading-4 text-center">Out Now!</h4> */}
 
         {/* Side Wall Impact Button - below "Out Now!" - space always reserved */}
         <div className="mt-8 z-20 relative" style={{ minHeight: "40px" }}>
