@@ -56,7 +56,7 @@ export function AOTYCard({ className }: AOTYCardProps) {
 
         <CardContent className="pt-0">
           <CardDescription className="body-text-xs text-muted leading-relaxed mb-3">
-            Joya's debut project. A rare experimental sound exploring introspection, loss, and rebellion.
+            Joya&apos;s debut project. A rare experimental sound exploring introspection, loss, and rebellion.
           </CardDescription>
           <div className="flex items-center justify-between min-h-[36px]">
             <div className="body-text-sm font-semibold text-white tracking-wide">OUT NOW</div>

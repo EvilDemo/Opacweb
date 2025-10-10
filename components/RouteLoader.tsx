@@ -13,7 +13,6 @@ interface RouteLoaderProps {
 
 export default function RouteLoader({ children, minimumLoadTime = 3000 }: RouteLoaderProps) {
   const { showInitialLoader, setShowInitialLoader } = useLoader();
-  const [showSimpleLoader, setShowSimpleLoader] = useState(false);
   const [isLoaderExiting, setIsLoaderExiting] = useState(false);
   const [hasCompletedInitialRender, setHasCompletedInitialRender] = useState(false);
   const [blockPageMount, setBlockPageMount] = useState(false);
@@ -46,7 +45,6 @@ export default function RouteLoader({ children, minimumLoadTime = 3000 }: RouteL
 
       // Block page mount and show simple loader for navigation
       setBlockPageMount(true);
-      setShowSimpleLoader(true);
       setIsLoaderExiting(false);
       const loadTime = 1500;
 
@@ -59,7 +57,6 @@ export default function RouteLoader({ children, minimumLoadTime = 3000 }: RouteL
           setTimeout(() => {
             setIsLoaderExiting(true);
             setTimeout(() => {
-              setShowSimpleLoader(false);
               setIsLoaderExiting(false);
               setBlockPageMount(false);
             }, 600);
@@ -92,7 +89,6 @@ export default function RouteLoader({ children, minimumLoadTime = 3000 }: RouteL
 
       // Block page mount and show simple loader for navigation
       setBlockPageMount(true);
-      setShowSimpleLoader(true);
       setIsLoaderExiting(false);
       const loadTime = 1500;
 
@@ -104,7 +100,6 @@ export default function RouteLoader({ children, minimumLoadTime = 3000 }: RouteL
           setTimeout(() => {
             setIsLoaderExiting(true);
             setTimeout(() => {
-              setShowSimpleLoader(false);
               setIsLoaderExiting(false);
               setBlockPageMount(false);
             }, 600);

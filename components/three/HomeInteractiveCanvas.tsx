@@ -1,6 +1,6 @@
 "use client";
 
-import { Canvas, useThree, useFrame } from "@react-three/fiber";
+import { Canvas, useThree } from "@react-three/fiber";
 import { Physics, RigidBody, CuboidCollider } from "@react-three/rapier";
 import { Environment, PerspectiveCamera, useGLTF, Stats } from "@react-three/drei";
 import { useRef, useState, useEffect } from "react";
@@ -9,7 +9,6 @@ import type { RapierRigidBody } from "@react-three/rapier";
 import type { ThreeEvent } from "@react-three/fiber";
 import { HomeInteractiveMusic } from "./HomeInteractiveMusic";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
-import { Button } from "@/components/ui/button";
 import { AOTYCard } from "@/components/AOTYCard";
 
 /**
@@ -88,7 +87,6 @@ function BoundaryWalls() {
   const { thickness, restitution } = CONFIG.physics.walls;
 
   const ceilingHeight = (height / 2) * ceilingHeightMultiplier;
-  const floorHeight = height / 2;
   const wallHeight = height * 1.5; // Make walls taller to ensure they catch everything
 
   const handleWallCollision = (wallType: string, position: { x: number; y: number; z: number }) => {
@@ -151,7 +149,7 @@ function InteractiveCross() {
   const rigidBodyRef = useRef<RapierRigidBody>(null);
   const [isGrabbed, setIsGrabbed] = useState(false);
   const currentMousePos = useRef<THREE.Vector3>(new THREE.Vector3());
-  const { camera, viewport } = useThree();
+  const { camera } = useThree();
 
   // Global pointer move handler
   useEffect(() => {
