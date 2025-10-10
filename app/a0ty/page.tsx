@@ -19,7 +19,7 @@ export default function A0TYPage() {
             <A0TYRotatingCross />
           </div>
         </div>
-        <div className="flex flex-col w-1/2 items-center justify-center ">
+        <div className="flex flex-col w-1/2 items-center justify-center relative">
           {/* <img src="aoty-cover-back.webp" alt="A0TY Cover" className="w-full h-full object-cover" /> */}
           <video
             key="aoty-video"
@@ -30,6 +30,19 @@ export default function A0TYPage() {
             playsInline
             className="w-full h-full object-cover"
           />
+          <div className="absolute bottom-4 padding-global w-full">
+            <iframe
+              data-testid="embed-iframe"
+              style={{ borderRadius: "1px" }}
+              src="https://open.spotify.com/embed/album/0Uem3wM8ZJ6rLwPhNNB1NS?utm_source=generator&theme=0"
+              width="100%"
+              height="300px"
+              frameBorder="0"
+              allowFullScreen
+              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+              loading="lazy"
+            />
+          </div>
         </div>
       </div>
     </section>

@@ -57,7 +57,7 @@ export default function Lightbox({ isOpen, images, currentIndex, onClose, onNavi
   return (
     // PARENT: Fixed positioning with flexbox centering and responsive padding
     <div
-      className="fixed left-0 right-0 top-[6rem] h-[calc(100vh-6rem)] bg-black/95 z-50 flex items-center justify-center px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 py-4"
+      className="fixed left-0 right-0 top-[94px] h-[calc(100vh-94px)] bg-black/95 z-50 flex items-center justify-center px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 py-4"
       role="dialog"
       aria-modal="true"
       aria-labelledby="lightbox-title"

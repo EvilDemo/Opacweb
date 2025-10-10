@@ -8,6 +8,7 @@ import { Analytics } from "@vercel/analytics/react";
 import Footer from "@/components/Footer";
 import { Navbar } from "@/components/Navbar";
 import RouteLoader from "@/components/RouteLoader";
+import { LoaderProvider } from "@/components/loaders/LoaderContext";
 
 //Importing Font
 const geist = Geist({
@@ -52,8 +53,7 @@ export const metadata: Metadata = {
     url: "https://weareopac.com",
     siteName: "Opac",
     title: "Opac - Embracing Individuality Through Music & Fashion",
-    description:
-      "Opac creates residue through music and clothing - a trace of something unspoken.",
+    description: "Opac creates residue through music and clothing - a trace of something unspoken.",
     images: [
       {
         url: "/og-image.jpg",
@@ -66,8 +66,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Opac - Embracing Individuality Through Music & Fashion",
-    description:
-      "Opac creates residue through music and clothing - a trace of something unspoken.",
+    description: "Opac creates residue through music and clothing - a trace of something unspoken.",
     images: ["/twitter-image.jpg"],
   },
   robots: {
@@ -105,12 +104,13 @@ export default function RootLayout({
       <SpeedInsights />
       <Analytics />
       <body className={`${geist.variable} antialiased`}>
-        <RouteLoader minimumLoadTime={1000}>
-          {/* <Staging /> */}
+        <LoaderProvider>
           <Navbar />
-          <main>{children}</main>
-          <Footer />
-        </RouteLoader>
+          <RouteLoader minimumLoadTime={3000}>
+            <main>{children}</main>
+            <Footer />
+          </RouteLoader>
+        </LoaderProvider>
       </body>
     </html>
   );

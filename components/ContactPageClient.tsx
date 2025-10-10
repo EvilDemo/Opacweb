@@ -104,11 +104,7 @@ export default function ContactPageClient() {
               icon={<div className="w-4 h-1 bg-white rounded"></div>}
               title="Partners"
               description="Brands, sponsors, and collaborators interested in working with OPAC on creative projects and initiatives."
-              pills={[
-                "Brand Partnerships",
-                "Event Collaborations",
-                "Sponsorship",
-              ]}
+              pills={["Brand Partnerships", "Event Collaborations", "Sponsorship"]}
               buttonText="Partner With Us"
               onButtonClick={() => handleButtonClick("Partner With Us")}
               ariaLabel="Partnership categories"
@@ -120,11 +116,7 @@ export default function ContactPageClient() {
               icon={<div className="w-4 h-0.5 bg-white"></div>}
               title="Press"
               description="Media inquiries, interview requests, and press kit access for journalists and content creators."
-              pills={[
-                "Media Inquiries",
-                "Interview Requests",
-                "Press Materials",
-              ]}
+              pills={["Media Inquiries", "Interview Requests", "Press Materials"]}
               buttonText="Media Inquiry"
               onButtonClick={() => handleButtonClick("Media Inquiry")}
               ariaLabel="Press inquiry categories"

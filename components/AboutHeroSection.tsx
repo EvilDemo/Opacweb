@@ -18,10 +18,21 @@ export const AboutHeroSection = ({
   });
 
   return (
-    <motion.div className="h-[200vh]" ref={horizontalScrollRef}>
+    <motion.div
+      className="h-[200vh]"
+      ref={horizontalScrollRef}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.8, ease: "easeOut" }}
+    >
       <div className="sticky top-0 h-[100vh] mt-[-6rem] overflow-hidden">
         <div className="h-full flex items-end justify-end">
-          <motion.div className="overflow-hidden">
+          <motion.div
+            className="overflow-hidden"
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
+          >
             <motion.h1
               className="display-text w-[450vw] uppercase padding-global whitespace-nowrap"
               style={{

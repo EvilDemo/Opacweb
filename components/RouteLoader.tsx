@@ -1,22 +1,36 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { usePathname, useRouter } from "next/navigation";
+import InitialPageLoader from "./loaders/InitialPageLoader";
+import SimplePageLoader from "./loaders/SimplePageLoader";
+import { useLoader } from "./loaders/LoaderContext";
 
 interface RouteLoaderProps {
   children: React.ReactNode;
-  minimumLoadTime?: number; // in milliseconds
+  minimumLoadTime?: number;
 }
 
-// 3D Sphere video from your public folder
-const sphereVideo = "/esfera3D_optimized.webm";
-
-export default function RouteLoader({ children, minimumLoadTime = 1000 }: RouteLoaderProps) {
-  const [isLoading, setIsLoading] = useState(false);
-  const [isFirstLoad, setIsFirstLoad] = useState(true);
-  const [counter, setCounter] = useState(1);
+export default function RouteLoader({ children, minimumLoadTime = 3000 }: RouteLoaderProps) {
+  const { showInitialLoader, setShowInitialLoader } = useLoader();
+  const [showSimpleLoader, setShowSimpleLoader] = useState(false);
+  const [isLoaderExiting, setIsLoaderExiting] = useState(false);
+  const [hasCompletedInitialRender, setHasCompletedInitialRender] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
+
+  // Set initial render flag based on loader state
+  useEffect(() => {
+    if (!showInitialLoader) {
+      setHasCompletedInitialRender(true);
+    }
+  }, [showInitialLoader]);
+
+  // Callback for when initial loader completes
+  const handleInitialLoaderComplete = useCallback(() => {
+    setShowInitialLoader(false);
+    setHasCompletedInitialRender(true);
+  }, [setShowInitialLoader]);
 
   // Handle programmatic navigation requests
   useEffect(() => {
@@ -29,137 +43,85 @@ export default function RouteLoader({ children, minimumLoadTime = 1000 }: RouteL
         return;
       }
 
-      // Show loader
-      setIsLoading(true);
-      setCounter(1);
+      // Show simple loader for navigation
+      setShowSimpleLoader(true);
+      setIsLoaderExiting(false);
+      const loadTime = 1500;
 
-      // Smooth counter animation with easing
-      const startTime = Date.now();
-      const counterInterval = setInterval(() => {
-        const elapsed = Date.now() - startTime;
-        const progress = Math.min(elapsed / minimumLoadTime, 0.99);
-
-        // Easing function for smoother progression (ease-out)
-        const easedProgress = 1 - Math.pow(1 - progress, 3);
-        const counterValue = Math.floor(easedProgress * 100) + 1;
-
-        if (counterValue <= 99) {
-          setCounter(counterValue);
-        }
-      }, 50);
-
-      // Navigate after animation completes
       const navigationTimer = setTimeout(() => {
-        clearInterval(counterInterval);
         router.push(href);
-
-        // Go directly from 99 to 000, then hide
-        setCounter(0);
+        // Trigger fade-out animation
+        setIsLoaderExiting(true);
         setTimeout(() => {
-          setIsLoading(false);
-        }, 200);
-      }, minimumLoadTime);
+          setShowSimpleLoader(false);
+          setIsLoaderExiting(false);
+        }, 1000);
+      }, loadTime);
 
-      // Cleanup function
-      const cleanup = () => {
-        if (counterInterval) {
-          clearInterval(counterInterval);
-        }
-        if (navigationTimer) {
-          clearTimeout(navigationTimer);
-        }
-      };
-
-      // Store cleanup in a way that can be accessed if component unmounts
-      return cleanup;
+      return () => clearTimeout(navigationTimer);
     };
 
     window.addEventListener("requestNavigation", handleNavigationRequest as EventListener);
+    return () => window.removeEventListener("requestNavigation", handleNavigationRequest as EventListener);
+  }, [router]);
 
-    return () => {
-      window.removeEventListener("requestNavigation", handleNavigationRequest as EventListener);
-    };
-  }, [router, minimumLoadTime]);
-
+  // Handle Next.js Link clicks with loader
   useEffect(() => {
-    // Skip loader on very first page load
-    if (isFirstLoad) {
-      setIsFirstLoad(false);
-      return;
-    }
+    const handleClick = (e: MouseEvent) => {
+      const target = (e.target as HTMLElement).closest("a");
+      if (!target) return;
 
-    // Skip loader when navigating within the studio
-    if (pathname.startsWith("/studio")) {
-      return;
-    }
-
-    // Show loader on route changes (for direct navigation via browser)
-    setIsLoading(true);
-    setCounter(1);
-
-    // Smooth counter animation with easing
-    const startTime = Date.now();
-    const counterInterval = setInterval(() => {
-      const elapsed = Date.now() - startTime;
-      const progress = Math.min(elapsed / minimumLoadTime, 0.99);
-
-      // Easing function for smoother progression (ease-out)
-      const easedProgress = 1 - Math.pow(1 - progress, 3);
-      const counterValue = Math.floor(easedProgress * 100) + 1;
-
-      if (counterValue <= 99) {
-        setCounter(counterValue);
+      const href = target.getAttribute("href");
+      if (!href || href.startsWith("#") || href.startsWith("http") || href.startsWith("/studio")) {
+        return;
       }
-    }, 50); // Slightly slower updates for more visible animation
 
-    // Complete the loader after minimum time
-    const completionTimer = setTimeout(() => {
-      clearInterval(counterInterval);
+      // Only intercept internal links that navigate to different pages
+      if (href === pathname) return;
 
-      // Go directly from 99 to 000, then hide
-      setCounter(0);
+      e.preventDefault();
+
+      // Show simple loader for navigation
+      setShowSimpleLoader(true);
+      setIsLoaderExiting(false);
+      const loadTime = 1500;
+
       setTimeout(() => {
-        setIsLoading(false);
-      }, 200);
-    }, minimumLoadTime);
-
-    return () => {
-      if (counterInterval) {
-        clearInterval(counterInterval);
-      }
-      if (completionTimer) {
-        clearTimeout(completionTimer);
-      }
+        router.push(href);
+        // Trigger fade-out animation
+        setIsLoaderExiting(true);
+        setTimeout(() => {
+          setShowSimpleLoader(false);
+          setIsLoaderExiting(false);
+        }, 1000);
+      }, loadTime);
     };
-  }, [pathname, minimumLoadTime, isFirstLoad]);
 
-  if (isLoading) {
-    return (
-      <div className="fixed flex flex-col lg:flex-row padding-global inset-0 z-50 bg-black">
-        {/* Video - takes remaining space and centers content */}
-        <div className="flex-1 flex items-center justify-center overflow-hidden">
-          <div className="relative w-96 h-96 lg:w-[32rem] lg:h-[32rem] xl:w-[40rem] xl:h-[40rem] overflow-hidden rounded-full">
-            <video src={sphereVideo} autoPlay loop muted playsInline className="w-full h-full object-contain" />
-          </div>
-        </div>
+    document.addEventListener("click", handleClick);
+    return () => document.removeEventListener("click", handleClick);
+  }, [router, pathname]);
 
-        {/* Text and Counter - full width on mobile, 50/50 split on desktop */}
-        <div className="flex-0 w-full lg:flex-1 flex items-end justify-end p-8 lg:p-16">
-          <div className="text-right">
-            {/* Brand Text */}
-            <h1 className="heading-1 text-white tracking-wider mb-2">opac</h1>
+  // Handle route changes (browser navigation)
+  // Note: For browser back/forward navigation, the route has already changed by the time
+  // we detect it, so showing a loader would cause a flash. We only show loaders for
+  // programmatic navigation where we control the timing.
+  useEffect(() => {
+    // Set the flag on first render
+    if (!hasCompletedInitialRender) {
+      setHasCompletedInitialRender(true);
+    }
+  }, [pathname, hasCompletedInitialRender]);
 
-            {/* Counter */}
-            <div className="text-6xl lg:text-8xl font-bold text-white tracking-tight">
-              <div key={counter} className="counter-simple">
-                {counter === 0 ? "000" : counter.toString()}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+  // Show initial page loader on first visit (replaces everything including navbar)
+  if (showInitialLoader) {
+    return <InitialPageLoader minimumLoadTime={minimumLoadTime} onComplete={handleInitialLoaderComplete} />;
   }
 
-  return <>{children}</>;
+  // Normal render with optional simple loader overlay (navbar stays visible)
+  return (
+    <>
+      {children}
+      {showSimpleLoader && <SimplePageLoader isExiting={isLoaderExiting} />}
+    </>
+  );
 }
