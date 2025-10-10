@@ -212,7 +212,7 @@ export function PrinciplesSection({
   const progressAnimations = [progress0, progress1, progress2, progress3, progress4, progress5];
 
   return (
-    <section ref={sectionRef} className={`min-h-[450vh] relative padding-global ${className}`}>
+    <section ref={sectionRef} className={`min-h-[560vh] relative padding-global ${className}`}>
       <div className="sticky top-0 h-screen flex items-center">
         <div className="w-full">
           <div className="flex flex-col lg:grid lg:grid-cols-12 gap-6 lg:gap-16 h-full lg:items-center">
