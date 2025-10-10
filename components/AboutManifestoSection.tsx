@@ -23,8 +23,8 @@ export const AboutManifestoSection = ({
     { text: "Together they create residue,", group: 2 },
     { text: "a trace of something unspoken.", group: 2 },
   ],
-  minHeight = "min-h-[400vh]",
-  marginTop = "mt-[-100vh]",
+  minHeight = "min-h-[250vh]",
+  marginTop = "mt-[-60vh]",
 }: AboutManifestoSectionProps = {}) => {
   const sectionRef = useRef<HTMLElement>(null);
 
@@ -34,23 +34,23 @@ export const AboutManifestoSection = ({
   });
 
   // Create individual useTransform calls for each text block
-  const opacity0 = useTransform(scrollYProgress, [0.25, 0.37, 1], [0, 1, 1]);
-  const y0 = useTransform(scrollYProgress, [0.25, 0.37], [300, 0]);
+  const opacity0 = useTransform(scrollYProgress, [0.2, 0.3, 1], [0, 1, 1]);
+  const y0 = useTransform(scrollYProgress, [0.2, 0.3], [200, 0]);
 
-  const opacity1 = useTransform(scrollYProgress, [0.33, 0.45, 1], [0, 1, 1]);
-  const y1 = useTransform(scrollYProgress, [0.33, 0.45], [300, 0]);
+  const opacity1 = useTransform(scrollYProgress, [0.28, 0.38, 1], [0, 1, 1]);
+  const y1 = useTransform(scrollYProgress, [0.28, 0.38], [200, 0]);
 
-  const opacity2 = useTransform(scrollYProgress, [0.41, 0.53, 1], [0, 1, 1]);
-  const y2 = useTransform(scrollYProgress, [0.41, 0.53], [300, 0]);
+  const opacity2 = useTransform(scrollYProgress, [0.36, 0.46, 1], [0, 1, 1]);
+  const y2 = useTransform(scrollYProgress, [0.36, 0.46], [200, 0]);
 
-  const opacity3 = useTransform(scrollYProgress, [0.49, 0.61, 1], [0, 1, 1]);
-  const y3 = useTransform(scrollYProgress, [0.49, 0.61], [300, 0]);
+  const opacity3 = useTransform(scrollYProgress, [0.44, 0.54, 1], [0, 1, 1]);
+  const y3 = useTransform(scrollYProgress, [0.44, 0.54], [200, 0]);
 
-  const opacity4 = useTransform(scrollYProgress, [0.57, 0.69, 1], [0, 1, 1]);
-  const y4 = useTransform(scrollYProgress, [0.57, 0.69], [300, 0]);
+  const opacity4 = useTransform(scrollYProgress, [0.52, 0.62, 1], [0, 1, 1]);
+  const y4 = useTransform(scrollYProgress, [0.52, 0.62], [200, 0]);
 
-  const opacity5 = useTransform(scrollYProgress, [0.65, 0.77, 1], [0, 1, 1]);
-  const y5 = useTransform(scrollYProgress, [0.65, 0.77], [300, 0]);
+  const opacity5 = useTransform(scrollYProgress, [0.6, 0.7, 1], [0, 1, 1]);
+  const y5 = useTransform(scrollYProgress, [0.6, 0.7], [200, 0]);
 
   const scrollStyles = [
     { opacity: opacity0, y: y0 },
@@ -62,9 +62,7 @@ export const AboutManifestoSection = ({
   ];
 
   // Get unique groups from textBlocks
-  const uniqueGroups = [
-    ...new Set(textBlocks.map((block) => block.group)),
-  ].sort();
+  const uniqueGroups = [...new Set(textBlocks.map((block) => block.group))].sort();
 
   return (
     <motion.section
@@ -80,11 +78,7 @@ export const AboutManifestoSection = ({
               .map((block) => {
                 const globalIndex = textBlocks.findIndex((b) => b === block);
                 return (
-                  <motion.p
-                    key={globalIndex}
-                    className="heading-2 text-white"
-                    style={scrollStyles[globalIndex]}
-                  >
+                  <motion.p key={globalIndex} className="heading-2 text-white" style={scrollStyles[globalIndex]}>
                     {block.text}
                   </motion.p>
                 );

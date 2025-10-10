@@ -19,7 +19,7 @@ export const AboutHeroSection = ({
 
   return (
     <motion.div
-      className="h-[200vh]"
+      className="h-[120vh]"
       ref={horizontalScrollRef}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
