@@ -1,9 +1,16 @@
 "use client";
 
 import { Card, CardContent } from "@/components/ui/card";
-import { Instagram, Youtube, Music, CloudRain } from "lucide-react";
+import { Instagram, Youtube, Music } from "lucide-react";
 import { motion, useInView } from "motion/react";
 import { useRef } from "react";
+
+// Custom TikTok Icon Component
+const TikTokIcon = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" className={className} xmlns="http://www.w3.org/2000/svg">
+    <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z" />
+  </svg>
+);
 
 export default function ContactCTA() {
   const ref = useRef(null);
@@ -31,11 +38,7 @@ export default function ContactCTA() {
             {/* Instagram */}
             <motion.div
               initial={{ opacity: 0, y: 40, scale: 0.95 }}
-              animate={
-                isInView
-                  ? { opacity: 1, y: 0, scale: 1 }
-                  : { opacity: 0, y: 40, scale: 0.95 }
-              }
+              animate={isInView ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 40, scale: 0.95 }}
               transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
             >
               <a
@@ -50,9 +53,7 @@ export default function ContactCTA() {
                     <div className="w-12 h-12 bg-neutral-700 rounded-lg mx-auto mb-4 flex items-center justify-center group-hover:bg-neutral-600 transition-colors duration-300">
                       <Instagram className="w-6 h-6 text-white" />
                     </div>
-                    <h3 className="body-text-lg font-semibold mb-1">
-                      Instagram
-                    </h3>
+                    <h3 className="body-text-lg font-semibold mb-1">Instagram</h3>
                     <p className="text-neutral-400 text-sm">@opac.label</p>
                   </CardContent>
                 </Card>
@@ -62,11 +63,7 @@ export default function ContactCTA() {
             {/* YouTube */}
             <motion.div
               initial={{ opacity: 0, y: 40, scale: 0.95 }}
-              animate={
-                isInView
-                  ? { opacity: 1, y: 0, scale: 1 }
-                  : { opacity: 0, y: 40, scale: 0.95 }
-              }
+              animate={isInView ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 40, scale: 0.95 }}
               transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
             >
               <a
@@ -91,11 +88,7 @@ export default function ContactCTA() {
             {/* Spotify */}
             <motion.div
               initial={{ opacity: 0, y: 40, scale: 0.95 }}
-              animate={
-                isInView
-                  ? { opacity: 1, y: 0, scale: 1 }
-                  : { opacity: 0, y: 40, scale: 0.95 }
-              }
+              animate={isInView ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 40, scale: 0.95 }}
               transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
             >
               <a
@@ -117,32 +110,26 @@ export default function ContactCTA() {
               </a>
             </motion.div>
 
-            {/* SoundCloud */}
+            {/* TikTok */}
             <motion.div
               initial={{ opacity: 0, y: 40, scale: 0.95 }}
-              animate={
-                isInView
-                  ? { opacity: 1, y: 0, scale: 1 }
-                  : { opacity: 0, y: 40, scale: 0.95 }
-              }
+              animate={isInView ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 40, scale: 0.95 }}
               transition={{ duration: 0.8, delay: 0.7, ease: "easeOut" }}
             >
               <a
-                href="https://soundcloud.com/opac-label"
+                href="https://www.tiktok.com/@opacweb?_t=ZG-90RboIyLltx&_r=1"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group"
-                aria-label="Listen to OPAC Label on SoundCloud"
+                aria-label="Follow OPAC on TikTok"
               >
                 <Card variant="contactCTA">
                   <CardContent className="p-6 text-center">
                     <div className="w-12 h-12 bg-neutral-700 rounded-lg mx-auto mb-4 flex items-center justify-center group-hover:bg-neutral-600 transition-colors duration-300">
-                      <CloudRain className="w-6 h-6 text-white" />
+                      <TikTokIcon className="w-6 h-6 text-white" />
                     </div>
-                    <h3 className="body-text-lg font-semibold mb-1">
-                      SoundCloud
-                    </h3>
-                    <p className="text-neutral-400 text-sm">OPAC Label</p>
+                    <h3 className="body-text-lg font-semibold mb-1">TikTok</h3>
+                    <p className="text-neutral-400 text-sm">@opacweb</p>
                   </CardContent>
                 </Card>
               </a>

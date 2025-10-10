@@ -190,7 +190,7 @@ function MediaScrollContent({ allMediaData }: MediaScrollContentProps) {
                             ease: "easeOut",
                           }}
                         >
-                          What can&apos;t be seen must be heard.
+                          the unspoken, captured
                         </motion.h1>
 
                         {/* Filter Buttons */}
@@ -283,7 +283,7 @@ function MediaScrollContent({ allMediaData }: MediaScrollContentProps) {
                           ease: "easeOut",
                         }}
                       >
-                        What can&apos;t be seen must be heard.
+                        The unspoken, captured.
                       </motion.h1>
 
                       {/* Filter Buttons */}
