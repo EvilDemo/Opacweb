@@ -23,18 +23,18 @@ const CONFIG = {
   },
   materials: {
     cross: {
-      metalness: 0.9,
-      roughness: 0.2,
-      envMapIntensity: 1.0,
-      emissiveColor: 0x222222,
-      emissiveIntensity: 0.2,
+      metalness: 0.7,
+      roughness: 0.4,
+      envMapIntensity: 0.5,
+      emissiveColor: 0x111111,
+      emissiveIntensity: 0.05,
     },
   },
   effects: {
     bloom: {
-      intensity: 0.2,
-      luminanceThreshold: 0.3,
-      luminanceSmoothing: 0.9,
+      intensity: 0.02,
+      luminanceThreshold: 0.9,
+      luminanceSmoothing: 0.2,
       mipmapBlur: true,
     },
   },
