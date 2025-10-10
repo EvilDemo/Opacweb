@@ -12,19 +12,22 @@ function SimplePageLoader({ isExiting = false }: SimplePageLoaderProps) {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    // Trigger fade-in after mount
-    setIsVisible(true);
+    // Trigger fade-in for sphere after a brief moment
+    const timer = setTimeout(() => {
+      setIsVisible(true);
+    }, 50);
+    return () => clearTimeout(timer);
   }, []);
 
   return (
     <div
-      className={`fixed inset-0 z-50 bg-black flex items-center justify-center transition-opacity ${
-        isVisible && !isExiting ? "opacity-100 duration-300" : "opacity-0 delay-[700ms] duration-300"
+      className={`fixed inset-0 z-[9999] bg-black flex items-center justify-center transition-opacity ${
+        !isExiting ? "opacity-100" : "opacity-0 duration-500"
       }`}
     >
       <div
-        className={`relative w-32 h-32 overflow-hidden rounded-full transition-all ${
-          isVisible && !isExiting ? "opacity-100 scale-100 delay-200 duration-400" : "opacity-0 scale-80 duration-400"
+        className={`relative w-32 h-32 overflow-hidden rounded-full transition-all duration-500 ${
+          isVisible && !isExiting ? "opacity-100 scale-100" : "opacity-0 scale-90"
         }`}
       >
         <video src={sphereVideo} autoPlay loop muted playsInline className="w-full h-full object-contain" />

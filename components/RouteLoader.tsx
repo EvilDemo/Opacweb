@@ -48,14 +48,20 @@ export default function RouteLoader({ children, minimumLoadTime = 3000 }: RouteL
       setIsLoaderExiting(false);
       const loadTime = 1500;
 
+      // Wait a brief moment for loader to be visible before navigating
       const navigationTimer = setTimeout(() => {
-        router.push(href);
-        // Trigger fade-out animation
-        setIsLoaderExiting(true);
-        setTimeout(() => {
-          setShowSimpleLoader(false);
-          setIsLoaderExiting(false);
-        }, 1000);
+        // Small delay to ensure loader is fully rendered
+        requestAnimationFrame(() => {
+          router.push(href);
+          // Keep loader visible for a moment after navigation
+          setTimeout(() => {
+            setIsLoaderExiting(true);
+            setTimeout(() => {
+              setShowSimpleLoader(false);
+              setIsLoaderExiting(false);
+            }, 600);
+          }, 100);
+        });
       }, loadTime);
 
       return () => clearTimeout(navigationTimer);
@@ -87,13 +93,18 @@ export default function RouteLoader({ children, minimumLoadTime = 3000 }: RouteL
       const loadTime = 1500;
 
       setTimeout(() => {
-        router.push(href);
-        // Trigger fade-out animation
-        setIsLoaderExiting(true);
-        setTimeout(() => {
-          setShowSimpleLoader(false);
-          setIsLoaderExiting(false);
-        }, 1000);
+        // Small delay to ensure loader is fully rendered
+        requestAnimationFrame(() => {
+          router.push(href);
+          // Keep loader visible for a moment after navigation
+          setTimeout(() => {
+            setIsLoaderExiting(true);
+            setTimeout(() => {
+              setShowSimpleLoader(false);
+              setIsLoaderExiting(false);
+            }, 600);
+          }, 100);
+        });
       }, loadTime);
     };
 
