@@ -16,6 +16,7 @@ export default function RouteLoader({ children, minimumLoadTime = 3000 }: RouteL
   const [showSimpleLoader, setShowSimpleLoader] = useState(false);
   const [isLoaderExiting, setIsLoaderExiting] = useState(false);
   const [hasCompletedInitialRender, setHasCompletedInitialRender] = useState(false);
+  const [blockPageMount, setBlockPageMount] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
 
@@ -43,7 +44,8 @@ export default function RouteLoader({ children, minimumLoadTime = 3000 }: RouteL
         return;
       }
 
-      // Show simple loader for navigation
+      // Block page mount and show simple loader for navigation
+      setBlockPageMount(true);
       setShowSimpleLoader(true);
       setIsLoaderExiting(false);
       const loadTime = 1500;
@@ -59,6 +61,7 @@ export default function RouteLoader({ children, minimumLoadTime = 3000 }: RouteL
             setTimeout(() => {
               setShowSimpleLoader(false);
               setIsLoaderExiting(false);
+              setBlockPageMount(false);
             }, 600);
           }, 100);
         });
@@ -87,7 +90,8 @@ export default function RouteLoader({ children, minimumLoadTime = 3000 }: RouteL
 
       e.preventDefault();
 
-      // Show simple loader for navigation
+      // Block page mount and show simple loader for navigation
+      setBlockPageMount(true);
       setShowSimpleLoader(true);
       setIsLoaderExiting(false);
       const loadTime = 1500;
@@ -102,6 +106,7 @@ export default function RouteLoader({ children, minimumLoadTime = 3000 }: RouteL
             setTimeout(() => {
               setShowSimpleLoader(false);
               setIsLoaderExiting(false);
+              setBlockPageMount(false);
             }, 600);
           }, 100);
         });
@@ -128,11 +133,11 @@ export default function RouteLoader({ children, minimumLoadTime = 3000 }: RouteL
     return <InitialPageLoader minimumLoadTime={minimumLoadTime} onComplete={handleInitialLoaderComplete} />;
   }
 
-  // Normal render with optional simple loader overlay (navbar stays visible)
-  return (
-    <>
-      {children}
-      {showSimpleLoader && <SimplePageLoader isExiting={isLoaderExiting} />}
-    </>
-  );
+  // Show loader while blocked (replaces everything, page won't mount)
+  if (blockPageMount) {
+    return <SimplePageLoader isExiting={isLoaderExiting} />;
+  }
+
+  // Render page with pathname key to retrigger animations on route change
+  return <div key={pathname}>{children}</div>;
 }
