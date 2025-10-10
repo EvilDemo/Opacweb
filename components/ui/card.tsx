@@ -5,7 +5,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const cardVariants = cva(
-  "bg-gradient-to-br from-neutral-900 to-black text-white flex flex-col rounded-2xl border border-neutral-800 py-4 px-4 shadow-sm overflow-hidden group relative hover:shadow-lg hover:-translate-y-1 hover:border-neutral-600 hover:bg-neutral-800 transition-all duration-300 ease-in-out",
+  "bg-gradient-to-br from-neutral-900 to-black text-white flex flex-col rounded-2xl border border-neutral-800 py-4 px-4 shadow-sm overflow-hidden group relative hover:shadow-lg hover:-translate-y-1 hover:border-neutral-600  transition-all duration-300 ease-in-out",
   {
     variants: {
       variant: {
@@ -94,11 +94,7 @@ function Card({
   );
 }
 
-function CardHeader({
-  className,
-  children,
-  ...props
-}: HTMLMotionProps<"div"> & { children?: React.ReactNode }) {
+function CardHeader({ className, children, ...props }: HTMLMotionProps<"div"> & { children?: React.ReactNode }) {
   return (
     <motion.div
       data-slot="card-header"
@@ -116,11 +112,7 @@ function CardHeader({
   );
 }
 
-function CardTitle({
-  className,
-  children,
-  ...props
-}: HTMLMotionProps<"div"> & { children?: React.ReactNode }) {
+function CardTitle({ className, children, ...props }: HTMLMotionProps<"div"> & { children?: React.ReactNode }) {
   return (
     <motion.div
       data-slot="card-title"
@@ -134,11 +126,7 @@ function CardTitle({
   );
 }
 
-function CardDescription({
-  className,
-  children,
-  ...props
-}: HTMLMotionProps<"div"> & { children?: React.ReactNode }) {
+function CardDescription({ className, children, ...props }: HTMLMotionProps<"div"> & { children?: React.ReactNode }) {
   return (
     <motion.div
       data-slot="card-description"
@@ -153,18 +141,11 @@ function CardDescription({
   );
 }
 
-function CardAction({
-  className,
-  children,
-  ...props
-}: HTMLMotionProps<"div"> & { children?: React.ReactNode }) {
+function CardAction({ className, children, ...props }: HTMLMotionProps<"div"> & { children?: React.ReactNode }) {
   return (
     <motion.div
       data-slot="card-action"
-      className={cn(
-        "col-start-2 row-span-2 row-start-1 self-start justify-self-end",
-        className
-      )}
+      className={cn("col-start-2 row-span-2 row-start-1 self-start justify-self-end", className)}
       initial={{ scale: 0, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
       transition={{
@@ -180,11 +161,7 @@ function CardAction({
   );
 }
 
-function CardContent({
-  className,
-  children,
-  ...props
-}: HTMLMotionProps<"div"> & { children?: React.ReactNode }) {
+function CardContent({ className, children, ...props }: HTMLMotionProps<"div"> & { children?: React.ReactNode }) {
   return (
     <motion.div
       data-slot="card-content"
@@ -199,11 +176,7 @@ function CardContent({
   );
 }
 
-function CardFooter({
-  className,
-  children,
-  ...props
-}: HTMLMotionProps<"div"> & { children?: React.ReactNode }) {
+function CardFooter({ className, children, ...props }: HTMLMotionProps<"div"> & { children?: React.ReactNode }) {
   return (
     <motion.div
       data-slot="card-footer"
@@ -218,12 +191,4 @@ function CardFooter({
   );
 }
 
-export {
-  Card,
-  CardHeader,
-  CardFooter,
-  CardTitle,
-  CardAction,
-  CardDescription,
-  CardContent,
-};
+export { Card, CardHeader, CardFooter, CardTitle, CardAction, CardDescription, CardContent };

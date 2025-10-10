@@ -10,6 +10,7 @@ import type { ThreeEvent } from "@react-three/fiber";
 import { HomeInteractiveMusic } from "./HomeInteractiveMusic";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import { Button } from "@/components/ui/button";
+import { AOTYCard } from "@/components/AOTYCard";
 
 /**
  * Configuration for the Interactive Canvas
@@ -55,8 +56,8 @@ const CONFIG = {
   },
   effects: {
     bloom: {
-      intensity: 0.1,
-      luminanceThreshold: 0.2,
+      intensity: 0.02,
+      luminanceThreshold: 0.9,
       luminanceSmoothing: 0.2,
       mipmapBlur: true,
     },
@@ -74,7 +75,6 @@ const CONFIG = {
     crossAppearDelay: 1600,
     instructionsAppearDelay: 2600,
     textAnimationDuration: 1.5,
-    sideWallButtonDuration: 10000,
   },
   animation: {
     textInitialDepth: "-500px",
@@ -320,8 +320,6 @@ export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }
   const [showCross, setShowCross] = useState(false);
   const [animateText, setAnimateText] = useState(false);
   const [showInstructions, setShowInstructions] = useState(false);
-  const [showSideWallButton, setShowSideWallButton] = useState(false);
-  const sideWallTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     // Start text animation immediately
@@ -343,41 +341,6 @@ export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }
     };
   }, []);
 
-  // Listen for side wall impacts
-  useEffect(() => {
-    const handleWallImpact = (event: CustomEvent) => {
-      const { wallType } = event.detail;
-      console.log("handleWallImpact received:", wallType);
-
-      // Only show button for side walls (left or right)
-      if (wallType === "left" || wallType === "right") {
-        console.log("Showing side wall button!");
-        // Show button and restart timer every time a side wall is hit
-        setShowSideWallButton(true);
-
-        // Clear any existing timer
-        if (sideWallTimerRef.current) {
-          clearTimeout(sideWallTimerRef.current);
-        }
-
-        // Set new timer to hide button
-        sideWallTimerRef.current = setTimeout(() => {
-          setShowSideWallButton(false);
-          sideWallTimerRef.current = null;
-        }, CONFIG.timing.sideWallButtonDuration);
-      }
-    };
-
-    window.addEventListener("wallImpact", handleWallImpact as EventListener);
-
-    return () => {
-      window.removeEventListener("wallImpact", handleWallImpact as EventListener);
-      if (sideWallTimerRef.current) {
-        clearTimeout(sideWallTimerRef.current);
-      }
-    };
-  }, []);
-
   return (
     <div
       className="w-full relative"
@@ -388,6 +351,9 @@ export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }
         userSelect: "none",
       }}
     >
+      {/* AOTY Card - Top Left */}
+      <AOTYCard />
+
       {/* Background Text Content */}
       <div
         className="absolute inset-0 flex flex-col items-center justify-center padding-global  text-white pointer-events-none z-10"
@@ -401,34 +367,13 @@ export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }
       >
         {/* <h1 className="heading-1 font-bold">A0TY</h1>
         <h4 className="heading-4 text-center">Out Now!</h4> */}
-
-        {/* Side Wall Impact Button - below "Out Now!" - space always reserved */}
-        <div className="mt-8 z-20 relative" style={{ minHeight: "40px" }}>
-          {showSideWallButton && (
-            <Button
-              variant="secondary"
-              size="lg"
-              className="animate-[fadeIn_0.3s_ease-out] pointer-events-auto"
-              onClick={() => {
-                // Dispatch custom event to trigger RouteLoader animation
-                window.dispatchEvent(
-                  new CustomEvent("requestNavigation", {
-                    detail: { href: "/a0ty" },
-                  })
-                );
-              }}
-            >
-              Take me to the page
-            </Button>
-          )}
-        </div>
       </div>
 
       {/* 3D Canvas Layer */}
       <div className="absolute inset-0 z-0">
         {/* Instructions - centered at bottom */}
         {showInstructions && (
-          <div className="absolute bottom-8 md:bottom-12 lg:bottom-16 left-1/2 -translate-x-1/2 z-10 text-white pointer-events-none px-4 text-center">
+          <div className="absolute bottom-8 md:bottom-9 lg:bottom-10 left-1/2 -translate-x-1/2 z-10 text-white pointer-events-none px-4 text-center">
             <p className="body-text-sm text-muted">
               <span className="hidden md:inline">Drag and throw the cross to move it around.</span>
               <span className="md:hidden">Tap, drag and release the cross to throw it.</span>

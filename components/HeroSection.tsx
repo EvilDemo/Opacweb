@@ -70,7 +70,7 @@ export default function HeroSection() {
 
       {/* Controls - AOTY Mode Toggle and Mute Button */}
       <motion.div
-        className="absolute bottom-8 md:bottom-12 lg:bottom-16 right-4 md:right-8 lg:right-16 z-20 flex gap-3 items-center"
+        className="absolute bottom-8 md:bottom-9 lg:bottom-10 right-4 md:right-8 lg:right-16 z-20 flex gap-3 items-center"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
