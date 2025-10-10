@@ -176,29 +176,29 @@ export function PrinciplesSection({
   });
 
   // Create individual useTransform calls for each principle (up to 6 principles)
-  const principle0Opacity = useTransform(scrollYProgress, [0, 0.025, 0.142, 0.167], [0, 1, 1, 0]);
-  const principle0Scale = useTransform(scrollYProgress, [0, 0.025, 0.142, 0.167], [0.9, 1, 1, 0.9]);
-  const progress0 = useTransform(scrollYProgress, [0, 0.025, 0.142, 0.167], [0, 1, 1, 0]);
+  const principle0Opacity = useTransform(scrollYProgress, [0.1, 0.125, 0.225, 0.25], [0, 1, 1, 0]);
+  const principle0Scale = useTransform(scrollYProgress, [0.1, 0.125, 0.225, 0.25], [0.9, 1, 1, 0.9]);
+  const progress0 = useTransform(scrollYProgress, [0.1, 0.125, 0.225, 0.25], [0, 1, 1, 0]);
 
-  const principle1Opacity = useTransform(scrollYProgress, [0.167, 0.192, 0.309, 0.334], [0, 1, 1, 0]);
-  const principle1Scale = useTransform(scrollYProgress, [0.167, 0.192, 0.309, 0.334], [0.9, 1, 1, 0.9]);
-  const progress1 = useTransform(scrollYProgress, [0.167, 0.192, 0.309, 0.334], [0, 1, 1, 0]);
+  const principle1Opacity = useTransform(scrollYProgress, [0.25, 0.275, 0.375, 0.4], [0, 1, 1, 0]);
+  const principle1Scale = useTransform(scrollYProgress, [0.25, 0.275, 0.375, 0.4], [0.9, 1, 1, 0.9]);
+  const progress1 = useTransform(scrollYProgress, [0.25, 0.275, 0.375, 0.4], [0, 1, 1, 0]);
 
-  const principle2Opacity = useTransform(scrollYProgress, [0.334, 0.359, 0.476, 0.5], [0, 1, 1, 0]);
-  const principle2Scale = useTransform(scrollYProgress, [0.334, 0.359, 0.476, 0.5], [0.9, 1, 1, 0.9]);
-  const progress2 = useTransform(scrollYProgress, [0.334, 0.359, 0.476, 0.5], [0, 1, 1, 0]);
+  const principle2Opacity = useTransform(scrollYProgress, [0.4, 0.425, 0.525, 0.55], [0, 1, 1, 0]);
+  const principle2Scale = useTransform(scrollYProgress, [0.4, 0.425, 0.525, 0.55], [0.9, 1, 1, 0.9]);
+  const progress2 = useTransform(scrollYProgress, [0.4, 0.425, 0.525, 0.55], [0, 1, 1, 0]);
 
-  const principle3Opacity = useTransform(scrollYProgress, [0.5, 0.525, 0.642, 0.667], [0, 1, 1, 0]);
-  const principle3Scale = useTransform(scrollYProgress, [0.5, 0.525, 0.642, 0.667], [0.9, 1, 1, 0.9]);
-  const progress3 = useTransform(scrollYProgress, [0.5, 0.525, 0.642, 0.667], [0, 1, 1, 0]);
+  const principle3Opacity = useTransform(scrollYProgress, [0.55, 0.575, 0.675, 0.7], [0, 1, 1, 0]);
+  const principle3Scale = useTransform(scrollYProgress, [0.55, 0.575, 0.675, 0.7], [0.9, 1, 1, 0.9]);
+  const progress3 = useTransform(scrollYProgress, [0.55, 0.575, 0.675, 0.7], [0, 1, 1, 0]);
 
-  const principle4Opacity = useTransform(scrollYProgress, [0.667, 0.692, 0.809, 0.834], [0, 1, 1, 0]);
-  const principle4Scale = useTransform(scrollYProgress, [0.667, 0.692, 0.809, 0.834], [0.9, 1, 1, 0.9]);
-  const progress4 = useTransform(scrollYProgress, [0.667, 0.692, 0.809, 0.834], [0, 1, 1, 0]);
+  const principle4Opacity = useTransform(scrollYProgress, [0.7, 0.725, 0.825, 0.85], [0, 1, 1, 0]);
+  const principle4Scale = useTransform(scrollYProgress, [0.7, 0.725, 0.825, 0.85], [0.9, 1, 1, 0.9]);
+  const progress4 = useTransform(scrollYProgress, [0.7, 0.725, 0.825, 0.85], [0, 1, 1, 0]);
 
-  const principle5Opacity = useTransform(scrollYProgress, [0.834, 0.859, 0.976, 1], [0, 1, 1, 0]);
-  const principle5Scale = useTransform(scrollYProgress, [0.834, 0.859, 0.976, 1], [0.9, 1, 1, 0.9]);
-  const progress5 = useTransform(scrollYProgress, [0.834, 0.859, 0.976, 1], [0, 1, 1, 0]);
+  const principle5Opacity = useTransform(scrollYProgress, [0.85, 0.875, 0.975, 1], [0, 1, 1, 0]);
+  const principle5Scale = useTransform(scrollYProgress, [0.85, 0.875, 0.975, 1], [0.9, 1, 1, 0.9]);
+  const progress5 = useTransform(scrollYProgress, [0.85, 0.875, 0.975, 1], [0, 1, 1, 0]);
 
   const principleAnimations = [
     { opacity: principle0Opacity, scale: principle0Scale },
@@ -212,7 +212,7 @@ export function PrinciplesSection({
   const progressAnimations = [progress0, progress1, progress2, progress3, progress4, progress5];
 
   return (
-    <section ref={sectionRef} className={`min-h-[560vh] relative padding-global mt-[-150vh] ${className}`}>
+    <section ref={sectionRef} className={`min-h-[560vh] relative padding-global mt-[-50vh] ${className}`}>
       <div className="sticky top-0 h-screen flex items-center">
         <div className="w-full">
           <div className="flex flex-col lg:grid lg:grid-cols-12 gap-6 lg:gap-16 h-full lg:items-center">
