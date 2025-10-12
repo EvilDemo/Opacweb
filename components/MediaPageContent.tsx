@@ -225,7 +225,7 @@ function MediaScrollContent({ allMediaData }: MediaScrollContentProps) {
                     className="pb-20 pt-10 padding-global"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ duration: 0.3 }}
+                    transition={{ delay: 0.8, duration: 0.6 }}
                   >
                     <div className="flex items-center justify-center">
                       <div className="text-center lg:text-left">
@@ -319,19 +319,19 @@ function MediaScrollContent({ allMediaData }: MediaScrollContentProps) {
                   className="relative pb-20 pt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:flex lg:flex-row lg:flex-nowrap lg:pt-0 lg:pb-0 lg:pl-10 md:gap-6 lg:gap-4 lg:min-w-max xl:gap-5 2xl:gap-6 w-full"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  transition={{ duration: 0.3 }}
+                  transition={{ delay: 0.8, duration: 0.6 }}
                 >
                   <AnimatePresence>
                     {displayData.map((item, index) => (
                       <motion.div
                         key={item._id}
                         className="lg:flex-shrink-0 lg:w-68 2xl:w-72"
-                        initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                        initial={{ opacity: 0, y: 100, scale: 0.8 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: -10, scale: 0.95 }}
                         transition={{
-                          delay: index * 0.05,
-                          duration: 0.3,
+                          delay: 1 + index * 0.05,
+                          duration: 0.4,
                           ease: "easeOut",
                         }}
                         whileHover={{
