@@ -2,7 +2,7 @@
 
 import { Canvas, useThree } from "@react-three/fiber";
 import { Physics, RigidBody, CuboidCollider } from "@react-three/rapier";
-import { Environment, PerspectiveCamera, useGLTF, Stats } from "@react-three/drei";
+import { Environment, PerspectiveCamera, useGLTF } from "@react-three/drei";
 import { useRef, useState, useEffect } from "react";
 import * as THREE from "three";
 import type { RapierRigidBody } from "@react-three/rapier";
@@ -475,7 +475,6 @@ export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }
           frameloop="always"
         >
           <PerspectiveCamera makeDefault position={CONFIG.camera.position} fov={CONFIG.camera.fov} />
-          <Stats />
           {showCross && <SceneContent />}
         </Canvas>
       </div>

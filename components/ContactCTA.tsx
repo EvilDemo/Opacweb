@@ -54,7 +54,7 @@ export default function ContactCTA() {
                       <Instagram className="w-6 h-6 text-white" />
                     </div>
                     <h3 className="body-text-lg font-semibold mb-1">Instagram</h3>
-                    <p className="text-neutral-400 text-sm">@opac.label</p>
+                    <p className="text-neutral-400 text-sm">@opac.__</p>
                   </CardContent>
                 </Card>
               </a>
@@ -79,7 +79,7 @@ export default function ContactCTA() {
                       <Youtube className="w-6 h-6 text-white" />
                     </div>
                     <h3 className="body-text-lg font-semibold mb-1">YouTube</h3>
-                    <p className="text-neutral-400 text-sm">OPAC Label</p>
+                    <p className="text-neutral-400 text-sm">@joyaboi</p>
                   </CardContent>
                 </Card>
               </a>
