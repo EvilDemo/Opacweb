@@ -9,7 +9,8 @@ import type { RapierRigidBody } from "@react-three/rapier";
 import type { ThreeEvent } from "@react-three/fiber";
 import { HomeInteractiveMusic } from "./HomeInteractiveMusic";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
-import { AOTYCard } from "@/components/AOTYCard";
+import { motion } from "motion/react";
+import { Button } from "@/components/ui/button";
 
 /**
  * Configuration for the Interactive Canvas
@@ -292,7 +293,7 @@ function SceneContent() {
       />
 
       {/* Environment */}
-      <Environment preset="sunset" resolution={128} />
+      <Environment preset="studio" resolution={128} />
 
       {/* Physics World */}
       <Physics gravity={CONFIG.physics.gravity}>
@@ -318,6 +319,8 @@ export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }
   const [showCross, setShowCross] = useState(false);
   const [animateText, setAnimateText] = useState(false);
   const [showInstructions, setShowInstructions] = useState(false);
+  const [showButton, setShowButton] = useState(false);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     // Start text animation immediately
@@ -339,6 +342,39 @@ export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }
     };
   }, []);
 
+  // Listen for wall impacts
+  useEffect(() => {
+    const handleWallImpact = (event: CustomEvent) => {
+      const { wallType } = event.detail;
+
+      // Only show button for side walls (left or right)
+      if (wallType === "left" || wallType === "right") {
+        // Clear any existing timer
+        if (timerRef.current) {
+          clearTimeout(timerRef.current);
+        }
+
+        setShowButton(true);
+
+        // Hide button after 10 seconds
+        timerRef.current = setTimeout(() => {
+          setShowButton(false);
+          timerRef.current = null;
+        }, 10000);
+      }
+    };
+
+    window.addEventListener("wallImpact", handleWallImpact as EventListener);
+
+    return () => {
+      window.removeEventListener("wallImpact", handleWallImpact as EventListener);
+      // Clean up timer on unmount
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+    };
+  }, []);
+
   return (
     <div
       className="w-full relative"
@@ -349,36 +385,78 @@ export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }
         userSelect: "none",
       }}
     >
-      {/* AOTY Card - Top Left */}
-      <AOTYCard />
-
-      {/* Background Text Content */}
-      <div
-        className="absolute inset-0 flex flex-col items-center justify-center padding-global  text-white pointer-events-none z-10"
-        style={{
-          transform: animateText
-            ? `perspective(1000px) translateZ(${CONFIG.animation.textFinalDepth})`
-            : `perspective(1000px) translateZ(${CONFIG.animation.textInitialDepth})`,
-          opacity: animateText ? 1 : 0,
-          transition: `transform ${CONFIG.timing.textAnimationDuration}s ease-out, opacity ${CONFIG.timing.textAnimationDuration}s ease-out`,
+      {/* AOTY Content - Top Section */}
+      <motion.div
+        className="absolute top-2 left-0 right-0 flex flex-col items-center z-20 pointer-events-none padding-global"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{
+          duration: 0.8,
+          ease: "easeOut",
+          delay: 1.0,
         }}
       >
-        {/* <h1 className="heading-1 font-bold">A0TY</h1>
-        <h4 className="heading-4 text-center">Out Now!</h4> */}
-      </div>
+        <div className="text-white text-center space-y-4">
+          {/* Title */}
+          <div>
+            <div className="heading-3 font-bold tracking-tight">A0TY</div>
+            <div className="body-text-xs text-muted font-medium uppercase tracking-widest mt-1">Album of the Year</div>
+          </div>
 
-      {/* 3D Canvas Layer */}
-      <div className="absolute inset-0 z-0">
-        {/* Instructions - centered at bottom */}
-        {showInstructions && (
-          <div className="absolute bottom-8 md:bottom-9 lg:bottom-10 left-1/2 -translate-x-1/2 z-10 text-white pointer-events-none px-4 text-center">
+          {/* 2-line description text */}
+          <div className="body-text-xs text-muted max-w-md mx-auto">
+            <p>Experience the album that redefines boundaries.</p>
+            <p>Drag the cross and discover something new.</p>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* AOTY Content - Bottom Section */}
+      <motion.div
+        className="absolute bottom-8 md:bottom-9 lg:bottom-10 left-0 right-0 flex flex-col items-center z-20 pointer-events-none padding-global"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{
+          duration: 0.8,
+          ease: "easeOut",
+          delay: 1.0,
+        }}
+      >
+        <div className="text-white text-center space-y-4">
+          {/* OUT NOW Text */}
+          <div className="heading-3 font-bold tracking-widest">OUT NOW</div>
+
+          {/* Button */}
+          {showButton && (
+            <Button
+              variant="secondary"
+              size="lg"
+              className="pointer-events-auto animate-[fadeIn_0.3s_ease-out]"
+              onClick={() => {
+                // Dispatch custom event to trigger RouteLoader animation
+                window.dispatchEvent(
+                  new CustomEvent("requestNavigation", {
+                    detail: { href: "/a0ty" },
+                  })
+                );
+              }}
+            >
+              Explore
+            </Button>
+          )}
+
+          {/* Instructions */}
+          {showInstructions && (
             <p className="body-text-sm text-muted">
               <span className="hidden md:inline">Drag and throw the cross to move it around.</span>
               <span className="md:hidden">Tap, drag and release the cross to throw it.</span>
             </p>
-          </div>
-        )}
+          )}
+        </div>
+      </motion.div>
 
+      {/* 3D Canvas Layer */}
+      <div className="absolute inset-0 z-0">
         {/* Interactive Music Player (reacts to physics) */}
         <HomeInteractiveMusic audioSrc="/aoty-mode.m4a" autoPlay={true} isMuted={isMuted} />
 

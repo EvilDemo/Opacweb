@@ -147,7 +147,7 @@ function SceneContent() {
       />
 
       {/* Environment */}
-      <Environment preset="sunset" resolution={128} />
+      <Environment preset="studio" resolution={128} />
 
       {/* Rotating Cross */}
       <RotatingCross />

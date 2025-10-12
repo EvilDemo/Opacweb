@@ -23,7 +23,7 @@ export default function Footer() {
             objectPosition: "center bottom",
           }}
         >
-          <source src="/opac-world-short.webm" type="video/webm" />
+          <source src="/opac-world.webm" type="video/webm" />
           {/* Fallback to WebP for browsers that don't support WebM */}
           <Image
             src="/opac-word-short.webp"
