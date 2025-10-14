@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import AotyHero from "@/components/AotyHero";
+import AotyInfo from "@/components/AotyInfo";
 
 export const metadata: Metadata = {
   title: "A0TY",
@@ -7,5 +8,10 @@ export const metadata: Metadata = {
 };
 
 export default function A0TYPage() {
-  return <AotyHero />;
+  return (
+    <>
+      <AotyHero />
+      <AotyInfo />
+    </>
+  );
 }

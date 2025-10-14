@@ -1,7 +1,7 @@
 "use client";
 
 import { A0TYRotatingCross } from "@/components/three/A0TYRotatingCross";
-import { motion, useInView } from "motion/react";
+import { motion } from "motion/react";
 import { useRef } from "react";
 import Image from "next/image";
 
@@ -35,7 +35,6 @@ const songs = [
 
 export default function AotyHero() {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
     <section className="relative w-full min-h-[calc(100vh-6rem)] flex items-center justify-center padding-global">
@@ -76,6 +75,7 @@ export default function AotyHero() {
             playsInline
             className="w-full h-full object-cover"
           />
+          {/* spotify embed */}
           {/* <div className="absolute bottom-4 padding-global w-full">
             <iframe
               data-testid="embed-iframe"
@@ -98,7 +98,7 @@ export default function AotyHero() {
             transition={{ duration: 0.6, delay: 0.8, ease: "easeOut" }}
           >
             <div className="flex flex-col gap-2 md:gap-3 xl:gap-4 items-start justify-start w-full">
-              {songs.map((song, index) => (
+              {songs.map((song) => (
                 <motion.a
                   key={song.id}
                   href={song.url}

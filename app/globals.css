@@ -276,7 +276,6 @@
     }
   }
 
-  /* Counter Animations - Ultra Minimal */
   .counter-simple {
     transition: opacity 0.1s ease-in-out;
   }

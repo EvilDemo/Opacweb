@@ -317,15 +317,11 @@ function SceneContent() {
 // Main Component
 export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }) {
   const [showCross, setShowCross] = useState(false);
-  const [animateText, setAnimateText] = useState(false);
   const [showInstructions, setShowInstructions] = useState(false);
   const [showButton, setShowButton] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    // Start text animation immediately
-    setAnimateText(true);
-
     // Show cross after text animation completes
     const crossTimer = setTimeout(() => {
       setShowCross(true);
@@ -396,17 +392,19 @@ export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }
           delay: 1.0,
         }}
       >
-        <div className="text-white text-center space-y-4">
+        <div className="text-white text-center space-y-3">
           {/* Title */}
           <div>
-            <div className="heading-3 font-bold tracking-tight">A0TY</div>
+            <div className="heading-2 font-bold tracking-tight">A0TY</div>
             <div className="body-text-xs text-muted font-medium uppercase tracking-widest mt-1">Album of the Year</div>
           </div>
 
           {/* 2-line description text */}
-          <div className="body-text-xs text-muted max-w-md mx-auto">
-            <p>Experience the album that redefines boundaries.</p>
-            <p>Drag the cross and discover something new.</p>
+          <div className="text-muted max-w-md mx-auto">
+            <p className="body-text-sm text-balance">
+              Joya’s debut project explores introspection, loss, and rebellion through a fusion of rap, electronic, and
+              psychedelic rock sounds.
+            </p>
           </div>
         </div>
       </motion.div>
@@ -447,9 +445,11 @@ export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }
 
           {/* Instructions */}
           {showInstructions && (
-            <p className="body-text-sm text-muted">
-              <span className="hidden md:inline">Drag and throw the cross to move it around.</span>
-              <span className="md:hidden">Tap, drag and release the cross to throw it.</span>
+            <p>
+              <span className="hidden md:inline body-text-sm text-muted">
+                Drag and throw the cross to move it around.
+              </span>
+              <span className="md:hidden body-text-sm text-muted">Tap, drag and release the cross to throw it.</span>
             </p>
           )}
         </div>
