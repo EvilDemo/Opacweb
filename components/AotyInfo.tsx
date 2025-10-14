@@ -44,14 +44,26 @@ export default function AotyInfo() {
                 </p>
               </div>
               <div className="flex flex-wrap gap-2">
-                <Badge variant="secondary" className="bg-neutral-700 text-white border-0">
-                  2025 Release
+                <Badge
+                  variant="secondary"
+                  className="relative bg-gradient-to-br from-neutral-900 to-black text-white border border-neutral-800 overflow-hidden"
+                >
+                  <span className="absolute inset-0 bg-gradient-to-br from-blue-500/25 to-emerald-400/25 opacity-10"></span>
+                  <span className="relative z-10">2025 Release</span>
                 </Badge>
-                <Badge variant="secondary" className="bg-neutral-700 text-white border-0">
-                  Release
+                <Badge
+                  variant="secondary"
+                  className="relative bg-gradient-to-br from-neutral-900 to-black text-white border border-neutral-800 overflow-hidden"
+                >
+                  <span className="absolute inset-0 bg-gradient-to-br from-blue-500/25 to-emerald-400/25 opacity-10"></span>
+                  <span className="relative z-10">Release</span>
                 </Badge>
-                <Badge variant="secondary" className="bg-neutral-700 text-white border-0">
-                  Rap
+                <Badge
+                  variant="secondary"
+                  className="relative bg-gradient-to-br from-neutral-900 to-black text-white border border-neutral-800 overflow-hidden"
+                >
+                  <span className="absolute inset-0 bg-gradient-to-br from-blue-500/25 to-emerald-400/25 opacity-10"></span>
+                  <span className="relative z-10">Rap</span>
                 </Badge>
               </div>
             </div>
@@ -61,17 +73,17 @@ export default function AotyInfo() {
               <div className="flex flex-col gap-8">
                 <div className="flex flex-col gap-2 ">
                   <h3 className="body-text-sm font-bold text-muted uppercase">Artists</h3>
-                  <p className="body-text">Joyaboi</p>
+                  <p className="body-text-sm">Joyaboi</p>
                 </div>
                 <div className="flex flex-col gap-2 ">
                   <h3 className="body-text-sm font-bold text-muted uppercase">Release Date</h3>
-                  <p className="body-text text-muted">October 2025</p>
+                  <p className="body-text-sm text-muted">October 2025</p>
                 </div>
               </div>
               <div className="flex flex-col gap-8">
                 <div className="flex flex-col gap-2 ">
                   <h3 className="body-text-sm font-bold text-muted uppercase">Genre</h3>
-                  <p className="body-text">Role name</p>
+                  <p className="body-text-sm">Role name</p>
                 </div>
                 <div className="flex flex-col gap-2">
                   <h3 className="body-text-sm font-bold uppercase text-muted">Spotify</h3>
@@ -79,7 +91,7 @@ export default function AotyInfo() {
                     href="https://open.spotify.com/album/0Uem3wM8ZJ6rLwPhNNB1NS?si=QY3LksNNR3-3t7RLyMFxCQ"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="body-text hover:underline underline-offset-4"
+                    className="body-text-sm hover:underline underline-offset-4"
                   >
                     Take me there!
                   </a>
