@@ -8,26 +8,31 @@ import Image from "next/image";
 const songs = [
   {
     id: 1,
+    name: "Track 1",
     src: "aoty-songs/song-1.webp",
     url: "https://open.spotify.com/track/3eWPe1RYtLsBETNG5ZdF0E?si=e14ceec5d09d4bc6",
   },
   {
     id: 2,
+    name: "Track 2",
     src: "aoty-songs/song-2.webp",
     url: "https://open.spotify.com/track/1zkLJK1rBJjaAGssRBoeVx?si=24bbf30227554e1b",
   },
   {
     id: 3,
+    name: "Track 3",
     src: "aoty-songs/song-3.webp",
     url: "https://open.spotify.com/track/7rsxWRX9zTYZwhmI48KyyV?si=fb0e16433f3f42b7",
   },
   {
     id: 4,
+    name: "Track 4",
     src: "aoty-songs/song-4.webp",
     url: "https://open.spotify.com/track/66BQtMftEEOkQ8l9UIxM9n?si=f1bc647e7e8d4743",
   },
   {
     id: 5,
+    name: "Track 5",
     src: "aoty-songs/song-5.webp",
     url: "https://open.spotify.com/track/1WT2hwUcPWDDtWkJoz0v5w?si=e146a4d4b6674a4f",
   },
@@ -51,6 +56,7 @@ export default function AotyHero() {
             alt="A0TY Cover"
             fill
             priority
+            fetchPriority="high"
             sizes="(max-width: 1280px) 100vw, 50vw"
             className="object-cover"
           />
@@ -104,6 +110,7 @@ export default function AotyHero() {
                   href={song.url}
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label={`Listen to ${song.name} on Spotify`}
                   className="h-10 md:h-12 xl:h-12 w-auto block overflow-hidden relative"
                   initial={{ opacity: 0, y: 40, scale: 0.95 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
