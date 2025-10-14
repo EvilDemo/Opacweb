@@ -60,21 +60,21 @@ export default function AotyInfo() {
             <div className="flex flex-row gap-8 lg:gap-20 w-full lg:max-w-[33.333333%]">
               <div className="flex flex-col gap-8">
                 <div className="flex flex-col gap-2 ">
-                  <h3 className="body-text-lg text-muted uppercase">Artists</h3>
+                  <h3 className="body-text-sm font-bold text-muted uppercase">Artists</h3>
                   <p className="body-text">Joyaboi</p>
                 </div>
                 <div className="flex flex-col gap-2 ">
-                  <h3 className="body-text-lg text-muted uppercase">Release Date</h3>
+                  <h3 className="body-text-sm font-bold text-muted uppercase">Release Date</h3>
                   <p className="body-text text-muted">October 2025</p>
                 </div>
               </div>
               <div className="flex flex-col gap-8">
                 <div className="flex flex-col gap-2 ">
-                  <h3 className="body-text-lg text-muted uppercase">Genre</h3>
+                  <h3 className="body-text-sm font-bold text-muted uppercase">Genre</h3>
                   <p className="body-text">Role name</p>
                 </div>
                 <div className="flex flex-col gap-2">
-                  <h3 className="body-text-lg uppercase text-muted">Spotify</h3>
+                  <h3 className="body-text-sm font-bold uppercase text-muted">Spotify</h3>
                   <a
                     href="https://open.spotify.com/album/0Uem3wM8ZJ6rLwPhNNB1NS?si=QY3LksNNR3-3t7RLyMFxCQ"
                     target="_blank"
