@@ -3,6 +3,7 @@
 import { A0TYRotatingCross } from "@/components/three/A0TYRotatingCross";
 import { motion, useInView } from "motion/react";
 import { useRef } from "react";
+import Image from "next/image";
 
 const songs = [
   {
@@ -46,7 +47,14 @@ export default function AotyHero() {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
-          <img src="/aoty-cover-front.webp" alt="A0TY Cover" className="w-full h-full object-cover" />
+          <Image
+            src="/aoty-cover-front.webp"
+            alt="A0TY Cover"
+            fill
+            priority
+            sizes="(max-width: 1280px) 100vw, 50vw"
+            className="object-cover"
+          />
           <div className="absolute inset-0">
             <A0TYRotatingCross />
           </div>
@@ -96,13 +104,20 @@ export default function AotyHero() {
                   href={song.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="h-10 md:h-12 xl:h-12 w-auto block overflow-hidden"
+                  className="h-10 md:h-12 xl:h-12 w-auto block overflow-hidden relative"
                   initial={{ opacity: 0, y: 40, scale: 0.95 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
-                  whileHover={{ scale: 1.05 }}
+                  whileHover={{ scale: 1.2 }}
                   transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
                 >
-                  <img src={song.src} alt="" className="h-full w-auto object-contain object-left" />
+                  <Image
+                    src={`/${song.src}`}
+                    alt=""
+                    height={48}
+                    width={200}
+                    sizes="200px"
+                    className="h-full w-auto object-contain object-left"
+                  />
                 </motion.a>
               ))}
             </div>
