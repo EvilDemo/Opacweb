@@ -33,7 +33,7 @@ export function ContactCard({
     >
       {/* we can add a background color here of bg-neutral-900 */}
       <Card variant="contact">
-        <CardHeader className="gap-1">
+        <CardHeader className="gap-1 2xl:gap-3">
           <div className="flex items-center gap-2">
             <div
               className="w-4 h-4 rounded-full border-1 border-white flex items-center justify-center"
@@ -45,12 +45,12 @@ export function ContactCard({
           </div>
           <CardDescription className="text-neutral-300 body-text-sm">{description}</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4 pt-1">
+        <CardContent className="space-y-4 2xl:space-y-6 pt-1 2xl:pt-3">
           <div className="flex flex-wrap gap-2" role="list" aria-label={ariaLabel}>
             {pills.map((pill, index) => (
               <span
                 key={index}
-                className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary text-secondary-foreground"
+                className="inline-flex items-center px-2.5 py-0.5 2xl:py-1 rounded-full text-xs font-medium bg-secondary text-secondary-foreground"
                 role="listitem"
               >
                 {pill}
