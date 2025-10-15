@@ -107,6 +107,7 @@ export default function AotyHero({ isMuted = false, onMuteChange }: AotyHeroProp
             loop
             muted
             playsInline
+            aria-label="A0TY album promotional video"
             className="w-full h-full object-cover"
           />
           {/* spotify embed */}
@@ -148,7 +149,7 @@ export default function AotyHero({ isMuted = false, onMuteChange }: AotyHeroProp
                 >
                   <Image
                     src={`/${song.src}`}
-                    alt=""
+                    alt={`${song.name} track artwork`}
                     height={48}
                     width={200}
                     sizes="200px"
@@ -162,7 +163,7 @@ export default function AotyHero({ isMuted = false, onMuteChange }: AotyHeroProp
       </div>
 
       {/* Audio Element */}
-      <audio ref={audioRef} loop>
+      <audio ref={audioRef} loop aria-label="A0TY background music">
         <source src="/aoty-mode.m4a" type="audio/mp4" />
       </audio>
     </section>

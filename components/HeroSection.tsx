@@ -61,7 +61,15 @@ export default function HeroSection() {
                 animate={{ opacity: 1, scale: 1, rotateY: 0 }}
                 transition={{ duration: 1.2, ease: "easeOut", delay: 0.3 }}
               >
-                <video src={sphereVideo} autoPlay loop muted playsInline className="w-full h-full object-cover" />
+                <video
+                  src={sphereVideo}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  aria-label="Animated 3D sphere visualization"
+                  className="w-full h-full object-cover"
+                />
               </motion.div>
             </div>
           </div>
@@ -122,6 +130,7 @@ export default function HeroSection() {
           <Switch
             checked={aotyMode}
             onCheckedChange={setAotyMode}
+            aria-label="Toggle A0TY mode"
             className="data-[state=checked]:bg-white border-neutral-200"
           />
           <p className="font-medium leading-[1.5] body-text-sm  text-white whitespace-nowrap">A0TY MODE</p>

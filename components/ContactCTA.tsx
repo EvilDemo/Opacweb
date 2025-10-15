@@ -54,7 +54,7 @@ export default function ContactCTA() {
                       <Instagram className="w-6 h-6 text-white" />
                     </div>
                     <h3 className="body-text-lg font-semibold mb-1">Instagram</h3>
-                    <p className="text-neutral-400 text-sm">@opac.__</p>
+                    <p className="text-neutral-200 text-sm">@opac.__</p>
                   </CardContent>
                 </Card>
               </a>
@@ -79,7 +79,7 @@ export default function ContactCTA() {
                       <Youtube className="w-6 h-6 text-white" />
                     </div>
                     <h3 className="body-text-lg font-semibold mb-1">YouTube</h3>
-                    <p className="text-neutral-400 text-sm">@joyaboi</p>
+                    <p className="text-neutral-200 text-sm">@joyaboi</p>
                   </CardContent>
                 </Card>
               </a>
@@ -104,7 +104,7 @@ export default function ContactCTA() {
                       <Music className="w-6 h-6 text-white" />
                     </div>
                     <h3 className="body-text-lg font-semibold mb-1">Spotify</h3>
-                    <p className="text-neutral-400 text-sm">OPAC</p>
+                    <p className="text-neutral-200 text-sm">OPAC</p>
                   </CardContent>
                 </Card>
               </a>
@@ -129,7 +129,7 @@ export default function ContactCTA() {
                       <TikTokIcon className="w-6 h-6 text-white" />
                     </div>
                     <h3 className="body-text-lg font-semibold mb-1">TikTok</h3>
-                    <p className="text-neutral-400 text-sm">@opacweb</p>
+                    <p className="text-neutral-200 text-sm">@opacweb</p>
                   </CardContent>
                 </Card>
               </a>
