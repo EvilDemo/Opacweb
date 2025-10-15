@@ -31,13 +31,13 @@ export default function AotyInfo() {
         <div className=" mx-auto">
           <div className="flex flex-col lg:flex-row gap-12 lg:gap-10">
             {/* Left Column - Album Info */}
-            <div className="flex flex-col gap-6 flex-1 lg:max-w-2/3">
+            <div className="flex flex-col gap-6 flex-1 max-w-2/3">
               <div className="flex flex-col gap-5">
                 <div>
-                  <h1 className="heading-1">A0TY</h1>
-                  <p className="body-text font-medium text-muted mt-1">ACRONYM FOR ALBUM OF THE YEAR</p>
+                  <h1 className="heading-1 !font-black !tracking-tighter">A0TY</h1>
+                  <p className="body-text !font-medium text-muted mt-1">ACRONYM FOR ALBUM OF THE YEAR</p>
                 </div>
-                <p className="body-text text-white text-balance">
+                <p className="body-text !font-medium text-balance">
                   Joya&apos;s debut project explores introspection, loss, and rebellion through a fusion of rap,
                   electronic, and psychedelic rock sounds. His effortless flow and distinctive approach showcase his
                   versatility and influence beyond traditional rap.
@@ -49,49 +49,49 @@ export default function AotyInfo() {
                   className="relative bg-gradient-to-br from-neutral-900 to-black text-white border border-neutral-800 overflow-hidden"
                 >
                   <span className="absolute inset-0 bg-gradient-to-br from-blue-500/25 to-emerald-400/25 opacity-10"></span>
-                  <span className="relative z-10">2025 Release</span>
+                  <span className="relative z-10 font-medium">2025 Release</span>
                 </Badge>
                 <Badge
                   variant="secondary"
                   className="relative bg-gradient-to-br from-neutral-900 to-black text-white border border-neutral-800 overflow-hidden"
                 >
                   <span className="absolute inset-0 bg-gradient-to-br from-blue-500/25 to-emerald-400/25 opacity-10"></span>
-                  <span className="relative z-10">Release</span>
+                  <span className="relative z-10 font-medium">Release</span>
                 </Badge>
                 <Badge
                   variant="secondary"
                   className="relative bg-gradient-to-br from-neutral-900 to-black text-white border border-neutral-800 overflow-hidden"
                 >
                   <span className="absolute inset-0 bg-gradient-to-br from-blue-500/25 to-emerald-400/25 opacity-10"></span>
-                  <span className="relative z-10">Rap</span>
+                  <span className="relative z-10 font-medium">Rap</span>
                 </Badge>
               </div>
             </div>
 
             {/* Right Column - Metadata */}
-            <div className="flex flex-row gap-8 lg:gap-20 w-full lg:max-w-[33.333333%]">
+            <div className="flex flex-row gap-8 lg:gap-20 w-full max-w-1/3 2xl:max-w-1/2">
               <div className="flex flex-col gap-8">
                 <div className="flex flex-col gap-2 ">
-                  <p className="body-text-sm font-bold text-muted uppercase">Artists</p>
-                  <p className="body-text-sm">Joyaboi</p>
+                  <p className="body-text-sm !font-bold text-muted uppercase">Artists</p>
+                  <p className="body-text-sm !font-medium">Joyaboi</p>
                 </div>
                 <div className="flex flex-col gap-2 ">
-                  <p className="body-text-sm font-bold text-muted uppercase">Release Date</p>
-                  <p className="body-text-sm text-muted">October 2025</p>
+                  <p className="body-text-sm !font-bold text-muted uppercase">Release Date</p>
+                  <p className="body-text-sm !font-medium text-muted">October 2025</p>
                 </div>
               </div>
               <div className="flex flex-col gap-8">
                 <div className="flex flex-col gap-2 ">
-                  <p className="body-text-sm font-bold text-muted uppercase">Genre</p>
-                  <p className="body-text-sm">Role name</p>
+                  <p className="body-text-sm !font-bold text-muted uppercase">Genre</p>
+                  <p className="body-text-sm !font-medium">Role name</p>
                 </div>
                 <div className="flex flex-col gap-2">
-                  <p className="body-text-sm font-bold uppercase text-muted">Spotify</p>
+                  <p className="body-text-sm !font-bold uppercase !font-medium text-muted">Spotify</p>
                   <a
                     href="https://open.spotify.com/album/0Uem3wM8ZJ6rLwPhNNB1NS?si=QY3LksNNR3-3t7RLyMFxCQ"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="body-text-sm hover:underline underline-offset-4"
+                    className="body-text-sm !font-medium hover:underline underline-offset-4"
                   >
                     Take me there!
                   </a>
@@ -114,58 +114,50 @@ export default function AotyInfo() {
           <div className="flex flex-col lg:flex-row gap-12 lg:gap-20 items-start justify-center">
             {/* Left Column - Text Content */}
             <motion.div
-              className="flex flex-col gap-6 flex-1 w-full lg:max-w-[33.333333%]"
+              className="flex flex-col gap-6 flex-1 w-full lg:max-w-1/3 "
               initial={{ opacity: 0, x: -50 }}
               animate={aboutInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -50 }}
               transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
             >
               <h2 className="heading-2">About the album.</h2>
-              <div className="flex flex-col gap-4">
-                <p className="body-text text-pretty">
+              <div className="flex flex-col gap-4 text-pretty ">
+                <p className="body-text !font-medium">
                   This project embraces a rare and experimental sound. A dark atmosphere showcasing the artist
                   willingness to explore unconventional territories. This extended play delves into themes of
                   introspection and loss as well as undisciplined and rebellious feelings.
                 </p>
-                <p className="body-text text-pretty">
+                <p className="body-text !font-medium">
                   Joya debut project showcases a fusion of different genres, as rap music mixed with electronic sounds
                   landing into psychedelic rock vibes.
                 </p>
-                <p className="body-text text-pretty">
+                <p className="body-text !font-medium">
                   His delivery is characterized by an effortless flow and distinctive approach, revealing a more
                   vulnerable side of the artist, while simultaneously a dynamic boundless and pioneer part of him
                   proving his versatility and refusal to be confined into a single style.
                 </p>
-                <p className="body-text text-pretty">
+                <p className="body-text !font-medium">
                   Collaborations with different artist demonstrate his ability to connect to a diverse range of
                   musicians, further solidifying his influence beyond traditional rap. This evolution speaks to his
                   ability to adapt, creativity and his enduring impact not only in music but also in fashion.
                 </p>
-                <p className="body-text text-pretty">
+                <p className="body-text !font-medium">
                   The electro sound has navigated him to a new and refreshing direction not only to survive but to
                   thrive in this environment. Influences that contribute to a distinctive style that is heavily
                   noticeable throughout the project.{" "}
                 </p>
-                <p className="body-text text-pretty">A style that will undoubtedly set him apart in the rap scene.</p>
+                <p className="body-text !font-medium">A style that will undoubtedly set him apart in the rap scene.</p>
               </div>
             </motion.div>
 
             {/* Right Column - Image Gallery */}
-            <div className="flex flex-col gap-8 w-full lg:max-w-[66.666667%]">
-              <motion.div
-                className="relative aspect-video"
-                initial={{ opacity: 0, x: 50 }}
-                animate={aboutInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 50 }}
-                transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
-              >
-                <Image src="/aoty-img/image-1.png" alt="Album artwork" fill className="object-cover" />
-              </motion.div>
+            <div className="flex flex-col gap-8 w-full lg:max-w-2/3 lg:pt-[5%]">
               <motion.div
                 className="relative aspect-video"
                 initial={{ opacity: 0, x: 50 }}
                 animate={aboutInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 50 }}
                 transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
               >
-                <Image src="/aoty-img/image-2.png" alt="Album artwork" fill className="object-cover" />
+                <Image src="/aoty-img/image-2.webp" alt="Album artwork" fill className="object-cover" />
               </motion.div>
               <motion.div
                 className="relative aspect-video"
@@ -173,7 +165,7 @@ export default function AotyInfo() {
                 animate={aboutInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 50 }}
                 transition={{ duration: 0.8, delay: 0.7, ease: "easeOut" }}
               >
-                <Image src="/aoty-img/image-3.png" alt="Album artwork" fill className="object-cover" />
+                <Image src="/aoty-img/image-4.webp" alt="Album artwork" fill className="object-cover" />
               </motion.div>
             </div>
           </div>
@@ -257,7 +249,7 @@ export default function AotyInfo() {
             animate={ctaInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 50 }}
             transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
           >
-            <Image src="/aoty-img/image-5.png" alt="OPAC Merch" fill className="object-cover aspect-square" />
+            <Image src="/aoty-img/image-6.webp" alt="OPAC Merch" fill className="object-cover aspect-square" />
           </motion.div>
         </div>
       </motion.section>

@@ -200,7 +200,7 @@
   /* Body Text - Using Tailwind utilities with custom properties */
   p,
   .body-text {
-    @apply text-base font-normal text-white;
+    @apply text-base 2xl:text-lg font-medium text-white;
     line-height: var(--line-height-normal);
   }
 
@@ -210,22 +210,22 @@
   }
 
   .body-text-sm {
-    @apply text-sm font-normal text-white;
+    @apply text-sm 2xl:text-base font-normal text-white;
     line-height: var(--line-height-normal);
   }
 
   .body-text-sm-md {
-    @apply text-sm font-medium text-white;
+    @apply text-sm 2xl:text-base font-medium text-white;
     line-height: var(--line-height-normal);
   }
 
   .body-text-xs {
-    @apply text-xs font-normal text-white;
+    @apply text-xs 2xl:text-sm font-normal text-white;
     line-height: var(--line-height-normal);
   }
 
   .body-text-sm-link {
-    @apply text-sm font-normal underline text-white;
+    @apply text-sm 2xl:text-base font-normal underline text-white;
     line-height: var(--line-height-normal);
   }
 

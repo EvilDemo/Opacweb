@@ -2,7 +2,7 @@
 
 import { A0TYRotatingCross } from "@/components/three/A0TYRotatingCross";
 import { motion } from "motion/react";
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import Image from "next/image";
 
 const songs = [
@@ -38,8 +38,36 @@ const songs = [
   },
 ];
 
-export default function AotyHero() {
+interface AotyHeroProps {
+  isMuted?: boolean;
+  onMuteChange?: (muted: boolean) => void;
+}
+
+export default function AotyHero({ isMuted = false, onMuteChange }: AotyHeroProps) {
   const ref = useRef(null);
+  const audioRef = useRef<HTMLAudioElement>(null);
+
+  // Handle audio playback
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    // Attempt to autoplay
+    const playPromise = audio.play();
+    if (playPromise !== undefined) {
+      playPromise.catch((error) => {
+        console.log("Autoplay prevented:", error);
+      });
+    }
+  }, []);
+
+  // Handle mute state
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    audio.muted = isMuted;
+  }, [isMuted]);
 
   return (
     <section className="relative w-full min-h-[calc(100vh-6rem)] flex items-center justify-center padding-global">
@@ -116,6 +144,7 @@ export default function AotyHero() {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   whileHover={{ scale: 1.2 }}
                   transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+                  onClick={() => onMuteChange?.(true)}
                 >
                   <Image
                     src={`/${song.src}`}
@@ -131,6 +160,11 @@ export default function AotyHero() {
           </motion.div>
         </motion.div>
       </div>
+
+      {/* Audio Element */}
+      <audio ref={audioRef} loop>
+        <source src="/aoty-mode.m4a" type="audio/mp4" />
+      </audio>
     </section>
   );
 }

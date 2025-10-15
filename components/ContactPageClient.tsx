@@ -132,7 +132,7 @@ export default function ContactPageClient() {
           <>
             {/* Backdrop - covers entire screen immediately */}
             <motion.div
-              className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm"
+              className="fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm"
               onClick={handleCloseOverlay}
               aria-label="Close form"
               initial={{ opacity: 0 }}
@@ -143,7 +143,7 @@ export default function ContactPageClient() {
 
             {/* Form Panel - slides in from right */}
             <motion.div
-              className="fixed top-0 right-0 h-full w-full lg:w-1/2 xl:w-2/5 bg-black border-l border-neutral-800 p-8 overflow-y-auto z-50"
+              className="fixed top-0 right-0 h-full w-full lg:w-1/2 xl:w-2/5 bg-black border-l border-neutral-800 p-8 overflow-y-auto z-[100]"
               role="dialog"
               aria-modal="true"
               aria-labelledby="form-title"
