@@ -57,7 +57,7 @@ export const AboutHeroSection = () => {
               <br />
               Today, OPAC is a cross disciplinary platform with innovation and distinction at its core. Branches
               connect, purpose remains. To introduce new ideas and elevate creative freedom. OPAC stands as a creative
-              platform and label shaping a new chapter in Portugal's contemporary landscape across music, arts, and
+              platform and label shaping a new chapter in Portugal&apos;s contemporary landscape across music, arts, and
               fashion.
             </motion.p>
           </motion.div>
