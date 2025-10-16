@@ -63,10 +63,10 @@ export const metadata: Metadata = {
 const AboutPage = () => {
   return (
     <>
-      <AboutScrollingSection />
       <AboutHeroSection />
       <AboutManifestoSection />
       <PrinciplesSection />
+      <AboutScrollingSection />
     </>
   );
 };

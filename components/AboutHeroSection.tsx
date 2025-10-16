@@ -8,7 +8,7 @@ export const AboutHeroSection = () => {
   const isInView = useInView(sectionRef, { once: true, amount: 0.3 });
 
   return (
-    <section ref={sectionRef} className="min-h-[150vh] relative" aria-label="About hero section">
+    <section ref={sectionRef} className="min-h-[calc(100vh-6rem)] relative" aria-label="About hero section">
       <div className="sticky top-0 h-screen flex items-center justify-center padding-global">
         <div className="flex flex-col lg:flex-row gap-8 lg:gap-4 w-full">
           {/* Left Column - Heading and Tagline */}
@@ -22,6 +22,7 @@ export const AboutHeroSection = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+              className="text-balance"
             >
               Inspired by you, created by me.
             </motion.h1>
@@ -43,7 +44,7 @@ export const AboutHeroSection = () => {
             transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
           >
             <motion.p
-              className="body-text"
+              className="body-text text-balance"
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
