@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { AboutHeroSection } from "@/components/AboutHeroSection";
 import { AboutManifestoSection } from "@/components/AboutManifestoSection";
 import { PrinciplesSection } from "@/components/AboutPrinciplesSection";
+import { AboutScrollingSection } from "@/components/AboutScrollingSection";
 
 export const metadata: Metadata = {
   title: "About Opac | Embracing the Difference",
@@ -62,6 +63,7 @@ export const metadata: Metadata = {
 const AboutPage = () => {
   return (
     <>
+      <AboutScrollingSection />
       <AboutHeroSection />
       <AboutManifestoSection />
       <PrinciplesSection />

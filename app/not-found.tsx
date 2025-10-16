@@ -18,15 +18,10 @@ export default function NotFound() {
       <div className="text-center max-w-2xl mx-auto">
         {/* 404 Error */}
         <div className="mb-6">
-          <h1 className="text-8xl md:text-9xl font-bold text-white mb-4">
-            404
-          </h1>
-          <h2 className="text-2xl md:text-3xl font-semibold text-gray-300 mb-4">
-            Page Not Found
-          </h2>
+          <h1 className="text-8xl md:text-9xl font-bold text-white mb-4">404</h1>
+          <h2 className="text-2xl md:text-3xl font-semibold text-gray-300 mb-4">Page Not Found</h2>
           <p className="text-lg text-gray-400 mb-8">
-            The page you&apos;re looking for doesn&apos;t exist or has been
-            moved.
+            The page you&apos;re looking for doesn&apos;t exist or has been moved.
           </p>
         </div>
 
@@ -46,9 +41,7 @@ export default function NotFound() {
 
         {/* Additional Help */}
         <div className="mt-12 text-sm text-gray-500">
-          <p>
-            If you believe this is an error, please contact our support team.
-          </p>
+          <p>If you believe this is an error, please contact our support team.</p>
         </div>
       </div>
     </div>
