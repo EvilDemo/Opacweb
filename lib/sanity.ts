@@ -53,6 +53,7 @@ export const musicQuery = `
     title,
     description,
     spotifyUrl,
+    albumWebsite,
     "thumbnailUrl": thumbnail.asset->url,
     _updatedAt
   }

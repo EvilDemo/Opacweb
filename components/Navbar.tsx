@@ -4,6 +4,14 @@ import { useState } from "react";
 import { motion } from "motion/react";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from "@/components/ui/navigation-menu";
 import Image from "next/image";
 import Link from "next/link";
 import { getVisibleNavItems, getShopItem } from "@/lib/constants";
@@ -17,11 +25,19 @@ const TikTokIcon = ({ className }: { className?: string }) => (
 );
 
 // Types
+interface SubItem {
+  label: string;
+  href: string;
+  icon?: string;
+  requiresShop?: boolean;
+}
+
 interface NavItem {
   label: string;
   href: string;
   icon: string;
   requiresShop?: boolean;
+  subItems?: SubItem[];
 }
 
 // Components
@@ -55,6 +71,9 @@ const Logo = ({ className = "" }: { className?: string }) => (
 );
 
 const AnimatedNavLink = ({ item, index }: { item: NavItem; index: number }) => {
+  // Check if item has sub-items for dropdown
+  const hasSubItems = item.subItems && item.subItems.length > 0;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: -20 }}
@@ -62,18 +81,51 @@ const AnimatedNavLink = ({ item, index }: { item: NavItem; index: number }) => {
       transition={{
         duration: 0.6,
         ease: "easeOut",
-        delay: 0.4 + index * 0.1, // Staggered animation
-      }}
-      whileHover={{
-        scale: 1.05,
-        transition: { duration: 0.15, ease: "easeOut" },
+        delay: 0.4 + index * 0.1,
       }}
     >
-      <Link href={item.href} className="block">
-        <Button variant="secondary" className="">
-          {item.label}
-        </Button>
-      </Link>
+      {hasSubItems ? (
+        // Render dropdown for items with subItems
+        <NavigationMenu>
+          <NavigationMenuList>
+            <NavigationMenuItem>
+              <NavigationMenuTrigger className=" text-secondary-foreground hover:bg-secondary/80 h-10 px-4 py-2 text-sm font-medium">
+                {item.label}
+              </NavigationMenuTrigger>
+              <NavigationMenuContent>
+                <ul className="grid gap-1 p-2">
+                  {item.subItems!.map((subItem) => (
+                    <li key={subItem.href}>
+                      <NavigationMenuLink asChild>
+                        <Link
+                          href={subItem.href}
+                          className="text-white hover:bg-white hover:text-black focus:bg-white focus:text-black data-[active=true]:bg-white data-[active=true]:text-black focus-visible:ring-white/50 flex flex-col gap-1 rounded-sm p-2 text-sm transition-all outline-none focus-visible:ring-[3px] focus-visible:outline-1"
+                        >
+                          <div className="text-sm font-medium leading-none">{subItem.label}</div>
+                        </Link>
+                      </NavigationMenuLink>
+                    </li>
+                  ))}
+                </ul>
+              </NavigationMenuContent>
+            </NavigationMenuItem>
+          </NavigationMenuList>
+        </NavigationMenu>
+      ) : (
+        // Render regular button for items without subItems
+        <motion.div
+          whileHover={{
+            scale: 1.05,
+            transition: { duration: 0.15, ease: "easeOut" },
+          }}
+        >
+          <Link href={item.href} className="block">
+            <Button variant="secondary" className="">
+              {item.label}
+            </Button>
+          </Link>
+        </motion.div>
+      )}
     </motion.div>
   );
 };
@@ -152,30 +204,64 @@ const MobileMenu = ({ setIsOpen }: { setIsOpen: (open: boolean) => void }) => {
         <nav className="flex-1 flex flex-col justify-center">
           <div className="space-y-8 text-center">
             {/* Regular navigation items */}
-            {visibleItems.map((item, index) => (
-              <motion.div
-                key={item.label}
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{
-                  duration: 0.6,
-                  ease: "easeOut",
-                  delay: 0.3 + index * 0.1, // Staggered animation
-                }}
-                whileHover={{
-                  scale: 1.05,
-                  transition: { duration: 0.15, ease: "easeOut" },
-                }}
-              >
-                <Link
-                  href={item.href}
-                  className="block text-white heading-2 hover:text-gray-300 transition-colors py-4 uppercase"
-                  onClick={() => setIsOpen(false)}
+            {visibleItems.map((item, index) => {
+              const hasSubItems = item.subItems && item.subItems.length > 0;
+
+              return (
+                <motion.div
+                  key={item.label}
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{
+                    duration: 0.6,
+                    ease: "easeOut",
+                    delay: 0.3 + index * 0.1,
+                  }}
                 >
-                  {item.label}
-                </Link>
-              </motion.div>
-            ))}
+                  {hasSubItems ? (
+                    // Show parent label + sub-items in mobile
+                    <div className="space-y-3">
+                      <div className="text-white text-base uppercase opacity-50 font-medium">{item.label}</div>
+                      <div className="space-y-2">
+                        {item.subItems!.map((subItem) => (
+                          <motion.div
+                            key={subItem.href}
+                            whileHover={{
+                              scale: 1.05,
+                              transition: { duration: 0.15, ease: "easeOut" },
+                            }}
+                          >
+                            <Link
+                              href={subItem.href}
+                              className="block text-white text-2xl hover:text-gray-300 transition-colors py-2 uppercase"
+                              onClick={() => setIsOpen(false)}
+                            >
+                              {subItem.label}
+                            </Link>
+                          </motion.div>
+                        ))}
+                      </div>
+                    </div>
+                  ) : (
+                    // Regular menu item
+                    <motion.div
+                      whileHover={{
+                        scale: 1.05,
+                        transition: { duration: 0.15, ease: "easeOut" },
+                      }}
+                    >
+                      <Link
+                        href={item.href}
+                        className="block text-white heading-2 hover:text-gray-300 transition-colors py-4 uppercase"
+                        onClick={() => setIsOpen(false)}
+                      >
+                        {item.label}
+                      </Link>
+                    </motion.div>
+                  )}
+                </motion.div>
+              );
+            })}
 
             {/* Shop button */}
             {shopItem && (

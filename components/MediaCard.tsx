@@ -31,6 +31,7 @@ interface MusicItem extends BaseMediaItem {
   type: "music";
   thumbnailUrl?: string;
   spotifyUrl: string;
+  albumWebsite?: string;
 }
 
 // Union type for all media items
@@ -101,10 +102,12 @@ export function MediaCard({ item, index = 0 }: MediaCardProps) {
             isExternal: true,
           };
         case "music":
+          // Check if albumWebsite exists, otherwise use Spotify
+          const hasAlbumWebsite = item.albumWebsite && item.albumWebsite.trim() !== "";
           return {
-            href: item.spotifyUrl,
-            label: `Listen to ${item.title} on Spotify`,
-            text: "Listen on Spotify",
+            href: hasAlbumWebsite ? item.albumWebsite : item.spotifyUrl,
+            label: hasAlbumWebsite ? `Visit ${item.title} album page` : `Listen to ${item.title} on Spotify`,
+            text: hasAlbumWebsite ? "Check Album Page" : "Listen on Spotify",
             icon: <ExternalLink className="ml-2 h-3 w-3" />,
             isExternal: true,
           };

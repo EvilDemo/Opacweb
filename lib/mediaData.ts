@@ -1,11 +1,4 @@
-import {
-  sanityClient,
-  picturesQuery,
-  galleryQuery,
-  videosQuery,
-  musicQuery,
-  radioQuery,
-} from "./sanity";
+import { sanityClient, picturesQuery, galleryQuery, videosQuery, musicQuery, radioQuery } from "./sanity";
 
 export interface Pictures {
   _id: string;
@@ -33,6 +26,7 @@ export interface Music {
   title: string;
   description: string;
   spotifyUrl: string;
+  albumWebsite?: string;
   thumbnailUrl?: string;
   _updatedAt: string;
 }

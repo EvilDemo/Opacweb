@@ -220,15 +220,15 @@ export default function AotyInfo() {
         animate={ctaInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
       >
-        <div className="flex flex-col lg:flex-row items-stretch">
+        <div className="flex flex-col md:flex-row items-stretch">
           {/* Left Content */}
           <motion.div
-            className="flex-1 py-16 md:py-20 lg:py-28 flex items-center justify-start lg:justify-end"
+            className="flex-1 py-16 md:py-20 lg:py-28 flex items-center justify-start lg:justify-end md:max-w-1/3"
             initial={{ opacity: 0, x: -50 }}
             animate={ctaInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -50 }}
             transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
           >
-            <div className="flex flex-col gap-8 w-full">
+            <div className="flex flex-col gap-8 w-full ">
               <div className="flex flex-col gap-6">
                 <h2 className="heading-2 text-white">0PAC Merch</h2>
                 <p className="body-text text-white text-pretty">
@@ -244,12 +244,12 @@ export default function AotyInfo() {
 
           {/* Right Image */}
           <motion.div
-            className="flex-1 relative min-h-[400px] lg:min-h-[720px]"
+            className="flex-1 relative aspect-video "
             initial={{ opacity: 0, x: 50 }}
             animate={ctaInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 50 }}
             transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
           >
-            <Image src="/aoty-img/image-6.webp" alt="OPAC Merch" fill className="object-cover aspect-square" />
+            <Image src="/aoty-img/image-6.webp" alt="OPAC Merch" fill className="object-contain" />
           </motion.div>
         </div>
       </motion.section>

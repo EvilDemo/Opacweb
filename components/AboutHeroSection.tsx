@@ -8,12 +8,12 @@ export const AboutHeroSection = () => {
   const isInView = useInView(sectionRef, { once: true, amount: 0.3 });
 
   return (
-    <section ref={sectionRef} className="min-h-[calc(100vh-6rem)] relative" aria-label="About hero section">
+    <section ref={sectionRef} className="min-h-[calc(100vh-6rem)] relative mt-[-6rem]" aria-label="About hero section">
       <div className="sticky top-0 h-screen flex items-center justify-center padding-global">
         <div className="flex flex-col lg:flex-row gap-8 lg:gap-4 w-full">
           {/* Left Column - Heading and Tagline */}
           <motion.div
-            className="w-full lg:w-1/2 space-y-2"
+            className="w-full lg:w-1/3 space-y-2"
             initial={{ opacity: 0, x: -100 }}
             animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -100 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
@@ -24,10 +24,10 @@ export const AboutHeroSection = () => {
               transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
               className="text-balance"
             >
-              Inspired by you, created by me.
+              Born to be different.
             </motion.h1>
             <motion.p
-              className="body-text"
+              className="body-text-sm text-muted"
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
@@ -38,7 +38,7 @@ export const AboutHeroSection = () => {
 
           {/* Right Column - Body Text */}
           <motion.div
-            className="w-full lg:w-1/2"
+            className="w-full lg:w-2/3"
             initial={{ opacity: 0, x: 100 }}
             animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 100 }}
             transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
@@ -49,17 +49,21 @@ export const AboutHeroSection = () => {
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
             >
-              Formerly Vanta, OPAC is the return of a long-standing idea conceived in adolescence, renewed with clarity
-              and relevance. Emerging from an emotional and spiritual void, it carries a purposeful vision. From
-              opacity, the name. From meaning, the acronym, One Purpose, Art and Culture. Black holds time and space,
-              light reveals intent. Begun in 2021 as a university project, first a music EP, then something broader and
-              multidimensional.
+              Formerly known as Vanta, OPAC marks the return of a long standing vision conceived in early years, now
+              renewed with clarity, relevance, and intention.
               <br />
               <br />
-              Today, OPAC is a cross disciplinary platform with innovation and distinction at its core. Branches
-              connect, purpose remains. To introduce new ideas and elevate creative freedom. OPAC stands as a creative
-              platform and label shaping a new chapter in Portugal&apos;s contemporary landscape across music, arts, and
-              fashion.
+              What began in 2021 as a university project soon evolved into a named and intentional musical endeavour.
+              Over time, it expanded becoming broader, multidimensional, and future-facing.
+              <br />
+              <br /> Born from an emotional and spiritual void, it emerges with purpose. The name evokes depth, the
+              acronym defines our mission. Black holds time and space, light reveals intent.
+              <br />
+              <br /> Today, OPAC is a cross disciplinary platform, where innovation and distinction drive every
+              initiative. We exist to introduce new ideas, elevate creative freedom, and shape meaningful narratives.
+              Branches connect. Purpose remains. Positioned as both a creative platform and an independent label, OPAC
+              stands at the intersection of music, arts, and fashion - writing a new chapter in Portugal’s contemporary
+              cultural landscape.
             </motion.p>
           </motion.div>
         </div>

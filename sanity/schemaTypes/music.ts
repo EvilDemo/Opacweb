@@ -25,6 +25,13 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: "albumWebsite",
+      title: "Album Website",
+      type: "url",
+      description:
+        "Optional: Link to a custom album website. If provided, this will be shown instead of Spotify link on the media page",
+    }),
+    defineField({
       name: "thumbnail",
       title: "Thumbnail",
       type: "image",

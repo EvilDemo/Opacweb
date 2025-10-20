@@ -24,10 +24,24 @@ export const SHOP_CONFIG = {
       requiresShop: true,
     },
     {
-      label: "About Us",
+      label: "About",
       href: "/about",
       icon: "/menu-about.gif",
       requiresShop: false,
+      subItems: [
+        {
+          label: "Us",
+          href: "/about/us",
+          icon: "/menu-about.gif",
+          requiresShop: false,
+        },
+        {
+          label: "You",
+          href: "/about/you",
+          icon: "/menu-about.gif",
+          requiresShop: false,
+        },
+      ],
     },
     {
       label: "Contact",
@@ -40,8 +54,7 @@ export const SHOP_CONFIG = {
   // Shopify configuration (only loaded when shop is enabled)
   SHOPIFY: {
     STORE_DOMAIN: process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN,
-    STOREFRONT_ACCESS_TOKEN:
-      process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN,
+    STOREFRONT_ACCESS_TOKEN: process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN,
   },
 };
 
@@ -52,9 +65,7 @@ export const getVisibleNavItems = () => {
 
 // Helper function to get shop item if enabled
 export const getShopItem = () => {
-  return SHOP_CONFIG.ENABLED
-    ? SHOP_CONFIG.NAV_ITEMS.find((item) => item.requiresShop)
-    : null;
+  return SHOP_CONFIG.ENABLED ? SHOP_CONFIG.NAV_ITEMS.find((item) => item.requiresShop) : null;
 };
 
 // Helper function to check if shop features should be shown
