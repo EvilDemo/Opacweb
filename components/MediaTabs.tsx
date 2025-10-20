@@ -34,7 +34,7 @@ export function MediaTabs({ pictures, videos, music }: MediaTabsProps) {
           </TabsTrigger>
           <TabsTrigger value="by-us" className="flex items-center gap-2">
             <MusicIcon className="h-4 w-4" />
-            By Us
+            Music
           </TabsTrigger>
         </TabsList>
       </div>
@@ -73,7 +73,7 @@ export function MediaTabs({ pictures, videos, music }: MediaTabsProps) {
         )}
       </TabsContent>
 
-      {/* By Us Tab */}
+      {/* Music Tab */}
       <TabsContent value="by-us" className="mt-6">
         {music.length === 0 ? (
           <div className="text-center py-12">
