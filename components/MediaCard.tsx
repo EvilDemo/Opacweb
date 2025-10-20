@@ -105,7 +105,7 @@ export function MediaCard({ item, index = 0 }: MediaCardProps) {
           // Check if albumWebsite exists, otherwise use Spotify
           const hasAlbumWebsite = item.albumWebsite && item.albumWebsite.trim() !== "";
           return {
-            href: hasAlbumWebsite ? item.albumWebsite : item.spotifyUrl,
+            href: (hasAlbumWebsite ? item.albumWebsite : item.spotifyUrl) as string,
             label: hasAlbumWebsite ? `Visit ${item.title} album page` : `Listen to ${item.title} on Spotify`,
             text: hasAlbumWebsite ? "Check Album Page" : "Listen on Spotify",
             icon: <ExternalLink className="ml-2 h-3 w-3" />,
