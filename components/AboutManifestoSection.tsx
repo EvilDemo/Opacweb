@@ -24,7 +24,7 @@ export const AboutManifestoSection = ({
     { text: "a trace of something unspoken.", group: 2 },
   ],
   minHeight = "min-h-[320vh]",
-  marginTop = "mt-[-120vh]",
+  marginTop = "mt-[-125vh]",
 }: AboutManifestoSectionProps = {}) => {
   const sectionRef = useRef<HTMLElement>(null);
 

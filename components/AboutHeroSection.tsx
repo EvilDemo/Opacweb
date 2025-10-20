@@ -22,7 +22,7 @@ export const AboutHeroSection = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-              className="text-balance"
+              className="text-balance heading-3"
             >
               Born to be different.
             </motion.h1>

@@ -1,6 +1,7 @@
 import React from "react";
 import type { Metadata } from "next";
 import ServicesSection from "@/components/ServicesSection";
+import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
   title: "Services | What We Offer at Opac",
@@ -65,6 +66,12 @@ const ServicesPage = () => {
   return (
     <>
       <ServicesSection />
+      <section className="flex items-center justify-center bg-black text-white padding-global py-16">
+        <div className="padding-global flex flex-col items-center justify-center gap-4">
+          <h2 className="heading-4">Want to know more?</h2>
+          <Button>Contact Us</Button>
+        </div>
+      </section>
     </>
   );
 };
