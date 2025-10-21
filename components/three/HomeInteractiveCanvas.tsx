@@ -10,7 +10,11 @@ import type { ThreeEvent } from "@react-three/fiber";
 import { HomeInteractiveMusic } from "./HomeInteractiveMusic";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import { motion } from "motion/react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { ExternalLink } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 
 /**
  * Configuration for the Interactive Canvas
@@ -314,6 +318,51 @@ function SceneContent() {
   );
 }
 
+// AOTY Album Card Component
+function AotyAlbumCard() {
+  const cardClasses = "w-full flex flex-col";
+  const headerClasses = "flex-1 flex flex-col min-h-0 pt-3";
+  const titleClasses = "body-text-sm-md line-clamp-1 leading-tight";
+  const contentClasses = "pb-1 pt-3";
+
+  return (
+    <Card variant="media" background="media" className={cardClasses}>
+      <div className="aspect-[3/2] overflow-hidden -m-6 mb-0 rounded-t-xl relative">
+        <Image
+          src="/aoty-mode-card.webp"
+          alt="AOTY - Album of the Year"
+          fill
+          className="object-contain"
+          sizes="(max-width: 768px) 320px, 384px"
+          priority
+        />
+      </div>
+      <CardHeader className={headerClasses}>
+        <CardTitle className={titleClasses} title="AOTY">
+          AOTY <span className="text-muted body-text-xs">Album of the Year</span>
+        </CardTitle>
+        <CardDescription title="Album of the Year - Explore our latest music collection">
+          <p
+            className="body-text-xs text-muted text-start"
+            style={{ minHeight: "calc(1em * var(--line-height-normal) * 3)" }}
+          >
+            Joya&apos;s debut project explores introspection, loss, and rebellion through a fusion of rap, electronic,
+            and psychedelic rock sounds.
+          </p>
+        </CardDescription>
+      </CardHeader>
+      <CardContent className={contentClasses}>
+        <Link href="/a0ty" aria-label="Visit AOTY album page">
+          <Button variant="secondary" size="sm" className="w-full">
+            <ExternalLink className="mr-2 h-3 w-3" />
+            Check Album Page
+          </Button>
+        </Link>
+      </CardContent>
+    </Card>
+  );
+}
+
 // Main Component
 export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }) {
   const [showCross, setShowCross] = useState(false);
@@ -381,35 +430,21 @@ export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }
         userSelect: "none",
       }}
     >
-      {/* AOTY Content - Top Section */}
-      <motion.div
-        className="absolute top-2 left-0 right-0 flex flex-col items-center z-20 pointer-events-none padding-global"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{
-          duration: 0.8,
-          ease: "easeOut",
-          delay: 1.0,
-        }}
-      >
-        <div className="text-white text-center space-y-3">
-          {/* Title */}
-          <div>
-            <div className="heading-2 font-bold tracking-tight">A0TY</div>
-            <div className="body-text-xs text-muted font-medium uppercase tracking-widest mt-1">Album of the Year</div>
+      {/* AOTY Album Card - Centered */}
+      {showButton && (
+        <motion.div
+          className="absolute inset-0 flex flex-col items-center justify-center z-20 pointer-events-none padding-global -translate-y-14"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, ease: "easeOut" }}
+        >
+          <div className="pointer-events-auto w-full max-w-[200px] md:max-w-[240px] lg:max-w-[300px]">
+            <AotyAlbumCard />
           </div>
+        </motion.div>
+      )}
 
-          {/* 2-line description text */}
-          <div className="text-muted max-w-md mx-auto">
-            <p className="body-text-sm text-balance">
-              Joya’s debut project explores introspection, loss, and rebellion through a fusion of rap, electronic, and
-              psychedelic rock sounds.
-            </p>
-          </div>
-        </div>
-      </motion.div>
-
-      {/* AOTY Content - Bottom Section */}
+      {/* Instructions - Bottom */}
       <motion.div
         className="absolute bottom-8 md:bottom-9 lg:bottom-10 left-0 right-0 flex flex-col items-center z-20 pointer-events-none padding-global"
         initial={{ opacity: 0 }}
@@ -420,45 +455,20 @@ export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }
           delay: 1.0,
         }}
       >
-        <div className="text-white text-center space-y-4">
-          {/* OUT NOW Text */}
-          <div className="heading-3 font-bold tracking-widest">OUT NOW</div>
-
-          {/* Button */}
-          {showButton && (
-            <Button
-              variant="secondary"
-              size="lg"
-              className="pointer-events-auto animate-[fadeIn_0.3s_ease-out]"
-              onClick={() => {
-                // Dispatch custom event to trigger RouteLoader animation
-                window.dispatchEvent(
-                  new CustomEvent("requestNavigation", {
-                    detail: { href: "/a0ty" },
-                  })
-                );
-              }}
-            >
-              Explore
-            </Button>
-          )}
-
-          {/* Instructions */}
-          {showInstructions && (
-            <p>
-              <span className="hidden md:inline body-text-sm text-muted">
-                Drag and throw the cross to move it around.
-              </span>
-              <span className="md:hidden body-text-sm text-muted">Tap, drag and release the cross to throw it.</span>
-            </p>
-          )}
-        </div>
+        {showInstructions && (
+          <p className="text-white text-center">
+            <span className="hidden md:inline body-text-sm text-muted">
+              Drag and throw the cross to move it around.
+            </span>
+            <span className="md:hidden body-text-sm text-muted">Tap, drag and release the cross to throw it.</span>
+          </p>
+        )}
       </motion.div>
 
       {/* 3D Canvas Layer */}
       <div className="absolute inset-0 z-0">
         {/* Interactive Music Player (reacts to physics) */}
-        <HomeInteractiveMusic audioSrc="/aoty-mode.m4a" autoPlay={true} isMuted={isMuted} />
+        <HomeInteractiveMusic audioSrc="/aoty-mode-home.mp4" autoPlay={true} isMuted={isMuted} />
 
         <Canvas
           gl={{

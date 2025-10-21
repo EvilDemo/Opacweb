@@ -34,7 +34,7 @@ export default function AotyInfo() {
             <div className="flex flex-col gap-6 flex-1 max-w-2/3">
               <div className="flex flex-col gap-5">
                 <div>
-                  <h1 className="heading-1 !font-black !tracking-tighter">A0TY</h1>
+                  <h1 className="heading-1 !font-semibold !tracking-tight">A0TY</h1>
                   <p className="body-text !font-medium text-muted mt-1">ACRONYM FOR ALBUM OF THE YEAR</p>
                 </div>
                 <p className="body-text !font-medium text-balance">
@@ -86,7 +86,7 @@ export default function AotyInfo() {
                   <p className="body-text-sm !font-medium">Role name</p>
                 </div>
                 <div className="flex flex-col gap-2">
-                  <p className="body-text-sm !font-bold uppercase !font-medium text-muted">Spotify</p>
+                  <p className="body-text-sm !font-bold uppercase text-muted">Spotify</p>
                   <a
                     href="https://open.spotify.com/album/0Uem3wM8ZJ6rLwPhNNB1NS?si=QY3LksNNR3-3t7RLyMFxCQ"
                     target="_blank"
@@ -150,7 +150,7 @@ export default function AotyInfo() {
             </motion.div>
 
             {/* Right Column - Image Gallery */}
-            <div className="flex flex-col gap-8 w-full lg:max-w-2/3 lg:pt-[5%]">
+            <div className="flex flex-col gap-8 lg:gap-36 2xl:gap-16 w-full lg:max-w-2/3 lg:pt-[5%]">
               <motion.div
                 className="relative aspect-video"
                 initial={{ opacity: 0, x: 50 }}
@@ -172,10 +172,10 @@ export default function AotyInfo() {
         </div>
       </motion.section>
 
-      {/* Image Gallery Slider Section */}
+      {/* video Gallery Slider Section */}
       <motion.section
         ref={carouselRef}
-        className="padding-global pb-16 md:pb-20 lg:pb-28"
+        className="padding-global pb-16 md:pb-20 lg:pb-28 mt-16 mb-16"
         initial={{ opacity: 0, y: 50 }}
         animate={carouselInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
@@ -230,7 +230,7 @@ export default function AotyInfo() {
           >
             <div className="flex flex-col gap-8 w-full ">
               <div className="flex flex-col gap-6">
-                <h2 className="heading-2 text-white">0PAC Merch</h2>
+                <h2 className="heading-2 text-white">A0TY Merch</h2>
                 <p className="body-text text-white text-pretty">
                   Edition pieces inspired by the album’s dark pulse. <br />
                   Wear the sound, not the trend.

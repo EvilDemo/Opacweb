@@ -1,5 +1,6 @@
 import React from "react";
 import type { Metadata } from "next";
+import Link from "next/link";
 import ServicesSection from "@/components/ServicesSection";
 import { Button } from "@/components/ui/button";
 
@@ -68,8 +69,10 @@ const ServicesPage = () => {
       <ServicesSection />
       <section className="flex items-center justify-center bg-black text-white padding-global py-16">
         <div className="padding-global flex flex-col items-center justify-center gap-4">
-          <h2 className="heading-4">Want to know more?</h2>
-          <Button>Contact Us</Button>
+          <h3 className="heading-3">Want to know more?</h3>
+          <Link href="/contact">
+            <Button>Contact Us</Button>
+          </Link>
         </div>
       </section>
     </>

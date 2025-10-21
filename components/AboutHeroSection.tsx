@@ -13,7 +13,7 @@ export const AboutHeroSection = () => {
         <div className="flex flex-col lg:flex-row gap-8 lg:gap-4 w-full">
           {/* Left Column - Heading and Tagline */}
           <motion.div
-            className="w-full lg:w-1/3 space-y-2"
+            className="w-full lg:w-1/3 space-y-2 lg:pt-[5%]"
             initial={{ opacity: 0, x: -100 }}
             animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -100 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
@@ -44,7 +44,7 @@ export const AboutHeroSection = () => {
             transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
           >
             <motion.p
-              className="body-text text-balance"
+              className="body-text text-pretty"
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
