@@ -343,7 +343,7 @@ function AotyAlbumCard() {
         </CardTitle>
         <CardDescription title="Album of the Year - Explore our latest music collection">
           <p
-            className="body-text-xs text-muted text-start"
+            className="body-text-xs text-muted text-start text-pretty"
             style={{ minHeight: "calc(1em * var(--line-height-normal) * 3)" }}
           >
             Joya&apos;s debut project explores introspection, loss, and rebellion through a fusion of rap, electronic,

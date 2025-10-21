@@ -77,13 +77,13 @@ export default function AotyInfo() {
                 </div>
                 <div className="flex flex-col gap-2 ">
                   <p className="body-text-sm !font-bold text-muted uppercase">Release Date</p>
-                  <p className="body-text-sm !font-medium text-muted">October 2025</p>
+                  <p className="body-text-sm !font-medium text-muted">October 1st</p>
                 </div>
               </div>
               <div className="flex flex-col gap-8">
                 <div className="flex flex-col gap-2 ">
                   <p className="body-text-sm !font-bold text-muted uppercase">Genre</p>
-                  <p className="body-text-sm !font-medium">Role name</p>
+                  <p className="body-text-sm !font-medium">Alt-Trap</p>
                 </div>
                 <div className="flex flex-col gap-2">
                   <p className="body-text-sm !font-bold uppercase text-muted">Spotify</p>
@@ -93,7 +93,7 @@ export default function AotyInfo() {
                     rel="noopener noreferrer"
                     className="body-text-sm !font-medium hover:underline underline-offset-4"
                   >
-                    Take me there!
+                    joyaboi (link)
                   </a>
                 </div>
               </div>
