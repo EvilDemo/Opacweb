@@ -107,7 +107,7 @@ export function MediaCard({ item, index = 0 }: MediaCardProps) {
           return {
             href: (hasAlbumWebsite ? item.albumWebsite : item.spotifyUrl) as string,
             label: hasAlbumWebsite ? `Visit ${item.title} album page` : `Listen to ${item.title} on Spotify`,
-            text: hasAlbumWebsite ? "Check Album Page" : "Listen on Spotify",
+            text: hasAlbumWebsite ? "View Release" : "Listen on Spotify",
             icon: <ExternalLink className="ml-2 h-3 w-3" />,
             isExternal: true,
           };
