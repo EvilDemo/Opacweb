@@ -26,7 +26,7 @@ export function LatestReleases({ pictures, videos, music }: LatestReleasesProps)
   );
 
   // Get the latest 5 items
-  const latestItems = allMediaData.slice(0, 5);
+  const latestItems = allMediaData.slice(0, 6);
 
   // Don't render if no items
   if (latestItems.length === 0) {
@@ -40,7 +40,7 @@ export function LatestReleases({ pictures, videos, music }: LatestReleasesProps)
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
         viewport={{ once: true, margin: "-100px" }}
-        className="max-w-7xl mx-auto"
+        className="w-full mx-auto"
       >
         {/* Section Header */}
         <div className="mb-8">
@@ -70,6 +70,7 @@ export function LatestReleases({ pictures, videos, music }: LatestReleasesProps)
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: "easeOut", delay: 0.3 }}
           viewport={{ once: true }}
+          className="flex items-center"
         >
           <Carousel
             opts={{
