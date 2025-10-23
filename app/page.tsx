@@ -1,4 +1,6 @@
 import HeroSection from "@/components/HeroSection";
+import { LatestReleases } from "@/components/LatestReleases";
+import { getPictures, getVideos, getMusic } from "@/lib/mediaData";
 import React from "react";
 import type { Metadata } from "next";
 
@@ -39,8 +41,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Opac - Embracing Individuality Through Music & Fashion",
-    description:
-      "Opac creates residue through music and clothing - a trace of something unspoken.",
+    description: "Opac creates residue through music and clothing - a trace of something unspoken.",
     images: ["/twitter-image.jpg"],
   },
   alternates: {
@@ -59,10 +60,14 @@ export const metadata: Metadata = {
   },
 };
 
-export default function Home() {
+export default async function Home() {
+  // Fetch media data
+  const [pictures, videos, music] = await Promise.all([getPictures(), getVideos(), getMusic()]);
+
   return (
     <div className="flex flex-col row-start-2 justify-around sm:items-start">
       <HeroSection />
+      <LatestReleases pictures={pictures} videos={videos} music={music} />
     </div>
   );
 }
