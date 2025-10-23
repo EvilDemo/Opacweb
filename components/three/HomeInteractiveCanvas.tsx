@@ -48,6 +48,8 @@ const CONFIG = {
     height: 20, // Taller to ensure floor catches everything
     depth: 14,
     ceilingHeightMultiplier: 0.5,
+    // Mobile-specific boundaries
+    mobileWidth: 12, // Much narrower for mobile viewport
   },
   materials: {
     cross: {
@@ -88,9 +90,11 @@ const CONFIG = {
 
 // Invisible Walls Component
 function BoundaryWalls() {
-  const { width, height, depth, ceilingHeightMultiplier } = CONFIG.boundaries;
+  const { width, height, depth, ceilingHeightMultiplier, mobileWidth } = CONFIG.boundaries;
   const { thickness, restitution } = CONFIG.physics.walls;
 
+  // Use responsive width - smaller on mobile
+  const effectiveWidth = typeof window !== "undefined" && window.innerWidth < 768 ? mobileWidth : width;
   const ceilingHeight = (height / 2) * ceilingHeightMultiplier;
   const wallHeight = height * 1.5; // Make walls taller to ensure they catch everything
 
@@ -111,26 +115,26 @@ function BoundaryWalls() {
     <>
       {/* Left Wall */}
       <CuboidCollider
-        position={[-width / 2, -3, 0]}
+        position={[-effectiveWidth / 2, -3, 0]}
         args={[thickness / 2, wallHeight / 2, depth / 2]}
         restitution={restitution}
         friction={0.1}
-        onCollisionEnter={() => handleWallCollision("left", { x: -width / 2, y: -3, z: 0 })}
+        onCollisionEnter={() => handleWallCollision("left", { x: -effectiveWidth / 2, y: -3, z: 0 })}
       />
 
       {/* Right Wall */}
       <CuboidCollider
-        position={[width / 2, -3, 0]}
+        position={[effectiveWidth / 2, -3, 0]}
         args={[thickness / 2, wallHeight / 2, depth / 2]}
         restitution={restitution}
         friction={0.1}
-        onCollisionEnter={() => handleWallCollision("right", { x: width / 2, y: -3, z: 0 })}
+        onCollisionEnter={() => handleWallCollision("right", { x: effectiveWidth / 2, y: -3, z: 0 })}
       />
 
       {/* Floor */}
       <CuboidCollider
         position={[0, -8, 0]}
-        args={[width, thickness / 2, depth]}
+        args={[effectiveWidth, thickness / 2, depth]}
         restitution={restitution}
         friction={0.1}
         onCollisionEnter={() => handleWallCollision("floor", { x: 0, y: -8, z: 0 })}
@@ -139,7 +143,7 @@ function BoundaryWalls() {
       {/* Ceiling */}
       <CuboidCollider
         position={[0, ceilingHeight, 0]}
-        args={[width / 2, thickness / 2, depth / 2]}
+        args={[effectiveWidth / 2, thickness / 2, depth / 2]}
         restitution={restitution}
         friction={0.1}
         onCollisionEnter={() => handleWallCollision("ceiling", { x: 0, y: ceilingHeight, z: 0 })}
@@ -160,15 +164,21 @@ function InteractiveCross() {
   useEffect(() => {
     if (!isGrabbed) return;
 
-    const handleMove = (event: PointerEvent) => {
+    const handleMove = (event: PointerEvent | TouchEvent) => {
       // Only prevent default when we're actively dragging to allow normal scrolling
       if (isGrabbed) {
         event.preventDefault();
       }
 
       if (rigidBodyRef.current) {
-        const x = (event.clientX / window.innerWidth) * 2 - 1;
-        const y = -(event.clientY / window.innerHeight) * 2 + 1;
+        // Handle both pointer and touch events
+        const clientX = "touches" in event ? event.touches[0]?.clientX : event.clientX;
+        const clientY = "touches" in event ? event.touches[0]?.clientY : event.clientY;
+
+        if (clientX === undefined || clientY === undefined) return;
+
+        const x = (clientX / window.innerWidth) * 2 - 1;
+        const y = -(clientY / window.innerHeight) * 2 + 1;
 
         const mouse = new THREE.Vector2(x, y);
         const raycaster = new THREE.Raycaster();
@@ -180,8 +190,9 @@ function InteractiveCross() {
 
         // Clamp position to boundaries - match the actual wall positions
         const wallPadding = 1; // Keep cross slightly away from walls
-        const { width, height, ceilingHeightMultiplier } = CONFIG.boundaries;
-        const halfWidth = width / 2 - wallPadding; // Match wall positions at width/2
+        const { width, height, ceilingHeightMultiplier, mobileWidth } = CONFIG.boundaries;
+        const effectiveWidth = typeof window !== "undefined" && window.innerWidth < 768 ? mobileWidth : width;
+        const halfWidth = effectiveWidth / 2 - wallPadding; // Match wall positions at effectiveWidth/2
         const ceilingY = (height / 2) * ceilingHeightMultiplier;
         const floorY = -8; // Match the floor position
 
@@ -220,10 +231,15 @@ function InteractiveCross() {
 
     window.addEventListener("pointermove", handleMove);
     window.addEventListener("pointerup", handleRelease);
+    // Add touch events for better mobile support
+    window.addEventListener("touchmove", handleMove as EventListener);
+    window.addEventListener("touchend", handleRelease);
 
     return () => {
       window.removeEventListener("pointermove", handleMove);
       window.removeEventListener("pointerup", handleRelease);
+      window.removeEventListener("touchmove", handleMove as EventListener);
+      window.removeEventListener("touchend", handleRelease);
     };
   }, [isGrabbed, camera]);
 
@@ -425,9 +441,10 @@ export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }
       className="w-full relative"
       style={{
         height: "calc(100vh - 6rem)",
-        touchAction: "pan-y",
+        touchAction: "none", // Disable all touch actions to allow custom handling
         WebkitUserSelect: "none",
         userSelect: "none",
+        WebkitTouchCallout: "none", // Disable iOS callout menu
       }}
     >
       {/* AOTY Album Card - Centered */}
@@ -446,7 +463,7 @@ export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }
 
       {/* Instructions - Bottom */}
       <motion.div
-        className="absolute bottom-8 md:bottom-9 lg:bottom-10 left-0 right-0 flex flex-col items-center z-20 pointer-events-none padding-global"
+        className="absolute bottom-22 md:bottom-24 lg:bottom-28 left-0 right-0 flex flex-col items-center z-30 pointer-events-none padding-global"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{
@@ -483,6 +500,10 @@ export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }
           dpr={[1, 1.5]}
           performance={{ min: 0.5 }}
           frameloop="always"
+          onTouchStart={(e) => {
+            // Handle touch start at canvas level
+            e.preventDefault();
+          }}
         >
           <PerspectiveCamera makeDefault position={CONFIG.camera.position} fov={CONFIG.camera.fov} />
           {showCross && <SceneContent />}

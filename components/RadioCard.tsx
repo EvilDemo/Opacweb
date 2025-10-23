@@ -102,8 +102,8 @@ export function RadioCard({ title, description, thumbnailUrl, spotifyUrl, index 
               >
                 <motion.button
                   onClick={() => spotifyUrl && window.open(spotifyUrl, "_blank")}
-                  className="w-16 h-16 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center hover:from-green-400 hover:to-emerald-500 relative overflow-hidden shadow-lg hover:shadow-green-500/25 transition-shadow duration-300 flex-shrink-0 cursor-pointer"
-                  whileHover={{ scale: 1.1 }}
+                  className="w-16 h-16 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm flex items-center justify-center relative overflow-hidden border border-neutral-200 transition-all duration-200 hover:scale-105 flex-shrink-0 cursor-pointer"
+                  whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   transition={{
                     type: "spring",
@@ -113,20 +113,7 @@ export function RadioCard({ title, description, thumbnailUrl, spotifyUrl, index 
                   }}
                   aria-label={`Play ${title} on Spotify`}
                 >
-                  {/* Ripple Effect */}
-                  <motion.div
-                    className="absolute inset-0 rounded-full bg-white/20"
-                    initial={{ scale: 0, opacity: 0 }}
-                    whileHover={{
-                      scale: [0, 1.5],
-                      opacity: [0, 0.3, 0],
-                    }}
-                    transition={{
-                      duration: 0.6,
-                      ease: "easeOut",
-                    }}
-                  />
-                  <Play className="w-7 h-7 text-white ml-1 relative z-10" fill="currentColor" />
+                  <Play className="w-5 h-5 text-white relative z-10" fill="currentColor" />
                 </motion.button>
               </motion.div>
             </div>
