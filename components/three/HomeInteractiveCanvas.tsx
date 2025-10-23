@@ -209,8 +209,8 @@ function InteractiveCross() {
       }
     };
 
-    const handleRelease = () => {
-      if (rigidBodyRef.current) {
+    const handleRelease = (event?: PointerEvent | TouchEvent) => {
+      if (rigidBodyRef.current && isGrabbed) {
         const pos = rigidBodyRef.current.translation();
         const currentPos = new THREE.Vector3(pos.x, pos.y, pos.z);
 
@@ -239,18 +239,93 @@ function InteractiveCross() {
     window.addEventListener("pointerup", handleRelease);
     // Add touch events for better mobile support
     window.addEventListener("touchmove", handleMove as EventListener);
-    window.addEventListener("touchend", handleRelease);
+    window.addEventListener("touchend", (event) => handleRelease(event));
+    window.addEventListener("touchcancel", (event) => {
+      setIsGrabbed(false);
+    });
 
     return () => {
       window.removeEventListener("pointermove", handleMove);
       window.removeEventListener("pointerup", handleRelease);
       window.removeEventListener("touchmove", handleMove as EventListener);
-      window.removeEventListener("touchend", handleRelease);
+      window.removeEventListener("touchend", (event) => handleRelease(event));
+      window.removeEventListener("touchcancel", (event) => {
+        setIsGrabbed(false);
+      });
     };
   }, [isGrabbed, camera]);
 
+  // Add touch tap listener for mobile
+  useEffect(() => {
+    const handleTouchTap = (event: TouchEvent) => {
+      // Only handle if we're not already grabbed and on mobile
+      if (!isGrabbed && rigidBodyRef.current && window.innerWidth < 768) {
+        // Get touch coordinates
+        const touch = event.touches[0];
+        if (!touch) return;
+
+        // Convert touch coordinates to normalized device coordinates
+        const x = (touch.clientX / window.innerWidth) * 2 - 1;
+        const y = -(touch.clientY / window.innerHeight) * 2 + 1;
+
+        // Check if touch is near the cross (simple distance check)
+        const crossPos = rigidBodyRef.current.translation();
+        const distance = Math.sqrt(Math.pow(x * 10 - crossPos.x, 2) + Math.pow(y * 10 - crossPos.y, 2));
+
+        // Only tap if touch is very close to cross (within 0.8 units - very precise)
+        if (distance < 0.8) {
+          event.preventDefault();
+
+          // Apply a random throw force on tap
+          const randomForce = {
+            x: (Math.random() - 0.5) * 20, // Random horizontal force
+            y: Math.random() * 15 + 5, // Upward force with some randomness
+            z: 0,
+          };
+
+          // Apply the force
+          rigidBodyRef.current.setLinvel(randomForce, true);
+
+          // Add some random rotation
+          const randomTorque = {
+            x: (Math.random() - 0.5) * 10,
+            y: (Math.random() - 0.5) * 10,
+            z: (Math.random() - 0.5) * 5,
+          };
+          rigidBodyRef.current.setAngvel(randomTorque, true);
+        }
+      }
+    };
+
+    window.addEventListener("touchstart", handleTouchTap, { passive: false });
+
+    return () => {
+      window.removeEventListener("touchstart", handleTouchTap);
+    };
+  }, [isGrabbed]);
+
   const handlePointerDown = (event: ThreeEvent<PointerEvent>) => {
     event.stopPropagation();
+
+    if (rigidBodyRef.current) {
+      // Freeze the cross
+      rigidBodyRef.current.setLinvel({ x: 0, y: 0, z: 0 }, true);
+      rigidBodyRef.current.setAngvel({ x: 0, y: 0, z: 0 }, true);
+
+      // Store current position
+      const pos = rigidBodyRef.current.translation();
+      currentMousePos.current.set(pos.x, pos.y, pos.z);
+
+      setIsGrabbed(true);
+    }
+  };
+
+  const handleTouchStart = (event: ThreeEvent<TouchEvent>) => {
+    event.stopPropagation();
+    // Prevent default to avoid scrolling while dragging
+    if (event.nativeEvent) {
+      event.nativeEvent.preventDefault();
+    }
 
     if (rigidBodyRef.current) {
       // Freeze the cross
@@ -390,7 +465,25 @@ export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }
   const [showCross, setShowCross] = useState(false);
   const [showInstructions, setShowInstructions] = useState(false);
   const [showButton, setShowButton] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    // Detect mobile screen size
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    // Check on mount
+    checkMobile();
+
+    // Listen for resize events
+    window.addEventListener("resize", checkMobile);
+
+    return () => {
+      window.removeEventListener("resize", checkMobile);
+    };
+  }, []);
 
   useEffect(() => {
     // Show cross after text animation completes
@@ -469,7 +562,9 @@ export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }
 
       {/* Instructions - Bottom */}
       <motion.div
-        className="absolute bottom-8 md:bottom-9 lg:bottom-10 sm:bottom-22 left-0 right-0 flex flex-col items-center z-30 pointer-events-none padding-global"
+        className={`absolute ${
+          isMobile ? "bottom-22" : "bottom-8 md:bottom-9 lg:bottom-10"
+        } left-0 right-0 flex flex-col items-center z-30 pointer-events-none padding-global`}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{
@@ -483,7 +578,7 @@ export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }
             <span className="hidden md:inline body-text-sm text-muted">
               Drag and throw the cross to move it around.
             </span>
-            <span className="md:hidden body-text-sm text-muted">Tap, drag and release the cross to throw it.</span>
+            <span className="md:hidden body-text-sm text-muted">Tap the cross to throw it around.</span>
           </p>
         )}
       </motion.div>

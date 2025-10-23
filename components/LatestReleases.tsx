@@ -108,7 +108,7 @@ export function LatestReleases({ pictures, videos, music }: LatestReleasesProps)
             className="w-full"
           >
             <CarouselContent className="-ml-2">
-              <AnimatePresence mode="wait">
+              <AnimatePresence>
                 {latestItems.map((item, index) => (
                   <CarouselItem
                     key={item._id}

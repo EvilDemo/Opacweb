@@ -63,6 +63,7 @@ const Logo = ({ className = "" }: { className?: string }) => (
       width={125}
       height={62}
       className={`object-contain ${className}`}
+      style={{ width: "auto", height: "auto" }}
       priority
       fetchPriority="high" // LCP optimization for logo
       quality={75} // Good quality for logo
