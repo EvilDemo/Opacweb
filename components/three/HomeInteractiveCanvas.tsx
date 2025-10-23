@@ -40,6 +40,7 @@ const CONFIG = {
     },
     interaction: {
       throwForceMultiplier: 50,
+      mobileThrowForceMultiplier: 80, // Higher force for mobile due to smaller boundaries
       torqueMultipliers: [0.3, 0.3, 0.2] as [number, number, number],
     },
   },
@@ -214,7 +215,12 @@ function InteractiveCross() {
         const currentPos = new THREE.Vector3(pos.x, pos.y, pos.z);
 
         const velocity = currentPos.clone().sub(currentMousePos.current);
-        const throwForce = velocity.multiplyScalar(CONFIG.physics.interaction.throwForceMultiplier);
+        // Use higher force multiplier on mobile due to smaller boundaries
+        const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+        const forceMultiplier = isMobile
+          ? CONFIG.physics.interaction.mobileThrowForceMultiplier
+          : CONFIG.physics.interaction.throwForceMultiplier;
+        const throwForce = velocity.multiplyScalar(forceMultiplier);
 
         rigidBodyRef.current.setLinvel({ x: throwForce.x, y: throwForce.y, z: 0 }, true);
 
@@ -359,7 +365,7 @@ function AotyAlbumCard() {
         </CardTitle>
         <CardDescription title="Album of the Year - Explore our latest music collection">
           <p
-            className="body-text-xs text-muted text-start text-pretty"
+            className="body-text-xs text-muted text-start text-wrap"
             style={{ minHeight: "calc(1em * var(--line-height-normal) * 3)" }}
           >
             Joya&apos;s debut project explores introspection, loss, and rebellion through a fusion of rap, electronic,
@@ -371,7 +377,7 @@ function AotyAlbumCard() {
         <Link href="/a0ty" aria-label="Visit AOTY album page">
           <Button variant="secondary" size="sm" className="w-full">
             <ExternalLink className="mr-2 h-3 w-3" />
-            Check Album Page
+            View Release
           </Button>
         </Link>
       </CardContent>
@@ -455,7 +461,7 @@ export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
         >
-          <div className="pointer-events-auto w-full max-w-[200px] md:max-w-[240px] lg:max-w-[300px]">
+          <div className="pointer-events-auto w-full max-w-[200px] md:max-w-[240px] lg:max-w-[320px]">
             <AotyAlbumCard />
           </div>
         </motion.div>
@@ -463,7 +469,7 @@ export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }
 
       {/* Instructions - Bottom */}
       <motion.div
-        className="absolute bottom-22 md:bottom-24 lg:bottom-28 left-0 right-0 flex flex-col items-center z-30 pointer-events-none padding-global"
+        className="absolute bottom-8 md:bottom-9 lg:bottom-10 sm:bottom-22 left-0 right-0 flex flex-col items-center z-30 pointer-events-none padding-global"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{
