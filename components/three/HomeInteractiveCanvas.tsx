@@ -100,7 +100,6 @@ function BoundaryWalls() {
   const wallHeight = height * 1.5; // Make walls taller to ensure they catch everything
 
   const handleWallCollision = (wallType: string, position: { x: number; y: number; z: number }) => {
-    console.log("Collision with:", wallType);
     window.dispatchEvent(
       new CustomEvent("wallImpact", {
         detail: {
@@ -291,7 +290,7 @@ function InteractiveCross() {
     return () => {
       window.removeEventListener("touchstart", handleTouchTap);
     };
-  }, [isGrabbed]);
+  }, []); // Remove isGrabbed dependency to prevent re-registration
 
   const handlePointerDown = (event: ThreeEvent<PointerEvent>) => {
     event.stopPropagation();
