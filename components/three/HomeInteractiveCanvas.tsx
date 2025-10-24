@@ -39,9 +39,9 @@ const CONFIG = {
       thickness: 0.5,
     },
     interaction: {
-      throwForceMultiplier: 50,
-      mobileThrowForceMultiplier: 80, // Higher force for mobile due to smaller boundaries
-      torqueMultipliers: [0.3, 0.3, 0.2] as [number, number, number],
+      throwForceMultiplier: 25, // Reduced force for gentler interaction
+      mobileThrowForceMultiplier: 30, // Reduced force for mobile - gentler interaction
+      torqueMultipliers: [0.15, 0.15, 0.1] as [number, number, number], // Reduced torque for gentler rotation
     },
   },
   boundaries: {
@@ -255,7 +255,7 @@ function InteractiveCross() {
     };
   }, [isGrabbed, camera]);
 
-  // Add touch tap listener for mobile
+  // Add touch tap listener for mobile - tap anywhere on screen to move cross
   useEffect(() => {
     const handleTouchTap = (event: TouchEvent) => {
       // Only handle if we're not already grabbed and on mobile
@@ -264,36 +264,25 @@ function InteractiveCross() {
         const touch = event.touches[0];
         if (!touch) return;
 
-        // Convert touch coordinates to normalized device coordinates
-        const x = (touch.clientX / window.innerWidth) * 2 - 1;
-        const y = -(touch.clientY / window.innerHeight) * 2 + 1;
+        event.preventDefault();
 
-        // Check if touch is near the cross (simple distance check)
-        const crossPos = rigidBodyRef.current.translation();
-        const distance = Math.sqrt(Math.pow(x * 10 - crossPos.x, 2) + Math.pow(y * 10 - crossPos.y, 2));
+        // Apply a much gentler random throw force on tap
+        const randomForce = {
+          x: (Math.random() - 0.5) * 3, // Much gentler horizontal force
+          y: Math.random() * 2 + 1, // Much gentler upward force
+          z: 0,
+        };
 
-        // Only tap if touch is VERY close to cross (within 0.5 units - extremely precise)
-        if (distance < 0.5) {
-          event.preventDefault();
+        // Apply the force
+        rigidBodyRef.current.setLinvel(randomForce, true);
 
-          // Apply a gentler random throw force on tap
-          const randomForce = {
-            x: (Math.random() - 0.5) * 8, // Reduced horizontal force (was 20)
-            y: Math.random() * 6 + 3, // Reduced upward force (was 15+5)
-            z: 0,
-          };
-
-          // Apply the force
-          rigidBodyRef.current.setLinvel(randomForce, true);
-
-          // Add some gentle random rotation
-          const randomTorque = {
-            x: (Math.random() - 0.5) * 4, // Reduced rotation (was 10)
-            y: (Math.random() - 0.5) * 4, // Reduced rotation (was 10)
-            z: (Math.random() - 0.5) * 2, // Reduced rotation (was 5)
-          };
-          rigidBodyRef.current.setAngvel(randomTorque, true);
-        }
+        // Add some gentle random rotation
+        const randomTorque = {
+          x: (Math.random() - 0.5) * 1.5, // Much gentler rotation
+          y: (Math.random() - 0.5) * 1.5, // Much gentler rotation
+          z: (Math.random() - 0.5) * 1, // Much gentler rotation
+        };
+        rigidBodyRef.current.setAngvel(randomTorque, true);
       }
     };
 
