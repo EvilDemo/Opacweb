@@ -90,7 +90,7 @@ export function MediaCard({ item, index = 0 }: MediaCardProps) {
             href: `/media/pictures/${item._id}`,
             label: `View gallery for ${item.title}`,
             text: "View Gallery",
-            icon: <Images className="mr-2 h-3 w-3" />,
+            icon: <Images className="ml-2 h-4 w-4" />,
             isExternal: false,
           };
         case "video":
@@ -98,7 +98,7 @@ export function MediaCard({ item, index = 0 }: MediaCardProps) {
             href: item.videoUrl,
             label: `Watch ${item.title} video on external platform`,
             text: "Watch Video",
-            icon: <ExternalLink className="ml-2 h-3 w-3" />,
+            icon: <ExternalLink className="ml-2 h-4 w-4" />,
             isExternal: true,
           };
         case "music":
@@ -108,7 +108,7 @@ export function MediaCard({ item, index = 0 }: MediaCardProps) {
             href: (hasAlbumWebsite ? item.albumWebsite : item.spotifyUrl) as string,
             label: hasAlbumWebsite ? `Visit ${item.title} album page` : `Listen to ${item.title} on Spotify`,
             text: hasAlbumWebsite ? "View Release" : "Listen on Spotify",
-            icon: <ExternalLink className="ml-2 h-3 w-3" />,
+            icon: <ExternalLink className="ml-2 h-4 w-4" />,
             isExternal: true,
           };
         default:

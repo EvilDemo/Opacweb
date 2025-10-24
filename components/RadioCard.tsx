@@ -113,7 +113,7 @@ export function RadioCard({ title, description, thumbnailUrl, spotifyUrl, index 
                   }}
                   aria-label={`Play ${title} on Spotify`}
                 >
-                  <Play className="w-5 h-5 text-white relative z-10" fill="currentColor" />
+                  <Play className="w-4 h-4 text-white relative z-10" fill="currentColor" />
                 </motion.button>
               </motion.div>
             </div>

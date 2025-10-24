@@ -272,25 +272,25 @@ function InteractiveCross() {
         const crossPos = rigidBodyRef.current.translation();
         const distance = Math.sqrt(Math.pow(x * 10 - crossPos.x, 2) + Math.pow(y * 10 - crossPos.y, 2));
 
-        // Only tap if touch is very close to cross (within 0.8 units - very precise)
-        if (distance < 0.8) {
+        // Only tap if touch is VERY close to cross (within 0.5 units - extremely precise)
+        if (distance < 0.5) {
           event.preventDefault();
 
-          // Apply a random throw force on tap
+          // Apply a gentler random throw force on tap
           const randomForce = {
-            x: (Math.random() - 0.5) * 20, // Random horizontal force
-            y: Math.random() * 15 + 5, // Upward force with some randomness
+            x: (Math.random() - 0.5) * 8, // Reduced horizontal force (was 20)
+            y: Math.random() * 6 + 3, // Reduced upward force (was 15+5)
             z: 0,
           };
 
           // Apply the force
           rigidBodyRef.current.setLinvel(randomForce, true);
 
-          // Add some random rotation
+          // Add some gentle random rotation
           const randomTorque = {
-            x: (Math.random() - 0.5) * 10,
-            y: (Math.random() - 0.5) * 10,
-            z: (Math.random() - 0.5) * 5,
+            x: (Math.random() - 0.5) * 4, // Reduced rotation (was 10)
+            y: (Math.random() - 0.5) * 4, // Reduced rotation (was 10)
+            z: (Math.random() - 0.5) * 2, // Reduced rotation (was 5)
           };
           rigidBodyRef.current.setAngvel(randomTorque, true);
         }
@@ -586,7 +586,7 @@ export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }
       {/* 3D Canvas Layer */}
       <div className="absolute inset-0 z-0">
         {/* Interactive Music Player (reacts to physics) */}
-        <HomeInteractiveMusic audioSrc="/aoty-mode-home.mp4" autoPlay={true} isMuted={isMuted} />
+        <HomeInteractiveMusic audioSrc="/aoty-mode-home.m4a" autoPlay={true} isMuted={isMuted} />
 
         <Canvas
           gl={{
@@ -601,10 +601,6 @@ export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }
           dpr={[1, 1.5]}
           performance={{ min: 0.5 }}
           frameloop="always"
-          onTouchStart={(e) => {
-            // Handle touch start at canvas level
-            e.preventDefault();
-          }}
         >
           <PerspectiveCamera makeDefault position={CONFIG.camera.position} fov={CONFIG.camera.fov} />
           {showCross && <SceneContent />}

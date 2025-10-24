@@ -93,7 +93,7 @@ export default function AotyInfo() {
                     rel="noopener noreferrer"
                     className="body-text-sm !font-medium hover:underline underline-offset-4"
                   >
-                    joyaboi (link)
+                    joyaboi
                   </a>
                 </div>
               </div>
@@ -181,7 +181,7 @@ export default function AotyInfo() {
         transition={{ duration: 0.8, ease: "easeOut" }}
       >
         <div className="max-w-[1280px] mx-auto">
-          <Carousel className="w-full lg:max-w-[75%] mx-auto">
+          <Carousel className="w-full lg:max-w-[60%] mx-auto">
             <CarouselContent>
               <CarouselItem>
                 <div className="relative w-full aspect-video">
