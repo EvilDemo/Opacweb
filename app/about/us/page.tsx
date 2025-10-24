@@ -25,11 +25,11 @@ export const metadata: Metadata = {
     title: "About Opac | Embracing the Difference",
     description:
       "We are not here to fill silence. We are here to bend it. Discover Opac's philosophy and approach to music and fashion.",
-    url: "https://weareopac.com/about",
+    url: "https://opacweb.pt/about/us",
     siteName: "Opac",
     images: [
       {
-        url: "/og-about.jpg",
+        url: "/logo.webp",
         width: 1200,
         height: 630,
         alt: "About Opac - Our Philosophy and Mission",
@@ -42,10 +42,10 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "About Opac | Embracing the Difference",
     description: "We are not here to fill silence. We are here to bend it.",
-    images: ["/twitter-about.jpg"],
+    images: ["/logo.webp"],
   },
   alternates: {
-    canonical: "https://weareopac.com/about",
+    canonical: "https://opacweb.pt/about/us",
   },
   robots: {
     index: true,

@@ -43,20 +43,20 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL("https://weareopac.com"),
+  metadataBase: new URL("https://opacweb.pt"),
   alternates: {
     canonical: "/",
   },
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://weareopac.com",
+    url: "https://opacweb.pt",
     siteName: "Opac",
     title: "Opac - Embracing Individuality Through Music & Fashion",
     description: "Opac creates residue through music and clothing - a trace of something unspoken.",
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/logo.webp",
         width: 1200,
         height: 630,
         alt: "Opac - Music and Fashion Collective",
@@ -67,7 +67,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Opac - Embracing Individuality Through Music & Fashion",
     description: "Opac creates residue through music and clothing - a trace of something unspoken.",
-    images: ["/twitter-image.jpg"],
+    images: ["/logo.webp"],
   },
   robots: {
     index: true,

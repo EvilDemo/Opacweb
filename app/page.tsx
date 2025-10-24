@@ -25,11 +25,11 @@ export const metadata: Metadata = {
     title: "Opac - Embracing Individuality Through Music & Fashion",
     description:
       "Opac creates residue through music and clothing - a trace of something unspoken. Discover our unique approach to artistic expression and individuality.",
-    url: "https://weareopac.com",
+    url: "https://opacweb.pt",
     siteName: "Opac",
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/logo.webp",
         width: 1200,
         height: 630,
         alt: "Opac - Music and Fashion Collective",
@@ -42,10 +42,10 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Opac - Embracing Individuality Through Music & Fashion",
     description: "Opac creates residue through music and clothing - a trace of something unspoken.",
-    images: ["/twitter-image.jpg"],
+    images: ["/logo.webp"],
   },
   alternates: {
-    canonical: "https://weareopac.com",
+    canonical: "https://opacweb.pt",
   },
   robots: {
     index: true,
