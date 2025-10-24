@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { Switch } from "@/components/ui/switch";
 import { HomeInteractiveCanvas } from "@/components/three/HomeInteractiveCanvas";
@@ -11,6 +11,24 @@ const sphereVideo = "/esfera3D_optimized.webm";
 export default function HeroSection() {
   const [aotyMode, setAotyMode] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect mobile screen size
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    // Check on mount
+    checkMobile();
+
+    // Listen for resize events
+    window.addEventListener("resize", checkMobile);
+
+    return () => {
+      window.removeEventListener("resize", checkMobile);
+    };
+  }, []);
 
   return (
     <section
@@ -18,6 +36,68 @@ export default function HeroSection() {
         !aotyMode ? "padding-global" : ""
       }`}
     >
+      {/* Controls - Always visible in bottom right corner */}
+      <motion.div
+        className="absolute bottom-8 md:bottom-9 lg:bottom-10 right-4 md:right-8 lg:right-16 z-20 flex gap-3 items-center"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
+      >
+        {/* Mute Button - only visible in AOTY mode, positioned absolutely to not affect layout */}
+        <div className="relative">
+          {aotyMode && (
+            <button
+              onClick={() => setIsMuted(!isMuted)}
+              className="absolute -left-12 top-1/2 -translate-y-1/2 text-white pointer-events-auto bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full p-3 transition-all duration-200 hover:scale-105 border border-neutral-200"
+              aria-label={isMuted ? "Unmute audio" : "Mute audio"}
+            >
+              {isMuted ? (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                  <line x1="23" y1="9" x2="17" y2="15"></line>
+                  <line x1="17" y1="9" x2="23" y2="15"></line>
+                </svg>
+              ) : (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                  <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                </svg>
+              )}
+            </button>
+          )}
+        </div>
+
+        {/* AOTY Mode Toggle - Always visible */}
+        <div className="flex gap-2 items-center justify-start px-3 py-1 rounded-full border border-neutral-200 bg-black/20 transition-all duration-200 hover:scale-105">
+          <Switch
+            checked={aotyMode}
+            onCheckedChange={setAotyMode}
+            aria-label="Toggle A0TY mode"
+            className="data-[state=checked]:bg-white border-neutral-200"
+          />
+          <p className="font-medium leading-[1.5] body-text-sm text-white whitespace-nowrap">A0TY MODE</p>
+        </div>
+      </motion.div>
       {aotyMode ? (
         /* AOTY Mode - Interactive 3D Cross */
         <HomeInteractiveCanvas key="aoty-canvas" isMuted={isMuted} />
@@ -75,67 +155,6 @@ export default function HeroSection() {
           </div>
         </>
       )}
-
-      {/* Controls - AOTY Mode Toggle and Mute Button */}
-      <motion.div
-        className="absolute bottom-8 md:bottom-9 lg:bottom-10 right-4 md:right-8 lg:right-16 z-20 flex gap-3 items-center"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
-      >
-        {/* Mute Button - only visible in AOTY mode */}
-        {aotyMode && (
-          <button
-            onClick={() => setIsMuted(!isMuted)}
-            className="text-white pointer-events-auto bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full p-3 transition-all duration-200 hover:scale-105 border border-neutral-200"
-            aria-label={isMuted ? "Unmute audio" : "Mute audio"}
-          >
-            {isMuted ? (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-                <line x1="23" y1="9" x2="17" y2="15"></line>
-                <line x1="17" y1="9" x2="23" y2="15"></line>
-              </svg>
-            ) : (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-                <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-              </svg>
-            )}
-          </button>
-        )}
-
-        {/* AOTY Mode Toggle */}
-        <div className="flex gap-2 items-center justify-start px-3 py-1 rounded-full border border-neutral-200 bg-black/20 transition-all duration-200 hover:scale-105">
-          <Switch
-            checked={aotyMode}
-            onCheckedChange={setAotyMode}
-            aria-label="Toggle A0TY mode"
-            className="data-[state=checked]:bg-white border-neutral-200"
-          />
-          <p className="font-medium leading-[1.5] body-text-sm  text-white whitespace-nowrap">A0TY MODE</p>
-        </div>
-      </motion.div>
     </section>
   );
 }

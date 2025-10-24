@@ -160,22 +160,23 @@ function InteractiveCross() {
   const currentMousePos = useRef<THREE.Vector3>(new THREE.Vector3());
   const { camera } = useThree();
 
-  // Global pointer move handler
+  // Global pointer move handler - only for desktop drag
   useEffect(() => {
     if (!isGrabbed) return;
 
-    const handleMove = (event: PointerEvent | TouchEvent) => {
+    // Check if we're on mobile - if so, don't attach global listeners
+    const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+    if (isMobile) return;
+
+    const handleMove = (event: PointerEvent) => {
       // Only prevent default when we're actively dragging to allow normal scrolling
       if (isGrabbed) {
         event.preventDefault();
       }
 
       if (rigidBodyRef.current) {
-        // Handle both pointer and touch events
-        const clientX = "touches" in event ? event.touches[0]?.clientX : event.clientX;
-        const clientY = "touches" in event ? event.touches[0]?.clientY : event.clientY;
-
-        if (clientX === undefined || clientY === undefined) return;
+        const clientX = event.clientX;
+        const clientY = event.clientY;
 
         const x = (clientX / window.innerWidth) * 2 - 1;
         const y = -(clientY / window.innerHeight) * 2 + 1;
@@ -190,9 +191,8 @@ function InteractiveCross() {
 
         // Clamp position to boundaries - match the actual wall positions
         const wallPadding = 1; // Keep cross slightly away from walls
-        const { width, height, ceilingHeightMultiplier, mobileWidth } = CONFIG.boundaries;
-        const effectiveWidth = typeof window !== "undefined" && window.innerWidth < 768 ? mobileWidth : width;
-        const halfWidth = effectiveWidth / 2 - wallPadding; // Match wall positions at effectiveWidth/2
+        const { width, height, ceilingHeightMultiplier } = CONFIG.boundaries;
+        const halfWidth = width / 2 - wallPadding; // Match wall positions at width/2
         const ceilingY = (height / 2) * ceilingHeightMultiplier;
         const floorY = -8; // Match the floor position
 
@@ -208,18 +208,13 @@ function InteractiveCross() {
       }
     };
 
-    const handleRelease = (event?: PointerEvent | TouchEvent) => {
+    const handleRelease = (event?: PointerEvent) => {
       if (rigidBodyRef.current && isGrabbed) {
         const pos = rigidBodyRef.current.translation();
         const currentPos = new THREE.Vector3(pos.x, pos.y, pos.z);
 
         const velocity = currentPos.clone().sub(currentMousePos.current);
-        // Use higher force multiplier on mobile due to smaller boundaries
-        const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
-        const forceMultiplier = isMobile
-          ? CONFIG.physics.interaction.mobileThrowForceMultiplier
-          : CONFIG.physics.interaction.throwForceMultiplier;
-        const throwForce = velocity.multiplyScalar(forceMultiplier);
+        const throwForce = velocity.multiplyScalar(CONFIG.physics.interaction.throwForceMultiplier);
 
         rigidBodyRef.current.setLinvel({ x: throwForce.x, y: throwForce.y, z: 0 }, true);
 
@@ -236,84 +231,63 @@ function InteractiveCross() {
 
     window.addEventListener("pointermove", handleMove);
     window.addEventListener("pointerup", handleRelease);
-    // Add touch events for better mobile support
-    window.addEventListener("touchmove", handleMove as EventListener);
-    window.addEventListener("touchend", (event) => handleRelease(event));
-    window.addEventListener("touchcancel", (event) => {
-      setIsGrabbed(false);
-    });
 
     return () => {
       window.removeEventListener("pointermove", handleMove);
       window.removeEventListener("pointerup", handleRelease);
-      window.removeEventListener("touchmove", handleMove as EventListener);
-      window.removeEventListener("touchend", (event) => handleRelease(event));
-      window.removeEventListener("touchcancel", (event) => {
-        setIsGrabbed(false);
-      });
     };
   }, [isGrabbed, camera]);
 
-  // Add touch tap listener for mobile - tap anywhere on screen to move cross
+  // Mobile tap interaction - tap anywhere on screen to throw cross
   useEffect(() => {
-    const handleTouchTap = (event: TouchEvent) => {
+    const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+    if (!isMobile) return;
+
+    const handleMobileTap = (event: TouchEvent) => {
       // Only handle if we're not already grabbed and on mobile
-      if (!isGrabbed && rigidBodyRef.current && window.innerWidth < 768) {
-        // Get touch coordinates
-        const touch = event.touches[0];
-        if (!touch) return;
+      if (isGrabbed || !rigidBodyRef.current) return;
 
-        event.preventDefault();
+      // Check if hero section is in view
+      const heroSection = document.querySelector("section");
+      if (!heroSection) return;
 
-        // Apply a much gentler random throw force on tap
-        const randomForce = {
-          x: (Math.random() - 0.5) * 3, // Much gentler horizontal force
-          y: Math.random() * 2 + 1, // Much gentler upward force
-          z: 0,
-        };
+      const rect = heroSection.getBoundingClientRect();
+      const isInView = rect.top < window.innerHeight && rect.bottom > 0;
+      if (!isInView) return;
 
-        // Apply the force
-        rigidBodyRef.current.setLinvel(randomForce, true);
+      event.preventDefault();
 
-        // Add some gentle random rotation
-        const randomTorque = {
-          x: (Math.random() - 0.5) * 1.5, // Much gentler rotation
-          y: (Math.random() - 0.5) * 1.5, // Much gentler rotation
-          z: (Math.random() - 0.5) * 1, // Much gentler rotation
-        };
-        rigidBodyRef.current.setAngvel(randomTorque, true);
-      }
+      // Apply stronger random throw force on tap
+      const randomForce = {
+        x: (Math.random() > 0.5 ? 1 : -1) * (Math.random() * 15 + 5), // Random left or right with strong force (5 to 20)
+        y: Math.random() * 8 + 4, // Stronger upward force (4 to 12)
+        z: 0,
+      };
+
+      // Apply the force
+      rigidBodyRef.current.setLinvel(randomForce, true);
+
+      // Add stronger random rotation
+      const randomTorque = {
+        x: (Math.random() - 0.5) * 2, // Stronger rotation (-1 to +1)
+        y: (Math.random() - 0.5) * 2, // Stronger rotation (-1 to +1)
+        z: (Math.random() - 0.5) * 1.5, // Stronger rotation (-0.75 to +0.75)
+      };
+      rigidBodyRef.current.setAngvel(randomTorque, true);
     };
 
-    window.addEventListener("touchstart", handleTouchTap, { passive: false });
+    window.addEventListener("touchstart", handleMobileTap, { passive: false });
 
     return () => {
-      window.removeEventListener("touchstart", handleTouchTap);
+      window.removeEventListener("touchstart", handleMobileTap);
     };
-  }, []); // Remove isGrabbed dependency to prevent re-registration
+  }, [isGrabbed]);
 
   const handlePointerDown = (event: ThreeEvent<PointerEvent>) => {
+    // Only handle on desktop
+    if (window.innerWidth < 768) return;
+
     event.stopPropagation();
-
-    if (rigidBodyRef.current) {
-      // Freeze the cross
-      rigidBodyRef.current.setLinvel({ x: 0, y: 0, z: 0 }, true);
-      rigidBodyRef.current.setAngvel({ x: 0, y: 0, z: 0 }, true);
-
-      // Store current position
-      const pos = rigidBodyRef.current.translation();
-      currentMousePos.current.set(pos.x, pos.y, pos.z);
-
-      setIsGrabbed(true);
-    }
-  };
-
-  const handleTouchStart = (event: ThreeEvent<TouchEvent>) => {
-    event.stopPropagation();
-    // Prevent default to avoid scrolling while dragging
-    if (event.nativeEvent) {
-      event.nativeEvent.preventDefault();
-    }
 
     if (rigidBodyRef.current) {
       // Freeze the cross
@@ -528,7 +502,7 @@ export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }
       className="w-full relative"
       style={{
         height: "calc(100vh - 6rem)",
-        touchAction: "none", // Disable all touch actions to allow custom handling
+        touchAction: isMobile ? "pan-y" : "none", // Allow vertical scrolling on mobile
         WebkitUserSelect: "none",
         userSelect: "none",
         WebkitTouchCallout: "none", // Disable iOS callout menu
