@@ -6,14 +6,7 @@ export const metadata: Metadata = {
   title: "Contact Opac | Get in Touch",
   description:
     "Connect with Opac. Reach out via phone at +351 915 006 659 or email at weareopac@gmail.com for collaborations, inquiries, and creative partnerships.",
-  keywords: [
-    "contact opac",
-    "get in touch",
-    "collaboration",
-    "inquiries",
-    "creative partnerships",
-    "portugal contact",
-  ],
+  keywords: ["contact opac", "get in touch", "collaboration", "inquiries", "creative partnerships", "portugal contact"],
   authors: [{ name: "Opac" }],
   creator: "Opac",
   publisher: "Opac",
@@ -21,11 +14,11 @@ export const metadata: Metadata = {
     title: "Contact Opac | Get in Touch",
     description:
       "Connect with Opac for collaborations, inquiries, and creative partnerships. Phone: +351 915 006 659 | Email: weareopac@gmail.com",
-    url: "https://weareopac.com/contact",
+    url: "https://opacweb.pt/contact",
     siteName: "Opac",
     images: [
       {
-        url: "/og-contact.jpg",
+        url: "/logo.webp",
         width: 1200,
         height: 630,
         alt: "Contact Opac - Get in Touch",
@@ -37,12 +30,11 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Contact Opac | Get in Touch",
-    description:
-      "Connect with Opac for collaborations and creative partnerships.",
-    images: ["/twitter-contact.jpg"],
+    description: "Connect with Opac for collaborations and creative partnerships.",
+    images: ["/logo.webp"],
   },
   alternates: {
-    canonical: "https://weareopac.com/contact",
+    canonical: "https://opacweb.pt/contact",
   },
   robots: {
     index: true,

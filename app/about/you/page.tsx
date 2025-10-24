@@ -28,11 +28,11 @@ export const metadata: Metadata = {
     title: "Services | What We Offer at Opac",
     description:
       "From music production to visual storytelling - discover Opac's full range of creative services including sound design, merchandise, branding, and art direction.",
-    url: "https://weareopac.com/about/you",
+    url: "https://opacweb.pt/about/you",
     siteName: "Opac",
     images: [
       {
-        url: "/og-services.jpg",
+        url: "/logo.webp",
         width: 1200,
         height: 630,
         alt: "Opac Services - Creative Production & Design",
@@ -45,10 +45,10 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Services | What We Offer at Opac",
     description: "Musical Production • Merchandise Design • Branding • Photography & Art Direction",
-    images: ["/twitter-services.jpg"],
+    images: ["/logo.webp"],
   },
   alternates: {
-    canonical: "https://weareopac.com/about/you",
+    canonical: "https://opacweb.pt/about/you",
   },
   robots: {
     index: true,

@@ -23,13 +23,12 @@ export const metadata: Metadata = {
   publisher: "Opac",
   openGraph: {
     title: "Opac Media | Music, Videos & Pictures",
-    description:
-      "Explore Opac's creative output across music, video, and photography. Experience our artistic vision.",
-    url: "https://weareopac.com/media",
+    description: "Explore Opac's creative output across music, video, and photography. Experience our artistic vision.",
+    url: "https://opacweb.pt/media",
     siteName: "Opac",
     images: [
       {
-        url: "/og-media.jpg",
+        url: "/logo.webp",
         width: 1200,
         height: 630,
         alt: "Opac Media - Music, Videos & Pictures",
@@ -42,10 +41,10 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Opac Media | Music, Videos & Pictures",
     description: "Explore Opac's creative output across multiple mediums.",
-    images: ["/twitter-media.jpg"],
+    images: ["/logo.webp"],
   },
   alternates: {
-    canonical: "https://weareopac.com/media",
+    canonical: "https://opacweb.pt/media",
   },
   robots: {
     index: true,
@@ -62,11 +61,7 @@ export const metadata: Metadata = {
 
 export default async function MediaPage() {
   // Fetch all media data on the server
-  const [pictures, videos, music] = await Promise.all([
-    getPictures(),
-    getVideos(),
-    getMusic(),
-  ]);
+  const [pictures, videos, music] = await Promise.all([getPictures(), getVideos(), getMusic()]);
 
   return (
     <MediaPageContent

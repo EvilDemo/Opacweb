@@ -13,14 +13,9 @@ interface PicturePageProps {
   }>;
 }
 
-export async function generateMetadata({
-  params,
-}: PicturePageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: PicturePageProps): Promise<Metadata> {
   const { id } = await params;
-  const [allPictures, gallery] = await Promise.all([
-    getPictures(),
-    getGallery(id),
-  ]);
+  const [allPictures, gallery] = await Promise.all([getPictures(), getGallery(id)]);
 
   const picture = allPictures.find((p) => p._id === id);
 
@@ -54,7 +49,7 @@ export async function generateMetadata({
     openGraph: {
       title: `${picture.title} | Opac Picture Gallery`,
       description: `${picture.description} Explore ${imageCount} images in this collection.`,
-      url: `https://weareopac.com/media/pictures/${id}`,
+      url: `https://opacweb.pt/media/pictures/${id}`,
       siteName: "Opac",
       images: [
         {
@@ -80,7 +75,7 @@ export async function generateMetadata({
       images: [picture.thumbnailUrl],
     },
     alternates: {
-      canonical: `https://weareopac.com/media/pictures/${id}`,
+      canonical: `https://opacweb.pt/media/pictures/${id}`,
     },
     robots: {
       index: true,
@@ -98,10 +93,7 @@ export async function generateMetadata({
 
 export default async function PicturePage({ params }: PicturePageProps) {
   const { id } = await params;
-  const [allPictures, gallery] = await Promise.all([
-    getPictures(),
-    getGallery(id),
-  ]);
+  const [allPictures, gallery] = await Promise.all([getPictures(), getGallery(id)]);
 
   const picture = allPictures.find((p) => p._id === id);
 

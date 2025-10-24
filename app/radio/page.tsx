@@ -24,13 +24,12 @@ export const metadata: Metadata = {
   publisher: "Opac",
   openGraph: {
     title: "Opac Radio | Curated Playlists & Shows",
-    description:
-      "Discover Opac Radio - our curated playlists and radio shows. Experience our musical curation.",
-    url: "https://weareopac.com/radio",
+    description: "Discover Opac Radio - our curated playlists and radio shows. Experience our musical curation.",
+    url: "https://opacweb.pt/radio",
     siteName: "Opac",
     images: [
       {
-        url: "/og-radio.jpg",
+        url: "/logo.webp",
         width: 1200,
         height: 630,
         alt: "Opac Radio - Curated Playlists & Shows",
@@ -43,10 +42,10 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Opac Radio | Curated Playlists & Shows",
     description: "Discover Opac Radio - our curated playlists and radio shows.",
-    images: ["/twitter-radio.jpg"],
+    images: ["/logo.webp"],
   },
   alternates: {
-    canonical: "https://weareopac.com/radio",
+    canonical: "https://opacweb.pt/radio",
   },
   robots: {
     index: true,

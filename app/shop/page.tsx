@@ -1,8 +1,59 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Shop | OPAC",
-  description: "Discover and purchase OPAC merchandise and music.",
+  title: "Shop | Opac - Merchandise & Music",
+  description:
+    "Discover and purchase Opac merchandise, music, and exclusive releases. Shop our curated collection of clothing, accessories, and digital content.",
+  keywords: [
+    "opac shop",
+    "merchandise",
+    "music",
+    "clothing",
+    "accessories",
+    "digital content",
+    "exclusive releases",
+    "portugal shop",
+    "creative merchandise",
+  ],
+  authors: [{ name: "Opac" }],
+  creator: "Opac",
+  publisher: "Opac",
+  openGraph: {
+    title: "Shop | Opac - Merchandise & Music",
+    description: "Discover and purchase Opac merchandise, music, and exclusive releases. Shop our curated collection.",
+    url: "https://opacweb.pt/shop",
+    siteName: "Opac",
+    images: [
+      {
+        url: "/logo.webp",
+        width: 1200,
+        height: 630,
+        alt: "Opac Shop - Merchandise & Music",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Shop | Opac - Merchandise & Music",
+    description: "Discover and purchase Opac merchandise and exclusive releases.",
+    images: ["/logo.webp"],
+  },
+  alternates: {
+    canonical: "https://opacweb.pt/shop",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
 };
 
 export default function ShopPage() {
