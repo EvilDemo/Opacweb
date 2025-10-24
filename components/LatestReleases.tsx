@@ -110,7 +110,10 @@ export function LatestReleases({ pictures, videos, music }: LatestReleasesProps)
             <CarouselContent className="-ml-2">
               <AnimatePresence>
                 {latestItems.map((item, index) => (
-                  <CarouselItem key={item._id} className="pl-2 md:pl-8 py-4 basis-full sm:basis-1/2 lg:basis-1/3 ">
+                  <CarouselItem
+                    key={item._id}
+                    className="  py-4 basis-full sm:basis-1/2 lg:basis-1/3 xl:basis-1/4 2xl:basis-1/5"
+                  >
                     <motion.div
                       className="w-full"
                       initial={{ opacity: 0, scale: 0.9, y: 20 }}
