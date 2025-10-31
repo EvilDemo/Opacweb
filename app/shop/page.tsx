@@ -1,4 +1,6 @@
 import { Metadata } from "next";
+import { ProductGrid } from "@/components/commerce/ProductGrid";
+import { getProducts, isShopifyConfigured } from "@/lib/shopify";
 
 export const metadata: Metadata = {
   title: "Shop | Opac - Merchandise & Music",
@@ -56,17 +58,59 @@ export const metadata: Metadata = {
   },
 };
 
-export default function ShopPage() {
+export default async function ShopPage() {
+  let products = [];
+  let error = null;
+  const shopifyConfigured = isShopifyConfigured();
+
+  if (!shopifyConfigured) {
+    error = "Shopify is not configured. Please add your Shopify credentials to .env.local";
+  } else {
+    try {
+      const result = await getProducts(20);
+      products = result.products;
+    } catch (err) {
+      console.error("Error fetching products:", err);
+      error = err instanceof Error ? err.message : "Failed to load products";
+    }
+  }
+
   return (
-    <section className="flex items-center justify-center bg-black text-white padding-global py-16 min-h-[calc(100vh-6rem)]">
-      <div className="max-w-4xl mx-auto text-center flex flex-col items-center justify-center gap-4 h-full">
-        <div className="bg-neutral-900 rounded-lg p-12 border border-neutral-800">
-          <h2 className="heading-2 mb-4">Coming Soon</h2>
-          <p className="body-large text-gray-400">
-            Our shop is currently under development. Check back soon for exclusive OPAC merchandise and music releases.
-          </p>
-        </div>
+    <section className="flex flex-col bg-black text-white min-h-[calc(100vh-6rem)] py-16">
+      <div className="padding-global mb-12">
+        <h1 className="heading-1 mb-4">Shop</h1>
+        <p className="body-text-lg text-neutral-400">
+          Discover our curated collection of merchandise and exclusive releases.
+        </p>
       </div>
+
+      {error ? (
+        <div className="padding-global">
+          <div className="bg-neutral-900 rounded-lg p-12 border border-neutral-800 text-center max-w-2xl mx-auto">
+            <h2 className="heading-2 mb-4">Shop Configuration Required</h2>
+            <p className="body-text text-gray-400 mb-6">{error}</p>
+            <div className="bg-black rounded-lg p-6 border border-neutral-800 text-left">
+              <p className="body-text-sm text-white mb-4 font-semibold">Add these to your .env.local file:</p>
+              <pre className="text-xs text-neutral-300 overflow-x-auto">
+                {`NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN=your-store.myshopify.com
+NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN=your-access-token
+NEXT_PUBLIC_SHOP_ENABLED=true`}
+              </pre>
+            </div>
+          </div>
+        </div>
+      ) : products.length === 0 ? (
+        <div className="padding-global">
+          <div className="bg-neutral-900 rounded-lg p-12 border border-neutral-800 text-center">
+            <h2 className="heading-2 mb-4">No products found</h2>
+            <p className="body-text text-gray-400">
+              Add some products to your Shopify store to see them here.
+            </p>
+          </div>
+        </div>
+      ) : (
+        <ProductGrid products={products} />
+      )}
     </section>
   );
 }
