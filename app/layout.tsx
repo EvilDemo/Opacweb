@@ -9,6 +9,8 @@ import Footer from "@/components/Footer";
 import { Navbar } from "@/components/Navbar";
 import RouteLoader from "@/components/RouteLoader";
 import { LoaderProvider } from "@/components/loaders/LoaderContext";
+import { CartProvider } from "@/components/commerce/CartContext";
+import { Toaster } from "@/components/ui/sonner";
 
 //Importing Font
 const geist = Geist({
@@ -111,11 +113,14 @@ export default function RootLayout({
           Skip to main content
         </a>
         <LoaderProvider>
-          <Navbar />
-          <RouteLoader minimumLoadTime={3000}>
-            <main id="main-content">{children}</main>
-            <Footer />
-          </RouteLoader>
+          <CartProvider>
+            <Navbar />
+            <RouteLoader minimumLoadTime={3000}>
+              <main id="main-content">{children}</main>
+              <Footer />
+            </RouteLoader>
+            <Toaster />
+          </CartProvider>
         </LoaderProvider>
       </body>
     </html>

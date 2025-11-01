@@ -14,8 +14,7 @@ const CART_COOKIE_MAX_AGE = 60 * 60 * 24 * 30; // 30 days
 // GET - Retrieve cart
 export async function GET(request: NextRequest) {
   try {
-    const cookieStore = await cookies();
-    const cartId = cookieStore.get(CART_COOKIE)?.value;
+    const cartId = cookies().get(CART_COOKIE)?.value;
 
     if (!cartId) {
       return NextResponse.json({ cart: null });
@@ -25,7 +24,7 @@ export async function GET(request: NextRequest) {
 
     if (!cart) {
       // Clear invalid cart cookie
-      cookieStore.delete(CART_COOKIE);
+      cookies().delete(CART_COOKIE);
       return NextResponse.json({ cart: null });
     }
 
@@ -46,9 +45,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "variantId is required" }, { status: 400 });
     }
 
-    const cookieStore = await cookies();
     let cart;
-    const existingCartId = cartId || cookieStore.get(CART_COOKIE)?.value;
+    const existingCartId = cartId || cookies().get(CART_COOKIE)?.value;
 
     if (existingCartId) {
       // Add to existing cart
@@ -64,7 +62,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Set cart cookie
-    cookieStore.set(CART_COOKIE, cart.id, {
+    cookies().set(CART_COOKIE, cart.id, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
@@ -92,8 +90,7 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ error: "updates array is required" }, { status: 400 });
     }
 
-    const cookieStore = await cookies();
-    const existingCartId = cartId || cookieStore.get(CART_COOKIE)?.value;
+    const existingCartId = cartId || cookies().get(CART_COOKIE)?.value;
 
     if (!existingCartId) {
       return NextResponse.json({ error: "Cart not found" }, { status: 404 });
@@ -121,8 +118,7 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: "lineIds are required" }, { status: 400 });
     }
 
-    const cookieStore = await cookies();
-    const cartId = cookieStore.get(CART_COOKIE)?.value;
+    const cartId = cookies().get(CART_COOKIE)?.value;
 
     if (!cartId) {
       return NextResponse.json({ error: "Cart not found" }, { status: 404 });
@@ -132,7 +128,7 @@ export async function DELETE(request: NextRequest) {
 
     // If cart is empty, remove the cookie
     if (cart.totalQuantity === 0) {
-      cookieStore.delete(CART_COOKIE);
+      cookies().delete(CART_COOKIE);
     }
 
     return NextResponse.json({ cart });

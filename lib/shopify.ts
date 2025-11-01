@@ -1,9 +1,9 @@
 import { createStorefrontApiClient, type StorefrontApiClient } from "@shopify/storefront-api-client";
-import type { Product, ProductVariant, Cart, CartLine } from "@/types/commerce";
+import type { Product, ProductVariant, Cart, CartLine, CheckoutInput, ShippingAddress } from "@/types/commerce";
 
 const domain = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN;
 const storefrontAccessToken = process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN;
-const apiVersion = process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_API_VERSION || "2025-10";
+const apiVersion = process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_API_VERSION || "2024-10";
 
 // Helper to check if Shopify is configured
 export function isShopifyConfigured(): boolean {
@@ -221,6 +221,10 @@ const CREATE_CART_MUTATION = `
                     amount
                     currencyCode
                   }
+                  selectedOptions {
+                    name
+                    value
+                  }
                   product {
                     title
                     handle
@@ -282,6 +286,10 @@ const ADD_TO_CART_MUTATION = `
                   price {
                     amount
                     currencyCode
+                  }
+                  selectedOptions {
+                    name
+                    value
                   }
                   product {
                     title
@@ -401,6 +409,10 @@ const UPDATE_CART_LINES_MUTATION = `
                     amount
                     currencyCode
                   }
+                  selectedOptions {
+                    name
+                    value
+                  }
                   product {
                     title
                     handle
@@ -462,6 +474,10 @@ const REMOVE_FROM_CART_MUTATION = `
                   price {
                     amount
                     currencyCode
+                  }
+                  selectedOptions {
+                    name
+                    value
                   }
                   product {
                     title
@@ -565,13 +581,14 @@ function transformCart(shopifyCart: any): Cart {
         currencyCode: edge.node.cost.totalAmount.currencyCode,
       },
     },
+    productTitle: edge.node.merchandise.product.title,
     merchandise: {
       id: edge.node.merchandise.id,
       title: edge.node.merchandise.title,
       price: edge.node.merchandise.price.amount,
       currencyCode: edge.node.merchandise.price.currencyCode,
       availableForSale: true,
-      selectedOptions: [],
+      selectedOptions: edge.node.merchandise.selectedOptions || [],
       image: edge.node.merchandise.product.images.edges[0]?.node
         ? {
             id: "",

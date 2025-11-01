@@ -15,7 +15,10 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { getVisibleNavItems, getShopItem } from "@/lib/constants";
-import { Instagram, Youtube, Music } from "lucide-react";
+import { Instagram, Youtube, Music, ShoppingCart } from "lucide-react";
+import { CartSidebar } from "@/components/commerce/CartSidebar";
+import { SHOP_CONFIG } from "@/lib/constants";
+import { useCartItemCount } from "./commerce/CartContext";
 
 // Custom TikTok Icon Component
 const TikTokIcon = ({ className }: { className?: string }) => (
@@ -164,6 +167,45 @@ const ShopButton = () => {
           {shopItem.label}
         </Button>
       </Link>
+    </motion.div>
+  );
+};
+
+const CartIcon = () => {
+  const cartItemCount = useCartItemCount();
+
+  if (!SHOP_CONFIG.ENABLED) return null;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: 20 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{
+        duration: 0.6,
+        ease: "easeOut",
+        delay: 0.7,
+      }}
+      whileHover={{
+        scale: 1.05,
+        transition: { duration: 0.15, ease: "easeOut" },
+      }}
+    >
+      <CartSidebar>
+        <div className="relative inline-block focus:outline-none focus-visible:outline-none focus-visible:ring-0 [&:has(button:focus-visible)]:outline-none [&:has(button:focus-visible)]:ring-0">
+          <Button variant="secondary" className="h-10 w-10 p-0">
+            <ShoppingCart className="h-5 w-5" />
+          </Button>
+          {cartItemCount > 0 && (
+            <span 
+              className="absolute -top-1 -right-1 bg-white text-black rounded-full w-5 h-5 flex items-center justify-center text-xs font-semibold z-10 pointer-events-none focus-visible:outline-none"
+              style={{ outline: 'none', boxShadow: 'none', border: 'none' }}
+              tabIndex={-1}
+            >
+              {cartItemCount}
+            </span>
+          )}
+        </div>
+      </CartSidebar>
     </motion.div>
   );
 };
@@ -393,9 +435,10 @@ export function Navbar() {
             <Logo />
           </Link>
 
-          {/* Right side - Shop button (desktop) and Mobile menu button */}
+          {/* Right side - Shop button (desktop), Cart icon, and Mobile menu button */}
           <div className="flex-1 max-w-1/3 flex items-center justify-end space-x-2.5">
             <ShopButton />
+            <CartIcon />
             <MobileMenuButton isOpen={isOpen} setIsOpen={setIsOpen} />
           </div>
         </div>

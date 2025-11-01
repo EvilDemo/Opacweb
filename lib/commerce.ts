@@ -10,7 +10,7 @@ export {
   getCart,
   updateCartLines,
   removeFromCart,
-} from "./shopify";
+} from "./shopify/index";
 
 export type {
   Product,

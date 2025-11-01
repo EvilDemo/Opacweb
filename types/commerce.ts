@@ -77,6 +77,7 @@ export interface CartLine {
     };
   };
   merchandise: ProductVariant;
+  productTitle: string;
 }
 
 export interface ShopifyError {

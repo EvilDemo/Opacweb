@@ -61,6 +61,9 @@
   --radius-sm: 0.25rem; /* 4px - matches Figma rounded-4 */
   --radius-full: 9999px; /* matches Figma Infinite */
 
+  /* Layout Heights */
+  --navbar-height: 94px; /* Logo (62px) + padding (32px) */
+
   /* Core Colors - Based on Figma Design System */
   --white: #ffffff;
   --black: #000000;
@@ -179,6 +182,25 @@
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
   }
+
+  /* Ensure sonner toasts are visible */
+  [data-sonner-toaster] {
+    z-index: 9999 !important;
+  }
+
+  [data-sonner-toast] {
+    color: white !important;
+  }
+
+  [data-sonner-toast] [data-title] {
+    color: white !important;
+    display: block !important;
+  }
+
+  [data-sonner-toast] [data-description] {
+    color: rgba(255, 255, 255, 0.8) !important;
+    display: block !important;
+  }
 }
 
 @layer utilities {
@@ -279,6 +301,18 @@
   /* Page Padding - From Figma */
   .padding-global {
     @apply px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16; /* Responsive: 16px mobile -> 64px desktop */
+  }
+
+  /* Gradient left border for sheet component */
+  .sheet-gradient-left::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.5), transparent);
+    pointer-events: none;
   }
 
   /* Radio page horizontal scroll responsive behavior. we are using variables to set the transform on lg up.*/

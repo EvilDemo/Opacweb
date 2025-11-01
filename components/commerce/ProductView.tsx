@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { Price } from "./Price";
 import { AddToCartButton } from "./AddToCartButton";
 import { Button } from "@/components/ui/button";
@@ -51,8 +52,33 @@ export function ProductView({ product }: ProductViewProps) {
   const selectedImage = product.images[selectedImageIndex] || product.images[0];
 
   return (
-    <div className="padding-global py-16">
-      <div className="max-w-7xl mx-auto">
+    <div className="padding-global py-8 md:py-12 lg:py-16">
+      <div className=" mx-auto">
+        {/* Breadcrumb Navigation */}
+        <nav aria-label="Breadcrumb" className="mb-6 md:mb-8">
+          <ol className="flex items-center space-x-2 body-text-sm">
+            <li>
+              <Link href="/" className="text-muted hover:text-white transition-colors">
+                Home
+              </Link>
+            </li>
+            <li aria-hidden="true" className="text-muted">
+              /
+            </li>
+            <li>
+              <Link href="/shop" className="text-muted hover:text-white transition-colors">
+                Shop
+              </Link>
+            </li>
+            <li aria-hidden="true" className="text-muted">
+              /
+            </li>
+            <li aria-current="page" className="text-white">
+              {product.title}
+            </li>
+          </ol>
+        </nav>
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Product Images */}
           <div className="space-y-4">
@@ -95,9 +121,7 @@ export function ProductView({ product }: ProductViewProps) {
           <div className="space-y-6">
             <div>
               <h1 className="heading-1 mb-4">{product.title}</h1>
-              {product.vendor && (
-                <p className="body-text-lg text-neutral-400 mb-4">{product.vendor}</p>
-              )}
+              {product.vendor && <p className="body-text-lg text-neutral-400 mb-4">{product.vendor}</p>}
             </div>
 
             <Price
@@ -124,9 +148,7 @@ export function ProductView({ product }: ProductViewProps) {
                   {option.values.map((value) => (
                     <Button
                       key={value}
-                      variant={
-                        selectedOptions[option.name] === value ? "default" : "secondary"
-                      }
+                      variant={selectedOptions[option.name] === value ? "default" : "secondary"}
                       onClick={() => handleOptionChange(option.name, value)}
                       className="min-w-[80px]"
                     >
@@ -149,9 +171,7 @@ export function ProductView({ product }: ProductViewProps) {
             {/* Additional Info */}
             {product.tags.length > 0 && (
               <div className="pt-6 border-t border-neutral-800">
-                <p className="body-text-sm text-neutral-400">
-                  Tags: {product.tags.join(", ")}
-                </p>
+                <p className="body-text-sm text-neutral-400">Tags: {product.tags.join(", ")}</p>
               </div>
             )}
           </div>
@@ -160,4 +180,3 @@ export function ProductView({ product }: ProductViewProps) {
     </div>
   );
 }
-

@@ -1,71 +1,78 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useOptimistic, useTransition } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Price } from "./Price";
+import { useCart } from "./CartContext";
+import { updateCartLineAction, removeFromCartAction } from "@/lib/shopify/actions";
 import type { Cart } from "@/types/commerce";
 
 export function CartPageClient() {
-  const [cart, setCart] = useState<Cart | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { cart, isLoading, updateCart } = useCart();
+  const [isPending, startTransition] = useTransition();
 
-  const fetchCart = async () => {
-    try {
-      const response = await fetch("/api/cart");
-      const data = await response.json();
-      setCart(data.cart);
-    } catch (error) {
-      console.error("Error fetching cart:", error);
-    } finally {
-      setLoading(false);
+  // Optimistic cart state for instant UI updates
+  const [optimisticCart, setOptimisticCart] = useOptimistic(
+    cart,
+    (state: Cart | null, update: { type: string; lineId: string; quantity?: number }) => {
+      if (!state) return state;
+
+      if (update.type === "update") {
+        return {
+          ...state,
+          lines: state.lines.map((line) =>
+            line.id === update.lineId ? { ...line, quantity: update.quantity || line.quantity } : line
+          ),
+        };
+      }
+
+      if (update.type === "remove") {
+        return {
+          ...state,
+          lines: state.lines.filter((line) => line.id !== update.lineId),
+          totalQuantity: Math.max(0, state.totalQuantity - 1),
+        };
+      }
+
+      return state;
     }
-  };
-
-  useEffect(() => {
-    fetchCart();
-  }, []);
+  );
 
   const updateQuantity = async (lineId: string, quantity: number) => {
     if (quantity < 1) return;
 
-    try {
-      const response = await fetch("/api/cart", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          updates: [{ id: lineId, quantity }],
-        }),
-      });
+    startTransition(async () => {
+      // Optimistic update
+      setOptimisticCart({ type: "update", lineId, quantity });
 
-      if (response.ok) {
-        const data = await response.json();
-        setCart(data.cart);
+      const result = await updateCartLineAction(lineId, quantity);
+
+      if (result.error) {
+        // Only refresh on error to get correct state
+      } else {
+        updateCart(result.cart);
       }
-    } catch (error) {
-      console.error("Error updating cart:", error);
-    }
+    });
   };
 
   const removeItem = async (lineId: string) => {
-    try {
-      const response = await fetch(`/api/cart?lineIds=${lineId}`, {
-        method: "DELETE",
-      });
+    startTransition(async () => {
+      // Optimistic update
+      setOptimisticCart({ type: "remove", lineId });
 
-      if (response.ok) {
-        const data = await response.json();
-        setCart(data.cart);
+      const result = await removeFromCartAction([lineId]);
+
+      if (result.error) {
+        // Only refresh on error to get correct state
+      } else {
+        updateCart(result.cart);
       }
-    } catch (error) {
-      console.error("Error removing item:", error);
-    }
+    });
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[400px] padding-global py-16">
         <p className="body-text text-neutral-400">Loading cart...</p>
@@ -73,7 +80,7 @@ export function CartPageClient() {
     );
   }
 
-  if (!cart || cart.lines.length === 0) {
+  if (!optimisticCart || optimisticCart.lines.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px] padding-global py-16 space-y-6">
         <h1 className="heading-1">Shopping Cart</h1>
@@ -93,11 +100,8 @@ export function CartPageClient() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           {/* Cart Items */}
           <div className="lg:col-span-2 space-y-6">
-            {cart.lines.map((line) => (
-              <div
-                key={line.id}
-                className="flex flex-col sm:flex-row gap-6 pb-6 border-b border-neutral-800"
-              >
+            {optimisticCart.lines.map((line) => (
+              <div key={line.id} className="flex flex-col sm:flex-row gap-6 pb-6 border-b border-neutral-800">
                 {line.merchandise.image && (
                   <div className="relative w-full sm:w-32 h-32 flex-shrink-0 rounded-lg overflow-hidden bg-neutral-900">
                     <Image
@@ -110,7 +114,14 @@ export function CartPageClient() {
                   </div>
                 )}
                 <div className="flex-1 min-w-0">
-                  <h3 className="heading-4 mb-2">{line.merchandise.title}</h3>
+                  <h3 className="heading-4 mb-2">{line.productTitle}</h3>
+                  {line.merchandise.selectedOptions
+                    .filter((opt) => opt.name.toLowerCase() === "size")
+                    .map((opt) => (
+                      <p key={opt.name} className="body-text-sm text-neutral-400 mb-2">
+                        Size: {opt.value}
+                      </p>
+                    ))}
                   <Price
                     price={line.cost.totalAmount.amount}
                     currencyCode={line.cost.totalAmount.currencyCode}
@@ -124,6 +135,7 @@ export function CartPageClient() {
                         size="sm"
                         onClick={() => updateQuantity(line.id, line.quantity - 1)}
                         className="h-9 w-9 p-0"
+                        disabled={isPending}
                       >
                         -
                       </Button>
@@ -133,6 +145,7 @@ export function CartPageClient() {
                         size="sm"
                         onClick={() => updateQuantity(line.id, line.quantity + 1)}
                         className="h-9 w-9 p-0"
+                        disabled={isPending}
                       >
                         +
                       </Button>
@@ -142,6 +155,7 @@ export function CartPageClient() {
                       size="sm"
                       onClick={() => removeItem(line.id)}
                       className="text-neutral-400 hover:text-white"
+                      disabled={isPending}
                     >
                       Remove
                     </Button>
@@ -160,22 +174,31 @@ export function CartPageClient() {
                 <div className="flex justify-between items-center">
                   <span className="body-text text-neutral-400">Subtotal</span>
                   <Price
-                    price={cart.cost.subtotalAmount.amount}
-                    currencyCode={cart.cost.subtotalAmount.currencyCode}
+                    price={optimisticCart.cost.subtotalAmount.amount}
+                    currencyCode={optimisticCart.cost.subtotalAmount.currencyCode}
                   />
                 </div>
                 <div className="flex justify-between items-center pt-4 border-t border-neutral-800">
                   <span className="body-text-lg text-white font-semibold">Total</span>
                   <Price
-                    price={cart.cost.totalAmount.amount}
-                    currencyCode={cart.cost.totalAmount.currencyCode}
+                    price={optimisticCart.cost.totalAmount.amount}
+                    currencyCode={optimisticCart.cost.totalAmount.currencyCode}
                     size="lg"
                   />
                 </div>
               </div>
 
-              <Button variant="default" className="w-full" asChild>
-                <Link href="/checkout">Proceed to Checkout</Link>
+              <Button
+                variant="default"
+                className="w-full"
+                onClick={() => {
+                  if (optimisticCart?.checkoutUrl) {
+                    window.location.href = optimisticCart.checkoutUrl;
+                  }
+                }}
+                disabled={!optimisticCart?.checkoutUrl}
+              >
+                Proceed to Checkout
               </Button>
               <Button variant="secondary" className="w-full" asChild>
                 <Link href="/shop">Continue Shopping</Link>
@@ -187,4 +210,3 @@ export function CartPageClient() {
     </div>
   );
 }
-

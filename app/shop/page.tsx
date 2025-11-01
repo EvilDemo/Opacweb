@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import { ProductGrid } from "@/components/commerce/ProductGrid";
 import { getProducts, isShopifyConfigured } from "@/lib/shopify";
+import type { Product } from "@/types/commerce";
 
 export const metadata: Metadata = {
   title: "Shop | Opac - Merchandise & Music",
@@ -59,8 +60,8 @@ export const metadata: Metadata = {
 };
 
 export default async function ShopPage() {
-  let products = [];
-  let error = null;
+  let products: Product[] = [];
+  let error: string | null = null;
   const shopifyConfigured = isShopifyConfigured();
 
   if (!shopifyConfigured) {
