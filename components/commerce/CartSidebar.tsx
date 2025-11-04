@@ -178,7 +178,7 @@ export function CartSidebar({ children }: CartSidebarProps) {
         className="w-full sm:max-w-lg !top-[var(--navbar-height)] !h-[calc(100vh-var(--navbar-height))] pl-1"
         hideDefaultClose
       >
-        <SheetHeader className="px-4  py-4 flex flex-row items-center justify-between gap-0">
+        <SheetHeader className="px-4  py-4 flex flex-row items-center justify-between gap-0 flex-shrink-0">
           <SheetTitle className="heading-4">Your Cart</SheetTitle>
           <SheetClose asChild>
             <Button variant="secondary" size="sm">
@@ -187,21 +187,21 @@ export function CartSidebar({ children }: CartSidebarProps) {
           </SheetClose>
         </SheetHeader>
 
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
           {isLoading ? (
             <div className="flex-1 flex items-center justify-center ">
               <p className="body-text text-neutral-400">Loading cart...</p>
             </div>
           ) : !optimisticCart || optimisticCart.lines.length === 0 ? (
-            <div className="flex-1 flex flex-col items-center justify-center text-center space-y-4 ">
-              <p className="body-text-lg text-neutral-400">Your cart is empty</p>
+            <div className="flex-1 flex flex-col items-center justify-center text-center space-y-2 ">
+              <p className="body-text-sm text-neutral-400">Your cart is empty</p>
               <Button variant="link" onClick={() => setOpen(false)} asChild>
                 <Link href="/shop">Continue Shopping</Link>
               </Button>
             </div>
           ) : (
             <>
-              <div className="flex-1 overflow-y-auto space-y-6 py-6 ">
+              <div className="flex-1 min-h-0 overflow-y-auto space-y-6 py-6 px-4">
                 {optimisticCart.lines.map((line) => (
                   <div key={line.id} className="flex gap-4 pb-6 border-b border-neutral-800">
                     {line.merchandise.image && (
@@ -269,7 +269,7 @@ export function CartSidebar({ children }: CartSidebarProps) {
                 ))}
               </div>
 
-              <div className="border-t border-neutral-800 pt-6 space-y-4 px-4 pb-4">
+              <div className="flex-shrink-0 border-t border-neutral-800 pt-6 space-y-4 px-4 pb-4">
                 <div className="flex justify-between items-center">
                   <span className="body-text-lg text-neutral-400">Subtotal</span>
                   <Price

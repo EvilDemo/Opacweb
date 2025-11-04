@@ -3,11 +3,8 @@ export const SHOPIFY_DOMAIN = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN;
 export const SHOPIFY_ACCESS_TOKEN = process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN;
 
 export const CART_COOKIE = "cart_id";
-export const CART_COOKIE_MAX_AGE = 60 * 60 * 24 * 30; // 30 days
+export const CART_COOKIE_MAX_AGE = 60 * 60 * 24 * 2; // its doign 60 secs * 60 mins * 24 hours * x(2) days
 
 export function isShopifyConfigured(): boolean {
   return !!(SHOPIFY_DOMAIN && SHOPIFY_ACCESS_TOKEN);
 }
-
-
-
