@@ -6,3 +6,5 @@ export { getProducts, getProductByHandle } from "./products";
 export { createCart, addToCart, getCart, updateCartLines, removeFromCart } from "./cart";
 export * from "./types";
 
+
+

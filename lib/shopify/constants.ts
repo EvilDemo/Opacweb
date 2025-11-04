@@ -9,3 +9,5 @@ export function isShopifyConfigured(): boolean {
   return !!(SHOPIFY_DOMAIN && SHOPIFY_ACCESS_TOKEN);
 }
 
+
+
