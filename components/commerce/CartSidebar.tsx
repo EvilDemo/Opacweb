@@ -203,7 +203,7 @@ export function CartSidebar({ children }: CartSidebarProps) {
             <>
               <div className="flex-1 min-h-0 overflow-y-auto space-y-6 py-6 px-4">
                 {optimisticCart.lines.map((line) => (
-                  <div key={line.id} className="flex gap-4 pb-6 border-b border-neutral-800">
+                  <div key={line.id} className="flex gap-4 pb-6 border-gradient-bottom">
                     {line.merchandise.image && (
                       <div className="relative w-24 h-24 flex-shrink-0 rounded-lg overflow-hidden bg-neutral-900">
                         <Image
@@ -269,7 +269,7 @@ export function CartSidebar({ children }: CartSidebarProps) {
                 ))}
               </div>
 
-              <div className="flex-shrink-0 border-t border-neutral-800 pt-6 space-y-4 px-4 pb-4">
+              <div className="flex-shrink-0 border-gradient-top pt-6 space-y-4 px-4 pb-4">
                 <div className="flex justify-between items-center">
                   <span className="body-text-lg text-neutral-400">Subtotal</span>
                   <Price
@@ -290,7 +290,7 @@ export function CartSidebar({ children }: CartSidebarProps) {
                 >
                   Checkout
                 </Button>
-                <Button variant="link" className="w-full" onClick={() => setOpen(false)} asChild>
+                <Button variant="link" size="sm" className="w-full" onClick={() => setOpen(false)} asChild>
                   <Link href="/shop">Continue Shopping</Link>
                 </Button>
               </div>

@@ -315,6 +315,38 @@
     pointer-events: none;
   }
 
+  /* Gradient top border for cart footer */
+  .border-gradient-top {
+    position: relative;
+  }
+
+  .border-gradient-top::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.5), transparent);
+    pointer-events: none;
+  }
+
+  /* Gradient bottom border for cart items */
+  .border-gradient-bottom {
+    position: relative;
+  }
+
+  .border-gradient-bottom::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.5), transparent);
+    pointer-events: none;
+  }
+
   /* Radio page horizontal scroll responsive behavior. we are using variables to set the transform on lg up.*/
   .radio-horizontal-scroll {
     --horizontal-transform: 0%;
