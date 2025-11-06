@@ -29,7 +29,6 @@ interface LatestReleasesProps {
 
 export function LatestReleases({ pictures, videos, music }: LatestReleasesProps) {
   const [api, setApi] = useState<CarouselApi>();
-  const [current, setCurrent] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
 
   // Combine all media data and sort by updated date
@@ -45,14 +44,28 @@ export function LatestReleases({ pictures, videos, music }: LatestReleasesProps)
       return;
     }
 
-    setCurrent(api.selectedScrollSnap());
+    let timeoutId: ReturnType<typeof setTimeout> | undefined;
 
-    api.on("select", () => {
+    const handleSelect = () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+
       setIsAnimating(true);
-      setCurrent(api.selectedScrollSnap());
       // Reset animation state after transition
-      setTimeout(() => setIsAnimating(false), 300);
-    });
+      timeoutId = setTimeout(() => setIsAnimating(false), 300);
+    };
+
+    api.on("select", handleSelect);
+    // Trigger immediately to ensure state matches current slide
+    handleSelect();
+
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+      api.off("select", handleSelect);
+    };
   }, [api]);
 
   // Don't render if no items

@@ -1,5 +1,128 @@
 import { createStorefrontApiClient, type StorefrontApiClient } from "@shopify/storefront-api-client";
-import type { Product, ProductVariant, Cart, CartLine, CheckoutInput, ShippingAddress } from "@/types/commerce";
+import type { Product, ProductVariant, Cart, CartLine } from "@/types/commerce";
+
+type ShopifyEdge<TNode> = {
+  node: TNode;
+};
+
+type ShopifyPageInfo = {
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+  startCursor: string | null;
+  endCursor: string | null;
+};
+
+type ShopifyMoneyV2 = {
+  amount: string;
+  currencyCode: string;
+};
+
+type ShopifySelectedOption = {
+  name: string;
+  value: string;
+};
+
+type ShopifyImageNode = {
+  id?: string | null;
+  url: string;
+  altText?: string | null;
+  width?: number | null;
+  height?: number | null;
+};
+
+type ShopifyImageEdge = ShopifyEdge<ShopifyImageNode>;
+
+type ShopifyProductVariantNode = {
+  id: string;
+  title: string;
+  price: ShopifyMoneyV2;
+  compareAtPrice?: ShopifyMoneyV2 | null;
+  availableForSale: boolean;
+  selectedOptions: ShopifySelectedOption[];
+  image?: ShopifyImageNode | null;
+  sku?: string | null;
+  weight?: number | null;
+  weightUnit?: string | null;
+};
+
+type ShopifyProductVariantEdge = ShopifyEdge<ShopifyProductVariantNode>;
+
+type ShopifyProductOptionNode = {
+  id: string;
+  name: string;
+  values: string[];
+};
+
+type ShopifyProductNode = {
+  id: string;
+  handle: string;
+  title: string;
+  description: string;
+  descriptionHtml?: string | null;
+  vendor?: string | null;
+  productType?: string | null;
+  tags?: string[];
+  availableForSale: boolean;
+  priceRange: {
+    minVariantPrice: ShopifyMoneyV2;
+    maxVariantPrice: ShopifyMoneyV2;
+  };
+  images: {
+    edges: ShopifyImageEdge[];
+  };
+  variants: {
+    edges: ShopifyProductVariantEdge[];
+  };
+  options?: ShopifyProductOptionNode[];
+};
+
+type ShopifyProductEdge = ShopifyEdge<ShopifyProductNode>;
+
+type ShopifyProductsConnection = {
+  edges: ShopifyProductEdge[];
+  pageInfo: ShopifyPageInfo;
+};
+
+type ShopifyCartLineNode = {
+  id: string;
+  quantity: number;
+  cost: {
+    totalAmount: ShopifyMoneyV2;
+  };
+  merchandise: {
+    id: string;
+    title: string;
+    price: ShopifyMoneyV2;
+    selectedOptions?: ShopifySelectedOption[] | null;
+    product: {
+      title: string;
+      handle: string;
+      images: {
+        edges: Array<
+          ShopifyEdge<{
+            url: string;
+            altText?: string | null;
+          }>
+        >;
+      };
+    };
+  };
+};
+
+type ShopifyCartLineEdge = ShopifyEdge<ShopifyCartLineNode>;
+
+type ShopifyCart = {
+  id: string;
+  checkoutUrl: string;
+  totalQuantity: number;
+  lines: {
+    edges: ShopifyCartLineEdge[];
+  };
+  cost: {
+    totalAmount: ShopifyMoneyV2;
+    subtotalAmount: ShopifyMoneyV2;
+  };
+};
 
 const domain = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN;
 const storefrontAccessToken = process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN;
@@ -516,34 +639,37 @@ const REMOVE_FROM_CART_MUTATION = `
 `;
 
 // Helper function to transform Shopify product to our Product type
-function transformProduct(shopifyProduct: any): Product {
-  const variants = shopifyProduct.variants.edges.map((edge: any) => ({
-    id: edge.node.id,
-    title: edge.node.title,
-    price: edge.node.price.amount,
-    compareAtPrice: edge.node.compareAtPrice?.amount,
-    availableForSale: edge.node.availableForSale,
-    selectedOptions: edge.node.selectedOptions,
-    image: edge.node.image
+function transformProduct(shopifyProduct: ShopifyProductNode): Product {
+  const variants: ProductVariant[] = shopifyProduct.variants.edges.map(({ node }) => ({
+    id: node.id,
+    title: node.title,
+    price: node.price.amount,
+    compareAtPrice: node.compareAtPrice?.amount ?? undefined,
+    availableForSale: node.availableForSale,
+    selectedOptions: node.selectedOptions.map((option) => ({
+      name: option.name,
+      value: option.value,
+    })),
+    image: node.image
       ? {
-          id: edge.node.image.id,
-          url: edge.node.image.url,
-          altText: edge.node.image.altText,
-          width: edge.node.image.width,
-          height: edge.node.image.height,
+          id: node.image.id ?? "",
+          url: node.image.url,
+          altText: node.image.altText ?? undefined,
+          width: node.image.width ?? undefined,
+          height: node.image.height ?? undefined,
         }
       : undefined,
-    sku: edge.node.sku,
-    weight: edge.node.weight,
-    weightUnit: edge.node.weightUnit,
+    sku: node.sku ?? undefined,
+    weight: node.weight ?? undefined,
+    weightUnit: node.weightUnit ?? undefined,
   }));
 
-  const images = shopifyProduct.images.edges.map((edge: any) => ({
-    id: edge.node.id,
-    url: edge.node.url,
-    altText: edge.node.altText,
-    width: edge.node.width,
-    height: edge.node.height,
+  const images = shopifyProduct.images.edges.map(({ node }) => ({
+    id: node.id ?? "",
+    url: node.url,
+    altText: node.altText ?? undefined,
+    width: node.width ?? undefined,
+    height: node.height ?? undefined,
   }));
 
   const price = shopifyProduct.priceRange.minVariantPrice.amount;
@@ -557,47 +683,56 @@ function transformProduct(shopifyProduct: any): Product {
     handle: shopifyProduct.handle,
     title: shopifyProduct.title,
     description: shopifyProduct.description,
-    descriptionHtml: shopifyProduct.descriptionHtml,
+    descriptionHtml: shopifyProduct.descriptionHtml ?? undefined,
     price,
     compareAtPrice,
     currencyCode: shopifyProduct.priceRange.minVariantPrice.currencyCode,
     availableForSale: shopifyProduct.availableForSale,
     images,
     variants,
-    options: shopifyProduct.options || [],
-    tags: shopifyProduct.tags || [],
-    vendor: shopifyProduct.vendor,
-    productType: shopifyProduct.productType,
+    options: shopifyProduct.options ?? [],
+    tags: shopifyProduct.tags ?? [],
+    vendor: shopifyProduct.vendor ?? undefined,
+    productType: shopifyProduct.productType ?? undefined,
   };
 }
 
-function transformCart(shopifyCart: any): Cart {
-  const lines: CartLine[] = shopifyCart.lines.edges.map((edge: any) => ({
-    id: edge.node.id,
-    quantity: edge.node.quantity,
-    cost: {
-      totalAmount: {
-        amount: edge.node.cost.totalAmount.amount,
-        currencyCode: edge.node.cost.totalAmount.currencyCode,
-      },
-    },
-    productTitle: edge.node.merchandise.product.title,
-    merchandise: {
-      id: edge.node.merchandise.id,
-      title: edge.node.merchandise.title,
-      price: edge.node.merchandise.price.amount,
-      currencyCode: edge.node.merchandise.price.currencyCode,
+function transformCart(shopifyCart: ShopifyCart): Cart {
+  const lines: CartLine[] = shopifyCart.lines.edges.map(({ node }) => {
+    const firstImage = node.merchandise.product.images.edges[0]?.node;
+
+    const merchandise: ProductVariant = {
+      id: node.merchandise.id,
+      title: node.merchandise.title,
+      price: node.merchandise.price.amount,
       availableForSale: true,
-      selectedOptions: edge.node.merchandise.selectedOptions || [],
-      image: edge.node.merchandise.product.images.edges[0]?.node
+      selectedOptions:
+        node.merchandise.selectedOptions?.map((option) => ({
+          name: option.name,
+          value: option.value,
+        })) ?? [],
+      image: firstImage
         ? {
-            id: "",
-            url: edge.node.merchandise.product.images.edges[0].node.url,
-            altText: edge.node.merchandise.product.images.edges[0].node.altText,
+            id: node.merchandise.id,
+            url: firstImage.url,
+            altText: firstImage.altText ?? undefined,
           }
         : undefined,
-    },
-  }));
+    };
+
+    return {
+      id: node.id,
+      quantity: node.quantity,
+      cost: {
+        totalAmount: {
+          amount: node.cost.totalAmount.amount,
+          currencyCode: node.cost.totalAmount.currencyCode,
+        },
+      },
+      productTitle: node.merchandise.product.title,
+      merchandise,
+    };
+  });
 
   return {
     id: shopifyCart.id,
@@ -632,11 +767,12 @@ export async function getProducts(first: number = 20, after?: string) {
       variables: { first, after },
     });
 
-    const products = response.data.products.edges.map((edge: any) => transformProduct(edge.node));
+    const productsConnection = response.data.products as ShopifyProductsConnection;
+    const products = productsConnection.edges.map(({ node }) => transformProduct(node));
 
     return {
       products,
-      pageInfo: response.data.products.pageInfo,
+      pageInfo: productsConnection.pageInfo,
     };
   } catch (error) {
     console.error("Error fetching products:", error);

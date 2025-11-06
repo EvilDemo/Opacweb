@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { motion } from "motion/react";
 import { Switch } from "@/components/ui/switch";
 import { HomeInteractiveCanvas } from "@/components/three/HomeInteractiveCanvas";
@@ -11,24 +11,6 @@ const sphereVideo = "/esfera3D_optimized.webm";
 export default function HeroSection() {
   const [aotyMode, setAotyMode] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-
-  // Detect mobile screen size
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
-    // Check on mount
-    checkMobile();
-
-    // Listen for resize events
-    window.addEventListener("resize", checkMobile);
-
-    return () => {
-      window.removeEventListener("resize", checkMobile);
-    };
-  }, []);
 
   return (
     <section

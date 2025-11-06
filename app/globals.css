@@ -63,7 +63,6 @@
 
   /* Layout Heights */
   --navbar-height: 94px; /* Logo (62px) + padding (32px) */
-
   /* Core Colors - Based on Figma Design System */
   --white: #ffffff;
   --black: #000000;
@@ -188,6 +187,19 @@
     z-index: 9999 !important;
   }
 
+  /* Remove number input spin buttons */
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    appearance: none;
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  input[type="number"] {
+    appearance: textfield;
+    -moz-appearance: textfield;
+  }
+
   [data-sonner-toast] {
     color: white !important;
   }
@@ -279,6 +291,19 @@
   .body-text-sm-link {
     @apply text-sm 2xl:text-base font-normal underline text-white;
     line-height: var(--line-height-normal);
+  }
+
+  .product-description p,
+  .product-description ul,
+  .product-description ol,
+  .product-description li {
+    @apply text-sm font-normal text-neutral-300;
+    line-height: var(--line-height-relaxed);
+  }
+
+  .product-description ul,
+  .product-description ol {
+    @apply list-disc list-inside;
   }
 
   /* Color Variants - Based on Figma neutral palette */

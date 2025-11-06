@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -78,7 +79,7 @@ export function CheckoutForm() {
       <div className="flex flex-col items-center justify-center min-h-[400px] space-y-4">
         <p className="body-text-lg text-neutral-400">Your cart is empty</p>
         <Button variant="secondary" asChild>
-          <a href="/shop">Continue Shopping</a>
+          <Link href="/shop">Continue Shopping</Link>
         </Button>
       </div>
     );
@@ -215,7 +216,7 @@ export function CheckoutForm() {
           </Button>
 
           <p className="body-text-sm text-neutral-400">
-            You will complete payment on Shopify's secure checkout page. We do not store payment
+            You will complete payment on Shopify&apos;s secure checkout page. We do not store payment
             information.
           </p>
         </form>

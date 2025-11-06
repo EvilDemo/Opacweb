@@ -208,7 +208,7 @@ function InteractiveCross() {
       }
     };
 
-    const handleRelease = (event?: PointerEvent) => {
+    const handleRelease = () => {
       if (rigidBodyRef.current && isGrabbed) {
         const pos = rigidBodyRef.current.translation();
         const currentPos = new THREE.Vector3(pos.x, pos.y, pos.z);

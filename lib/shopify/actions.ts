@@ -30,8 +30,8 @@ export async function addToCartAction(variantId: string, quantity: number = 1): 
         // Cart is invalid, create a new one
         // But if createCart also fails, we want to throw that error
         try {
-        cart = await createCart(variantId, quantity);
-        } catch (createError) {
+          cart = await createCart(variantId, quantity);
+        } catch {
           // Both failed, throw the original addToCart error (more relevant)
           throw error;
         }

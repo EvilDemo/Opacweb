@@ -77,14 +77,7 @@ export default async function ShopPage() {
   }
 
   return (
-    <section className="flex flex-col bg-black text-white min-h-[calc(100vh-6rem)] py-16">
-      <div className="padding-global mb-12">
-        <h1 className="heading-1 mb-4">Shop</h1>
-        <p className="body-text-lg text-neutral-400">
-          Discover our curated collection of merchandise and exclusive releases.
-        </p>
-      </div>
-
+    <section className="flex flex-col bg-black text-white min-h-[calc(100vh-6rem)] py-16 align-center justify-center">
       {error ? (
         <div className="padding-global">
           <div className="bg-neutral-900 rounded-lg p-12 border border-neutral-800 text-center max-w-2xl mx-auto">
@@ -104,9 +97,7 @@ NEXT_PUBLIC_SHOP_ENABLED=true`}
         <div className="padding-global">
           <div className="bg-neutral-900 rounded-lg p-12 border border-neutral-800 text-center">
             <h2 className="heading-2 mb-4">No products found</h2>
-            <p className="body-text text-gray-400">
-              Add some products to your Shopify store to see them here.
-            </p>
+            <p className="body-text text-gray-400">Add some products to your Shopify store to see them here.</p>
           </div>
         </div>
       ) : (
