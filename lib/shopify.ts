@@ -1,5 +1,13 @@
 import { createStorefrontApiClient, type StorefrontApiClient } from "@shopify/storefront-api-client";
-import type { Product, ProductVariant, Cart, CartLine } from "@/types/commerce";
+import type {
+  Product,
+  ProductVariant,
+  Cart,
+  CartLine,
+  ProductMedia,
+  ProductImage,
+  ProductVideo,
+} from "@/types/commerce";
 
 type ShopifyEdge<TNode> = {
   node: TNode;
@@ -53,6 +61,42 @@ type ShopifyProductOptionNode = {
   values: string[];
 };
 
+type ShopifyMediaVideoSource = {
+  url: string;
+  mimeType?: string | null;
+};
+
+type ShopifyMediaVideoNode = {
+  mediaContentType: "VIDEO";
+  previewImage?: ShopifyImageNode | null;
+  sources: ShopifyMediaVideoSource[];
+};
+
+type ShopifyMediaImageNode = {
+  mediaContentType: "IMAGE";
+  previewImage?: ShopifyImageNode | null;
+  image: ShopifyImageNode;
+};
+
+type ShopifyMediaExternalVideoNode = {
+  mediaContentType: "EXTERNAL_VIDEO";
+  previewImage?: ShopifyImageNode | null;
+  embeddedUrl?: string | null;
+  host?: string | null;
+  originUrl?: string | null;
+};
+
+type ShopifyMediaNode =
+  | ShopifyMediaVideoNode
+  | ShopifyMediaImageNode
+  | ShopifyMediaExternalVideoNode
+  | {
+      mediaContentType: string;
+      previewImage?: ShopifyImageNode | null;
+    };
+
+type ShopifyMediaEdge = ShopifyEdge<ShopifyMediaNode>;
+
 type ShopifyProductNode = {
   id: string;
   handle: string;
@@ -74,6 +118,9 @@ type ShopifyProductNode = {
     edges: ShopifyProductVariantEdge[];
   };
   options?: ShopifyProductOptionNode[];
+  media?: {
+    edges: ShopifyMediaEdge[];
+  };
 };
 
 type ShopifyProductEdge = ShopifyEdge<ShopifyProductNode>;
@@ -203,6 +250,39 @@ const PRODUCTS_QUERY = `
               }
             }
           }
+          media(first: 5) {
+            edges {
+              node {
+                mediaContentType
+                previewImage {
+                  id
+                  url
+                  altText
+                  width
+                  height
+                }
+                ... on MediaImage {
+                  image {
+                    id
+                    url
+                    altText
+                    width
+                    height
+                  }
+                }
+                ... on Video {
+                  sources {
+                    url
+                    mimeType
+                  }
+                }
+                ... on ExternalVideo {
+                  embeddedUrl
+                  host
+                }
+              }
+            }
+          }
           variants(first: 100) {
             edges {
               node {
@@ -275,6 +355,39 @@ const PRODUCT_BY_HANDLE_QUERY = `
             altText
             width
             height
+          }
+        }
+      }
+      media(first: 10) {
+        edges {
+          node {
+            mediaContentType
+            previewImage {
+              id
+              url
+              altText
+              width
+              height
+            }
+            ... on MediaImage {
+              image {
+                id
+                url
+                altText
+                width
+                height
+              }
+            }
+            ... on Video {
+              sources {
+                url
+                mimeType
+              }
+            }
+            ... on ExternalVideo {
+              embeddedUrl
+              host
+            }
           }
         }
       }
@@ -638,6 +751,41 @@ const REMOVE_FROM_CART_MUTATION = `
   }
 `;
 
+const isVideoMediaNode = (node: ShopifyMediaNode): node is ShopifyMediaVideoNode =>
+  node.mediaContentType === "VIDEO" && "sources" in node;
+
+const isImageMediaNode = (node: ShopifyMediaNode): node is ShopifyMediaImageNode =>
+  node.mediaContentType === "IMAGE" && "image" in node;
+
+const createProductImage = (imageNode?: ShopifyImageNode | null): ProductImage | undefined => {
+  if (!imageNode) {
+    return undefined;
+  }
+
+  return {
+    id: imageNode.id ?? "",
+    url: imageNode.url,
+    altText: imageNode.altText ?? undefined,
+    width: imageNode.width ?? undefined,
+    height: imageNode.height ?? undefined,
+  };
+};
+
+const createProductVideo = (mediaNode: ShopifyMediaVideoNode): ProductVideo | undefined => {
+  const source = mediaNode.sources.find((videoSource) => Boolean(videoSource.url));
+
+  if (!source) {
+    return undefined;
+  }
+
+  return {
+    id: mediaNode.previewImage?.id ?? "",
+    url: source.url,
+    mimeType: source.mimeType ?? undefined,
+    previewImage: createProductImage(mediaNode.previewImage),
+  };
+};
+
 // Helper function to transform Shopify product to our Product type
 function transformProduct(shopifyProduct: ShopifyProductNode): Product {
   const variants: ProductVariant[] = shopifyProduct.variants.edges.map(({ node }) => ({
@@ -650,27 +798,39 @@ function transformProduct(shopifyProduct: ShopifyProductNode): Product {
       name: option.name,
       value: option.value,
     })),
-    image: node.image
-      ? {
-          id: node.image.id ?? "",
-          url: node.image.url,
-          altText: node.image.altText ?? undefined,
-          width: node.image.width ?? undefined,
-          height: node.image.height ?? undefined,
-        }
-      : undefined,
+    image: createProductImage(node.image),
     sku: node.sku ?? undefined,
     weight: node.weight ?? undefined,
     weightUnit: node.weightUnit ?? undefined,
   }));
 
-  const images = shopifyProduct.images.edges.map(({ node }) => ({
-    id: node.id ?? "",
-    url: node.url,
-    altText: node.altText ?? undefined,
-    width: node.width ?? undefined,
-    height: node.height ?? undefined,
-  }));
+  const images = shopifyProduct.images.edges
+    .map(({ node }) => createProductImage(node))
+    .filter((image): image is ProductImage => Boolean(image));
+
+  let featuredMedia: ProductMedia | undefined;
+  const mediaEdges = shopifyProduct.media?.edges ?? [];
+
+  for (const { node } of mediaEdges) {
+    if (isVideoMediaNode(node)) {
+      const video = createProductVideo(node);
+      if (video) {
+        featuredMedia = { kind: "video", video };
+        break;
+      }
+    }
+
+    if (!featuredMedia && isImageMediaNode(node)) {
+      const image = createProductImage(node.image);
+      if (image) {
+        featuredMedia = { kind: "image", image };
+      }
+    }
+  }
+
+  if (!featuredMedia && images[0]) {
+    featuredMedia = { kind: "image", image: images[0] };
+  }
 
   const price = shopifyProduct.priceRange.minVariantPrice.amount;
   const compareAtPrice =
@@ -694,6 +854,7 @@ function transformProduct(shopifyProduct: ShopifyProductNode): Product {
     tags: shopifyProduct.tags ?? [],
     vendor: shopifyProduct.vendor ?? undefined,
     productType: shopifyProduct.productType ?? undefined,
+    featuredMedia,
   };
 }
 

@@ -9,7 +9,8 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product }: ProductCardProps) {
-  const firstImage = product.images[0];
+  const featuredMedia =
+    product.featuredMedia ?? (product.images[0] ? { kind: "image" as const, image: product.images[0] } : undefined);
   const availableVariant = product.variants.find((v) => v.availableForSale);
 
   if (!availableVariant && !product.availableForSale) {
@@ -18,15 +19,29 @@ export function ProductCard({ product }: ProductCardProps) {
 
   return (
     <Link href={`/shop/${product.handle}`}>
-      {firstImage && (
+      {featuredMedia && (
         <div className="relative w-full aspect-square overflow-hidden rounded-lg bg-neutral-900 cursor-pointer group">
-          <Image
-            src={firstImage.url}
-            alt={firstImage.altText || product.title}
-            fill
-            className="object-cover transition-transform duration-300 group-hover:scale-110"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          />
+          {featuredMedia.kind === "video" ? (
+            <video
+              src={featuredMedia.video.url}
+              poster={featuredMedia.video.previewImage?.url}
+              muted
+              loop
+              playsInline
+              autoPlay
+              preload="metadata"
+              aria-label={`${product.title} preview`}
+              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+            />
+          ) : (
+            <Image
+              src={featuredMedia.image.url}
+              alt={featuredMedia.image.altText || product.title}
+              fill
+              className="object-cover transition-transform duration-300 group-hover:scale-110"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            />
+          )}
         </div>
       )}
     </Link>

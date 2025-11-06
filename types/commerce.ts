@@ -1,5 +1,22 @@
 // Commerce types for Shopify integration
 
+export interface ProductVideo {
+  id: string;
+  url: string;
+  mimeType?: string;
+  previewImage?: ProductImage;
+}
+
+export type ProductMedia =
+  | {
+      kind: "image";
+      image: ProductImage;
+    }
+  | {
+      kind: "video";
+      video: ProductVideo;
+    };
+
 export interface Product {
   id: string;
   handle: string;
@@ -16,6 +33,7 @@ export interface Product {
   tags: string[];
   vendor?: string;
   productType?: string;
+  featuredMedia?: ProductMedia;
 }
 
 export interface ProductImage {
