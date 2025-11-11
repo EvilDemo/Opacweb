@@ -50,6 +50,7 @@ export interface ProductVariant {
   price: string;
   compareAtPrice?: string;
   availableForSale: boolean;
+  quantityAvailable?: number | null;
   selectedOptions: SelectedOption[];
   image?: ProductImage;
   sku?: string;

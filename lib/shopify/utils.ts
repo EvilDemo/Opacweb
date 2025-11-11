@@ -25,6 +25,7 @@ interface ShopifyVariant {
   price: ShopifyPrice;
   compareAtPrice?: ShopifyPrice;
   availableForSale: boolean;
+  quantityAvailable?: number | null;
   selectedOptions: ShopifySelectedOption[];
   image?: ShopifyImage;
   sku?: string;
@@ -101,6 +102,7 @@ export function transformProduct(shopifyProduct: ShopifyProduct): Product {
     price: edge.node.price.amount,
     compareAtPrice: edge.node.compareAtPrice?.amount,
     availableForSale: edge.node.availableForSale,
+    quantityAvailable: edge.node.quantityAvailable,
     selectedOptions: edge.node.selectedOptions,
     image: edge.node.image
       ? {

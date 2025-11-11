@@ -28,6 +28,7 @@ export const PRODUCT_VARIANT_FRAGMENT = `
       ...money
     }
     availableForSale
+    quantityAvailable
     selectedOptions {
       name
       value

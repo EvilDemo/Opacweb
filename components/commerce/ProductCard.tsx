@@ -15,7 +15,17 @@ export function ProductCard({ product }: ProductCardProps) {
 
   const featuredMedia =
     product.featuredMedia ?? (product.images[0] ? { kind: "image" as const, image: product.images[0] } : undefined);
-  const hasAvailableVariant = product.variants.some((variant) => variant.availableForSale);
+  const hasAvailableVariant = product.variants.some((variant) => {
+    if (!variant.availableForSale) {
+      return false;
+    }
+
+    if (typeof variant.quantityAvailable === "number") {
+      return variant.quantityAvailable > 0;
+    }
+
+    return true;
+  });
   const isCompletelySoldOut = !hasAvailableVariant;
 
   return (
