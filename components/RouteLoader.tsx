@@ -6,6 +6,31 @@ import InitialPageLoader from "./loaders/InitialPageLoader";
 import SimplePageLoader from "./loaders/SimplePageLoader";
 import { useLoader } from "./loaders/LoaderContext";
 
+const SHOP_PATH_PREFIX = "/shop";
+
+const normalizePath = (path?: string | null) => {
+  if (!path) return null;
+
+  try {
+    const url = new URL(path, "https://placeholder.local");
+    return url.pathname.replace(/\/+$/, "") || "/";
+  } catch {
+    const trimmed = path.split("?")[0]?.split("#")[0] ?? path;
+    const withoutTrailingSlash = trimmed.replace(/\/+$/, "");
+    if (!withoutTrailingSlash) return "/";
+    return withoutTrailingSlash.startsWith("/") ? withoutTrailingSlash : `/${withoutTrailingSlash}`;
+  }
+};
+
+const isShopPath = (path?: string | null) => {
+  const normalized = normalizePath(path);
+  if (!normalized) return false;
+  return normalized === SHOP_PATH_PREFIX || normalized.startsWith(`${SHOP_PATH_PREFIX}/`);
+};
+
+const shouldSkipLoaderForNavigation = (currentPath: string, targetPath?: string | null) =>
+  isShopPath(currentPath) && isShopPath(targetPath);
+
 interface RouteLoaderProps {
   children: React.ReactNode;
   minimumLoadTime?: number;
@@ -37,8 +62,8 @@ export default function RouteLoader({ children, minimumLoadTime = 3000 }: RouteL
     const handleNavigationRequest = (event: CustomEvent<{ href: string }>) => {
       const { href } = event.detail;
 
-      // Skip loader when navigating within the studio
-      if (href.startsWith("/studio")) {
+      // Skip loader when navigating within the studio or between shop pages
+      if (href.startsWith("/studio") || shouldSkipLoaderForNavigation(pathname, href)) {
         router.push(href);
         return;
       }
@@ -84,6 +109,10 @@ export default function RouteLoader({ children, minimumLoadTime = 3000 }: RouteL
 
       // Only intercept internal links that navigate to different pages
       if (href === pathname) return;
+
+      if (shouldSkipLoaderForNavigation(pathname, href)) {
+        return;
+      }
 
       e.preventDefault();
 
