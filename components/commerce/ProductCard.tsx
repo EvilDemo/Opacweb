@@ -9,18 +9,23 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product }: ProductCardProps) {
-  const featuredMedia =
-    product.featuredMedia ?? (product.images[0] ? { kind: "image" as const, image: product.images[0] } : undefined);
-  const availableVariant = product.variants.find((v) => v.availableForSale);
-
-  if (!availableVariant && !product.availableForSale) {
+  if (product.variants.length === 0) {
     return null;
   }
 
+  const featuredMedia =
+    product.featuredMedia ?? (product.images[0] ? { kind: "image" as const, image: product.images[0] } : undefined);
+  const hasAvailableVariant = product.variants.some((variant) => variant.availableForSale);
+  const isCompletelySoldOut = !product.availableForSale && !hasAvailableVariant;
+
   return (
-    <Link href={`/shop/${product.handle}`}>
-      {featuredMedia && (
-        <div className="relative w-full aspect-square overflow-hidden rounded-lg bg-neutral-900 cursor-pointer group">
+    <Link href={`/shop/${product.handle}`} className="group block">
+      {featuredMedia ? (
+        <div
+          className={`relative w-full aspect-square overflow-hidden rounded-lg bg-neutral-900 transition-opacity duration-300 ${
+            isCompletelySoldOut ? "opacity-70" : ""
+          }`}
+        >
           {featuredMedia.kind === "video" ? (
             <video
               src={featuredMedia.video.url}
@@ -42,6 +47,15 @@ export function ProductCard({ product }: ProductCardProps) {
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
           )}
+          {isCompletelySoldOut && (
+            <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 backdrop-blur-[2px] text-center text-white uppercase tracking-wide">
+              <span className="body-text-sm font-semibold">Sold Out</span>
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="flex h-full min-h-[280px] items-center justify-center rounded-lg bg-neutral-900 text-neutral-500">
+          No preview available
         </div>
       )}
     </Link>

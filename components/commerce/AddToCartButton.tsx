@@ -3,6 +3,7 @@
 import React from "react";
 import { useOptimistic, useTransition } from "react";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { addToCartAction } from "@/lib/shopify/actions";
 import { useCart } from "./CartContext";
 import { toast } from "sonner";
@@ -135,8 +136,23 @@ export function AddToCartButton({ variantId, availableForSale, className, quanti
     }
   };
 
+  const isDisabled = !availableForSale || isPending;
+  const buttonVariant = availableForSale ? "default" : "secondary";
+  const buttonClassName = cn(
+    className,
+    !availableForSale
+      ? "border border-neutral-800 bg-transparent text-neutral-500 disabled:opacity-100 cursor-not-allowed hover:text-neutral-500 hover:bg-transparent hover:scale-100"
+      : ""
+  );
+
   return (
-    <Button onClick={handleAddToCart} disabled={!availableForSale || isPending} className={className} variant="default">
+    <Button
+      onClick={handleAddToCart}
+      disabled={isDisabled}
+      className={buttonClassName}
+      variant={buttonVariant}
+      aria-disabled={isDisabled}
+    >
       {optimisticState.isAdding || isPending ? "Adding..." : availableForSale ? "Add to Cart" : "Sold Out"}
     </Button>
   );

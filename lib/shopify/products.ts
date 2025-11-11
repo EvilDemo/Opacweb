@@ -1,3 +1,4 @@
+import { unstable_cache } from "next/cache";
 import { getShopifyClient } from "./client";
 import { isShopifyConfigured } from "./constants";
 import { PRODUCTS_QUERY, PRODUCT_BY_HANDLE_QUERY } from "./queries/product";
@@ -68,30 +69,38 @@ interface ShopifyProductsResponse {
   };
 }
 
+const fetchProducts = unstable_cache(
+  async (first: number = 20, after?: string) => {
+    if (!isShopifyConfigured()) {
+      return {
+        products: [],
+        pageInfo: { hasNextPage: false, hasPreviousPage: false, startCursor: null, endCursor: null },
+      };
+    }
+
+    try {
+      const client = getShopifyClient();
+      const response = (await client.request(PRODUCTS_QUERY, {
+        variables: { first, after },
+      })) as ShopifyProductsResponse;
+
+      const products = response.data.products.edges.map((edge) => transformProduct(edge.node));
+
+      return {
+        products,
+        pageInfo: response.data.products.pageInfo,
+      };
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      throw error;
+    }
+  },
+  ["shopify-products"],
+  { tags: ["shopify-products"] }
+);
+
 export async function getProducts(first: number = 20, after?: string) {
-  if (!isShopifyConfigured()) {
-    return {
-      products: [],
-      pageInfo: { hasNextPage: false, hasPreviousPage: false, startCursor: null, endCursor: null },
-    };
-  }
-
-  try {
-    const client = getShopifyClient();
-    const response = await client.request(PRODUCTS_QUERY, {
-      variables: { first, after },
-    }) as ShopifyProductsResponse;
-
-    const products = response.data.products.edges.map((edge) => transformProduct(edge.node));
-
-    return {
-      products,
-      pageInfo: response.data.products.pageInfo,
-    };
-  } catch (error) {
-    console.error("Error fetching products:", error);
-    throw error;
-  }
+  return fetchProducts(first, after);
 }
 
 export async function getProductByHandle(handle: string): Promise<Product | null> {

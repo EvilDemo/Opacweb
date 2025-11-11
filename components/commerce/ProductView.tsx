@@ -14,14 +14,14 @@ interface ProductViewProps {
 }
 
 export function ProductView({ product }: ProductViewProps) {
-  const [selectedVariant, setSelectedVariant] = useState<ProductVariant>(
-    product.variants.find((v) => v.availableForSale) || product.variants[0]
-  );
+  const initialVariant = product.variants.find((variant) => variant.availableForSale) ?? product.variants[0] ?? null;
+
+  const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(initialVariant);
   const [quantity, setQuantity] = useState(1);
   const [selectedOptions, setSelectedOptions] = useState<Record<string, string>>(() => {
     const initial: Record<string, string> = {};
-    if (selectedVariant) {
-      selectedVariant.selectedOptions.forEach((opt) => {
+    if (initialVariant) {
+      initialVariant.selectedOptions.forEach((opt) => {
         initial[opt.name] = opt.value;
       });
     }
@@ -69,6 +69,8 @@ export function ProductView({ product }: ProductViewProps) {
           setSelectedMediaIndex(mediaIndex);
         }
       }
+    } else {
+      setSelectedVariant(null);
     }
   };
 
@@ -89,6 +91,13 @@ export function ProductView({ product }: ProductViewProps) {
     const clamped = Math.min(Math.max(parsed, 1), 99);
     setQuantity(clamped);
   };
+
+  const variantAvailable = Boolean(selectedVariant?.availableForSale);
+  const productHasAvailableVariants = product.variants.some((variant) => variant.availableForSale);
+  const entireProductSoldOut = product.variants.length === 0 || !productHasAvailableVariants || !product.availableForSale;
+  const filteredOptions = product.options.filter(
+    (option) => !(option.name === "Title" && option.values.length === 1 && option.values[0] === "Default Title")
+  );
 
   return (
     <div className="min-h-[calc(100vh-6rem)] padding-global py-8 flex flex-col">
@@ -226,55 +235,90 @@ export function ProductView({ product }: ProductViewProps) {
 
               <div className="flex flex-col gap-4">
                 {/* Product Options */}
-                {product.options.map((option) => (
-                  <div key={option.id} className="space-y-3 flex flex-col gap-1">
-                    <label className="body-text-sm-md text-white">{option.name}</label>
-                    <div className="flex flex-wrap gap-3">
-                      {option.values.map((value) => (
-                        <Button
-                          key={value}
-                          variant={selectedOptions[option.name] === value ? "default" : "secondary"}
-                          onClick={() => handleOptionChange(option.name, value)}
-                          className="min-w-[80px]"
-                        >
-                          {value}
-                        </Button>
-                      ))}
-                    </div>
-                  </div>
-                ))}
+                {filteredOptions.length > 0 && selectedVariant && (
+                  <>
+                    {filteredOptions.map((option) => (
+                      <div key={option.id} className="space-y-3 flex flex-col gap-1">
+                        <label className="body-text-sm-md text-white">{option.name}</label>
+                        <div className="flex flex-wrap gap-3">
+                          {option.values.map((value) => (
+                            <Button
+                              key={value}
+                              variant={selectedOptions[option.name] === value ? "default" : "secondary"}
+                              onClick={() => handleOptionChange(option.name, value)}
+                              className="min-w-[80px]"
+                              disabled={entireProductSoldOut}
+                            >
+                              {value}
+                            </Button>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </>
+                )}
 
                 {/* Quantity Selector */}
-                <div className="flex flex-col gap-3">
-                  <label className="body-text-sm-md text-white">Quantity</label>
-                  <div className="flex items-center gap-3">
-                    <Button variant="secondary" size="sm" onClick={decrementQuantity} className="h-9 w-9 p-0">
-                      -
-                    </Button>
-                    <Input
-                      type="number"
-                      inputMode="numeric"
-                      min={1}
-                      max={99}
-                      value={quantity}
-                      onChange={(event) => handleQuantityInput(event.target.value)}
-                      className="h-9 w-auto px-4 text-center font-medium bg-white text-neutral-900 dark:bg-white dark:text-black rounded-full"
-                    />
-                    <Button variant="secondary" size="sm" onClick={incrementQuantity} className="h-9 w-9 p-0">
-                      +
-                    </Button>
+                {selectedVariant && (
+                  <div className="flex flex-col gap-3">
+                    <label className="body-text-sm-md text-white">Quantity</label>
+                    <div className="flex items-center gap-3">
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        onClick={decrementQuantity}
+                        className="h-9 w-9 p-0"
+                        disabled={!variantAvailable}
+                      >
+                        -
+                      </Button>
+                      <Input
+                        type="number"
+                        inputMode="numeric"
+                        min={1}
+                        max={99}
+                        value={quantity}
+                        onChange={(event) => handleQuantityInput(event.target.value)}
+                        disabled={!variantAvailable}
+                        className="h-9 w-auto px-4 text-center font-medium bg-white text-neutral-900 dark:bg-white dark:text-black rounded-full"
+                      />
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        onClick={incrementQuantity}
+                        className="h-9 w-9 p-0"
+                        disabled={!variantAvailable}
+                      >
+                        +
+                      </Button>
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
 
               {/* Add to Cart */}
               <div className="pt-4">
-                <AddToCartButton
-                  variantId={selectedVariant.id}
-                  availableForSale={selectedVariant.availableForSale}
-                  className="w-full"
-                  quantity={quantity}
-                />
+                {selectedVariant ? (
+                  <>
+                    <AddToCartButton
+                      variantId={selectedVariant.id}
+                      availableForSale={variantAvailable}
+                      className="w-full"
+                      quantity={quantity}
+                    />
+                    {!variantAvailable && (
+                      <p className="mt-3 text-sm text-neutral-400">
+                        {entireProductSoldOut
+                          ? "This product is currently out of stock. Follow us for future restocks."
+                          : "The selected options are out of stock. Please choose a different combination."}
+                      </p>
+                    )}
+                  </>
+                ) : (
+                  <p className="text-sm text-neutral-400">
+                    This product is not currently available for purchase.
+                  </p>
+                )}
               </div>
 
               {/* Additional Info */}
