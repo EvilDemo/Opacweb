@@ -103,7 +103,7 @@ export async function getProducts(first: number = 20, after?: string) {
   return fetchProducts(first, after);
 }
 
-export async function getProductByHandle(handle: string): Promise<Product | null> {
+const fetchProductByHandle = async (handle: string) => {
   if (!isShopifyConfigured()) {
     return null;
   }
@@ -123,5 +123,9 @@ export async function getProductByHandle(handle: string): Promise<Product | null
     console.error("Error fetching product:", error);
     throw error;
   }
+};
+
+export async function getProductByHandle(handle: string): Promise<Product | null> {
+  return fetchProductByHandle(handle);
 }
 
