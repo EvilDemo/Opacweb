@@ -21,17 +21,9 @@ function isSignatureValid(rawBody: string, signature: string) {
   const signatureBuffer = Buffer.from(signature, "base64");
 
   if (computedBuffer.length !== signatureBuffer.length) {
-    console.error(
-      "Shopify webhook signature length mismatch",
-      JSON.stringify(
-        {
-          computedLength: computedBuffer.length,
-          signatureLength: signatureBuffer.length,
-        },
-        null,
-        2
-      )
-    );
+    console.error("Shopify webhook signature length mismatch");
+    console.error(`Computed signature (base64): ${computedDigest}`);
+    console.error(`Header signature (base64): ${signature}`);
     return false;
   }
 
@@ -50,18 +42,9 @@ export async function POST(request: NextRequest) {
     }
 
     if (!isSignatureValid(rawBody, signature)) {
-      console.error(
-        "Invalid Shopify signature received",
-        JSON.stringify(
-          {
-            topic,
-            signatureFromHeader: signature,
-            bodyPreview: rawBody.slice(0, 200),
-          },
-          null,
-          2
-        )
-      );
+      console.error(`Invalid Shopify signature received for topic ${topic ?? "unknown"}`);
+      console.error(`Signature from header: ${signature}`);
+      console.error(`Body preview (first 200 chars): ${rawBody.slice(0, 200)}`);
       return NextResponse.json({ message: "Invalid Shopify signature" }, { status: 401 });
     }
 
