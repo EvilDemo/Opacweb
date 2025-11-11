@@ -55,26 +55,12 @@ export async function POST(request: NextRequest) {
   let rawBody = "";
 
   try {
-    // Log all incoming headers for debugging
-    const headers = Object.fromEntries(request.headers.entries());
-    console.log("📥 Webhook request received", {
-      url: request.url,
-      method: request.method,
-      timestamp: new Date().toISOString(),
-    });
-
     rawBody = await request.text();
     const signature = request.headers.get("x-shopify-hmac-sha256");
     const topic = request.headers.get("x-shopify-topic");
     const shop = request.headers.get("x-shopify-shop-domain");
 
-    console.log("📋 Webhook details", {
-      topic,
-      shop,
-      hasSignature: !!signature,
-      hasSecret: !!SHOPIFY_WEBHOOK_SECRET,
-      bodyLength: rawBody.length,
-    });
+    console.log("📥 Webhook received", { topic, shop });
 
     // Check if secret is configured
     if (!SHOPIFY_WEBHOOK_SECRET) {
@@ -103,11 +89,7 @@ export async function POST(request: NextRequest) {
 
     // Validate signature
     if (!isSignatureValid(rawBody, signature)) {
-      console.error("❌ Invalid webhook signature", {
-        topic,
-        shop,
-        bodyPreview: rawBody.substring(0, 100) + "...",
-      });
+      console.error("❌ Invalid webhook signature", { topic, shop });
       return NextResponse.json(
         {
           success: false,
@@ -116,8 +98,6 @@ export async function POST(request: NextRequest) {
         { status: 401 }
       );
     }
-
-    console.log("✅ Signature validated successfully");
 
     // Check if topic is allowed
     if (topic && !SHOPIFY_WEBHOOK_ALLOWED_TOPICS.has(topic)) {
@@ -135,30 +115,16 @@ export async function POST(request: NextRequest) {
     // Parse webhook body
     const body = rawBody ? JSON.parse(rawBody) : {};
 
-    console.log("📦 Webhook payload", {
-      topic,
-      id: body?.id,
-      handle: body?.handle,
-      title: body?.title,
-      productId: body?.product_id,
-      variantId: body?.variant_id,
-    });
-
     // Revalidate cache
-    console.log("🔄 Revalidating cache...");
     revalidateTag("shopify-products");
     revalidatePath("/shop");
 
     if (body?.handle) {
       revalidatePath(`/shop/${body.handle}`);
-      console.log(`✅ Revalidated product page: /shop/${body.handle}`);
     }
 
     const processingTime = Date.now() - startTime;
-    console.log(`✅ Webhook processed successfully in ${processingTime}ms`, {
-      topic,
-      revalidated: true,
-    });
+    console.log(`✅ Webhook processed: ${topic} in ${processingTime}ms`);
 
     return NextResponse.json({
       success: true,
