@@ -16,9 +16,26 @@ function isSignatureValid(rawBody: string, signature: string) {
     return true;
   }
 
-  const digest = crypto.createHmac("sha256", SHOPIFY_WEBHOOK_SECRET).update(rawBody, "utf8").digest("base64");
+  const computedDigest = crypto.createHmac("sha256", SHOPIFY_WEBHOOK_SECRET).update(rawBody, "utf8").digest("base64");
+  const computedBuffer = Buffer.from(computedDigest, "base64");
+  const signatureBuffer = Buffer.from(signature, "base64");
 
-  return crypto.timingSafeEqual(Buffer.from(digest), Buffer.from(signature));
+  if (computedBuffer.length !== signatureBuffer.length) {
+    console.error(
+      "Shopify webhook signature length mismatch",
+      JSON.stringify(
+        {
+          computedLength: computedBuffer.length,
+          signatureLength: signatureBuffer.length,
+        },
+        null,
+        2
+      )
+    );
+    return false;
+  }
+
+  return crypto.timingSafeEqual(computedBuffer, signatureBuffer);
 }
 
 export async function POST(request: NextRequest) {
@@ -28,10 +45,23 @@ export async function POST(request: NextRequest) {
     const topic = request.headers.get("x-shopify-topic");
 
     if (!signature) {
+      console.error("Shopify webhook missing signature header.");
       return NextResponse.json({ message: "Missing Shopify signature" }, { status: 401 });
     }
 
     if (!isSignatureValid(rawBody, signature)) {
+      console.error(
+        "Invalid Shopify signature received",
+        JSON.stringify(
+          {
+            topic,
+            signatureFromHeader: signature,
+            bodyPreview: rawBody.slice(0, 200),
+          },
+          null,
+          2
+        )
+      );
       return NextResponse.json({ message: "Invalid Shopify signature" }, { status: 401 });
     }
 
