@@ -35,9 +35,7 @@ export function ProductView({ product }: ProductViewProps) {
     }
 
     for (const image of product.images) {
-      const alreadyIncluded = media.some(
-        (item) => item.kind === "image" && item.image.id === image.id
-      );
+      const alreadyIncluded = media.some((item) => item.kind === "image" && item.image.id === image.id);
       if (!alreadyIncluded) {
         media.push({ kind: "image", image });
       }
@@ -94,7 +92,8 @@ export function ProductView({ product }: ProductViewProps) {
 
   const variantAvailable = Boolean(selectedVariant?.availableForSale);
   const productHasAvailableVariants = product.variants.some((variant) => variant.availableForSale);
-  const entireProductSoldOut = product.variants.length === 0 || !productHasAvailableVariants || !product.availableForSale;
+  const entireProductSoldOut =
+    product.variants.length === 0 || !productHasAvailableVariants || !product.availableForSale;
   const filteredOptions = product.options.filter(
     (option) => !(option.name === "Title" && option.values.length === 1 && option.values[0] === "Default Title")
   );
@@ -160,24 +159,23 @@ export function ProductView({ product }: ProductViewProps) {
                   )}
                 </div>
               ) : (
-                <div className="flex h-[clamp(28vh,36vw,45vh)] items-center justify-center rounded-lg text-neutral-500">No media available</div>
+                <div className="flex h-[clamp(28vh,36vw,45vh)] items-center justify-center rounded-lg text-neutral-500">
+                  No media available
+                </div>
               )}
               {mediaItems.length > 1 && (
                 <div className="flex flex-wrap gap-3 lg:gap-4">
                   {mediaItems.map((media, index) => {
                     const isActive = selectedMediaIndex === index;
-                    const key =
-                      media.kind === "video"
-                        ? `video-${media.video.url}`
-                        : `image-${media.image.id}`;
+                    const key = media.kind === "video" ? `video-${media.video.url}` : `image-${media.image.id}`;
                     return (
-                    <button
-                      key={key}
-                      onClick={() => setSelectedMediaIndex(index)}
-                      className={`relative overflow-hidden rounded-lg  border-2 transition-all aspect-square size-[clamp(10vw,12vw,14vw)] sm:size-[clamp(8vw,10vw,12vw)] lg:size-[clamp(5vw,6vw,8vw)] ${
-                        isActive ? "border-white" : "border-transparent"
-                      }`}
-                    >
+                      <button
+                        key={key}
+                        onClick={() => setSelectedMediaIndex(index)}
+                        className={`relative overflow-hidden rounded-lg  border-2 transition-all aspect-square size-[clamp(10vw,12vw,14vw)] sm:size-[clamp(8vw,10vw,12vw)] lg:size-[clamp(5vw,6vw,8vw)] ${
+                          isActive ? "border-white" : "border-transparent"
+                        }`}
+                      >
                         {media.kind === "video" ? (
                           <>
                             {media.video.previewImage ? (
@@ -206,7 +204,7 @@ export function ProductView({ product }: ProductViewProps) {
                             sizes="(max-width: 1024px) 25vw, 12.5vw"
                           />
                         )}
-                    </button>
+                      </button>
                     );
                   })}
                 </div>
@@ -217,12 +215,16 @@ export function ProductView({ product }: ProductViewProps) {
             <div className="space-y-6">
               <div className="space-y-4">
                 <h1 className="heading-2">{product.title}</h1>
-                <Price
-                  price={selectedVariant.price}
-                  compareAtPrice={selectedVariant.compareAtPrice}
-                  currencyCode={product.currencyCode}
-                  size="lg"
-                />
+                {selectedVariant ? (
+                  <Price
+                    price={selectedVariant.price}
+                    compareAtPrice={selectedVariant.compareAtPrice}
+                    currencyCode={product.currencyCode}
+                    size="lg"
+                  />
+                ) : (
+                  <p className="body-text-sm text-neutral-400">Price unavailable for selected options.</p>
+                )}
               </div>
               {product.description && (
                 <div
@@ -315,9 +317,7 @@ export function ProductView({ product }: ProductViewProps) {
                     )}
                   </>
                 ) : (
-                  <p className="text-sm text-neutral-400">
-                    This product is not currently available for purchase.
-                  </p>
+                  <p className="text-sm text-neutral-400">This product is not currently available for purchase.</p>
                 )}
               </div>
 
