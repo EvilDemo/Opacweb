@@ -16,10 +16,7 @@ function isSignatureValid(rawBody: string, signature: string) {
     return true;
   }
 
-  const digest = crypto
-    .createHmac("sha256", SHOPIFY_WEBHOOK_SECRET)
-    .update(rawBody, "utf8")
-    .digest("base64");
+  const digest = crypto.createHmac("sha256", SHOPIFY_WEBHOOK_SECRET).update(rawBody, "utf8").digest("base64");
 
   return crypto.timingSafeEqual(Buffer.from(digest), Buffer.from(signature));
 }
@@ -68,4 +65,3 @@ export async function POST(request: NextRequest) {
 export async function GET() {
   return NextResponse.json({ message: "Shopify webhook endpoint ready" });
 }
-
