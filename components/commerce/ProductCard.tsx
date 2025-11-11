@@ -16,7 +16,7 @@ export function ProductCard({ product }: ProductCardProps) {
   const featuredMedia =
     product.featuredMedia ?? (product.images[0] ? { kind: "image" as const, image: product.images[0] } : undefined);
   const hasAvailableVariant = product.variants.some((variant) => variant.availableForSale);
-  const isCompletelySoldOut = !product.availableForSale && !hasAvailableVariant;
+  const isCompletelySoldOut = !hasAvailableVariant;
 
   return (
     <Link href={`/shop/${product.handle}`} className="group block">
