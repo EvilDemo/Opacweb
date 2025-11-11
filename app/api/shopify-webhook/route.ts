@@ -1,6 +1,6 @@
 import crypto from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
-import { revalidateTag } from "next/cache";
+import { revalidateTag, revalidatePath } from "next/cache";
 
 const SHOPIFY_WEBHOOK_SECRET = process.env.SHOPIFY_WEBHOOK_SECRET;
 const SHOPIFY_WEBHOOK_ALLOWED_TOPICS = new Set([
@@ -52,6 +52,11 @@ export async function POST(request: NextRequest) {
     });
 
     revalidateTag("shopify-products");
+    revalidatePath("/shop");
+
+    if (body?.handle) {
+      revalidatePath(`/shop/${body.handle}`);
+    }
 
     return NextResponse.json({ revalidated: true, topic });
   } catch (error) {
