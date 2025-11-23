@@ -32,14 +32,14 @@ export function ProductCard({ product }: ProductCardProps) {
     <Link href={`/shop/${product.handle}`} className="group block">
       {featuredMedia ? (
         <div
-          className={`relative w-full aspect-square overflow-hidden rounded-lg bg-neutral-900 transition-opacity duration-300 ${
+          className={`relative w-full aspect-square overflow-hidden rounded-lg bg-transparent transition-opacity duration-300 ${
             isCompletelySoldOut ? "opacity-70" : ""
           }`}
         >
           {featuredMedia.kind === "video" ? (
             <video
               src={featuredMedia.video.url}
-              poster={featuredMedia.video.previewImage?.url}
+              poster={product.images[0]?.url || featuredMedia.video.previewImage?.url}
               muted
               loop
               playsInline
@@ -64,7 +64,7 @@ export function ProductCard({ product }: ProductCardProps) {
           )}
         </div>
       ) : (
-        <div className="flex h-full min-h-[280px] items-center justify-center rounded-lg bg-neutral-900 text-neutral-500">
+        <div className="flex h-full min-h-[280px] items-center justify-center rounded-lg bg-transparent text-neutral-500">
           No preview available
         </div>
       )}

@@ -64,7 +64,7 @@ function Card({
     >
       {/* Animated Background Pattern */}
       <motion.div
-        className="absolute inset-0 opacity-10"
+        className="absolute inset-0 opacity-10 pointer-events-none"
         initial={{ scale: 0.8, opacity: 0 }}
         animate={{ scale: 1, opacity: 0.1 }}
         transition={{ delay: 0.2, duration: 0.8 }}
