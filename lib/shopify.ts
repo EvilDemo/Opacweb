@@ -1,4 +1,5 @@
 import { createStorefrontApiClient, type StorefrontApiClient } from "@shopify/storefront-api-client";
+import { SHOPIFY_API_VERSION } from "./shopify/constants";
 import type {
   Product,
   ProductVariant,
@@ -173,7 +174,7 @@ type ShopifyCart = {
 
 const domain = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN;
 const storefrontAccessToken = process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN;
-const apiVersion = process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_API_VERSION || "2024-10";
+const apiVersion = SHOPIFY_API_VERSION;
 
 // Helper to check if Shopify is configured
 export function isShopifyConfigured(): boolean {

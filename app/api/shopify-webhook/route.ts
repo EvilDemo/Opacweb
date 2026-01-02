@@ -116,7 +116,7 @@ export async function POST(request: NextRequest) {
     const body = rawBody ? JSON.parse(rawBody) : {};
 
     // Revalidate cache
-    revalidateTag("shopify-products");
+    revalidateTag("shopify-products", "page");
     revalidatePath("/shop");
 
     if (body?.handle) {

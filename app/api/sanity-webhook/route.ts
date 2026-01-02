@@ -24,10 +24,7 @@ export async function POST(request: NextRequest) {
 
     if (!signature) {
       console.log("❌ Missing webhook signature");
-      return NextResponse.json(
-        { message: "Missing webhook signature" },
-        { status: 401 }
-      );
+      return NextResponse.json({ message: "Missing webhook signature" }, { status: 401 });
     }
 
     // Get the document type from the webhook payload
@@ -39,7 +36,7 @@ export async function POST(request: NextRequest) {
       // Revalidate all content types for delete operations
       const allTags = ["pictures", "videos", "music", "radio"];
       allTags.forEach((tag) => {
-        revalidateTag(tag);
+        revalidateTag(tag, "page");
       });
 
       return NextResponse.json({
@@ -52,10 +49,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (!_type) {
-      return NextResponse.json(
-        { message: "Missing document type" },
-        { status: 400 }
-      );
+      return NextResponse.json({ message: "Missing document type" }, { status: 400 });
     }
 
     // Map document types to cache tags
@@ -71,7 +65,7 @@ export async function POST(request: NextRequest) {
     if (tag) {
       // Revalidate the specific tag
       console.log(`🔄 Revalidating tag: ${tag}`);
-      revalidateTag(tag);
+      revalidateTag(tag, "page");
       console.log(`✅ Tag ${tag} revalidated successfully`);
 
       return NextResponse.json({
@@ -89,9 +83,6 @@ export async function POST(request: NextRequest) {
     });
   } catch (err) {
     console.error("Error in Sanity webhook:", err);
-    return NextResponse.json(
-      { message: "Error processing webhook" },
-      { status: 500 }
-    );
+    return NextResponse.json({ message: "Error processing webhook" }, { status: 500 });
   }
 }
