@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { ExternalLink } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useMediaQuery } from "@/lib/hooks";
 
 /**
  * Configuration for the Interactive Canvas
@@ -87,15 +88,20 @@ const CONFIG = {
     textInitialDepth: "-500px",
     textFinalDepth: "0px",
   },
+  mobile: {
+    dpr: [1, 1] as [number, number],
+    environmentResolution: 64,
+    bloomEnabled: false,
+  },
 };
 
 // Invisible Walls Component
-function BoundaryWalls() {
+function BoundaryWalls({ isMobile }: { isMobile: boolean }) {
   const { width, height, depth, ceilingHeightMultiplier, mobileWidth } = CONFIG.boundaries;
   const { thickness, restitution } = CONFIG.physics.walls;
 
   // Use responsive width - smaller on mobile
-  const effectiveWidth = typeof window !== "undefined" && window.innerWidth < 768 ? mobileWidth : width;
+  const effectiveWidth = isMobile ? mobileWidth : width;
   const ceilingHeight = (height / 2) * ceilingHeightMultiplier;
   const wallHeight = height * 1.5; // Make walls taller to ensure they catch everything
 
@@ -153,7 +159,7 @@ function BoundaryWalls() {
 }
 
 // Interactive Cross Component
-function InteractiveCross() {
+function InteractiveCross({ isMobileRef }: { isMobileRef: React.RefObject<boolean> }) {
   const { scene } = useGLTF("/cross.glb");
   const rigidBodyRef = useRef<RapierRigidBody>(null);
   const [isGrabbed, setIsGrabbed] = useState(false);
@@ -165,7 +171,7 @@ function InteractiveCross() {
     if (!isGrabbed) return;
 
     // Check if we're on mobile - if so, don't attach global listeners
-    const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+    const isMobile = isMobileRef.current;
     if (isMobile) return;
 
     const handleMove = (event: PointerEvent) => {
@@ -240,7 +246,7 @@ function InteractiveCross() {
 
   // Mobile tap interaction - tap anywhere on screen to throw cross
   useEffect(() => {
-    const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+    const isMobile = isMobileRef.current;
     if (!isMobile) return;
 
     const handleMobileTap = (event: TouchEvent) => {
@@ -303,7 +309,7 @@ function InteractiveCross() {
 
   const handlePointerDown = (event: ThreeEvent<PointerEvent>) => {
     // Only handle on desktop
-    if (window.innerWidth < 768) return;
+    if (isMobileRef.current) return;
 
     event.stopPropagation();
 
@@ -360,7 +366,7 @@ function InteractiveCross() {
 }
 
 // Scene Content
-function SceneContent() {
+function SceneContent({ isMobile, isMobileRef }: { isMobile: boolean; isMobileRef: React.RefObject<boolean> }) {
   return (
     <>
       {/* Lighting */}
@@ -370,24 +376,29 @@ function SceneContent() {
         intensity={CONFIG.lighting.directional.intensity}
       />
 
-      {/* Environment */}
-      <Environment preset="studio" resolution={128} />
+      {/* Environment - Lower resolution on mobile */}
+      <Environment 
+        preset="studio" 
+        resolution={isMobile ? CONFIG.mobile.environmentResolution : 128} 
+      />
 
       {/* Physics World */}
       <Physics gravity={CONFIG.physics.gravity}>
-        <BoundaryWalls />
-        <InteractiveCross />
+        <BoundaryWalls isMobile={isMobile} />
+        <InteractiveCross isMobileRef={isMobileRef} />
       </Physics>
 
-      {/* Post-Processing Effects */}
-      <EffectComposer multisampling={0}>
-        <Bloom
-          intensity={CONFIG.effects.bloom.intensity}
-          luminanceThreshold={CONFIG.effects.bloom.luminanceThreshold}
-          luminanceSmoothing={CONFIG.effects.bloom.luminanceSmoothing}
-          mipmapBlur={CONFIG.effects.bloom.mipmapBlur}
-        />
-      </EffectComposer>
+      {/* Post-Processing Effects - Desktop Only */}
+      {!isMobile && (
+        <EffectComposer multisampling={0}>
+          <Bloom
+            intensity={CONFIG.effects.bloom.intensity}
+            luminanceThreshold={CONFIG.effects.bloom.luminanceThreshold}
+            luminanceSmoothing={CONFIG.effects.bloom.luminanceSmoothing}
+            mipmapBlur={CONFIG.effects.bloom.mipmapBlur}
+          />
+        </EffectComposer>
+      )}
     </>
   );
 }
@@ -442,12 +453,15 @@ export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }
   const [showCross, setShowCross] = useState(false);
   const [showInstructions, setShowInstructions] = useState(false);
   const [showButton, setShowButton] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [canvasReady, setCanvasReady] = useState(false);
   const [hideLoader, setHideLoader] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const canvasContainerRef = useRef<HTMLDivElement>(null);
+  
+  // Use media query for mobile detection
+  const isMobile = useMediaQuery('(max-width: 767px)');
+  const isMobileRef = useRef(isMobile);
 
   // Ensure component is mounted on client before rendering Canvas
   useEffect(() => {
@@ -518,22 +532,10 @@ export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }
     }
   }, [mounted]);
 
+  // Update mobile ref when isMobile changes
   useEffect(() => {
-    // Detect mobile screen size
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
-    // Check on mount
-    checkMobile();
-
-    // Listen for resize events
-    window.addEventListener("resize", checkMobile);
-
-    return () => {
-      window.removeEventListener("resize", checkMobile);
-    };
-  }, []);
+    isMobileRef.current = isMobile;
+  }, [isMobile]);
 
   useEffect(() => {
     // Hide loader slightly before cross appears for smooth transition
@@ -700,12 +702,12 @@ export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }
                   stencil: false,
                   depth: true,
                 }}
-                dpr={[1, 1.5]}
+                dpr={isMobile ? CONFIG.mobile.dpr : [1, 1.5]}
                 performance={{ min: 0.5 }}
                 frameloop="always"
               >
                 <PerspectiveCamera makeDefault position={CONFIG.camera.position} fov={CONFIG.camera.fov} />
-                {showCross && <SceneContent />}
+                {showCross && <SceneContent isMobile={isMobile} isMobileRef={isMobileRef} />}
               </Canvas>
             </Suspense>
           )}

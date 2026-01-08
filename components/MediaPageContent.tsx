@@ -6,6 +6,7 @@ import { type Pictures, type Video, type Music } from "@/lib/mediaData";
 import { MediaCard, type MediaItem } from "@/components/MediaCard";
 import { Button } from "@/components/ui/button";
 import { Image as ImageIcon, Video as VideoIcon, Music as MusicIcon } from "lucide-react";
+import { useMediaQuery } from "@/lib/hooks";
 
 // Helper functions to transform data to MediaCard format
 const transformPictures = (pictures: Pictures[]): MediaItem[] =>
@@ -47,6 +48,9 @@ function MediaScrollContent({ allMediaData }: MediaScrollContentProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   
+  // Use media query for large screen detection
+  const isLargeScreen = useMediaQuery('(min-width: 1024px)');
+  
   // Calculate initial filtered data for "all" filter to estimate dimensions
   const initialFilteredData = allMediaData.filter((item) => {
     if (item.type === "video") {
@@ -58,8 +62,8 @@ function MediaScrollContent({ allMediaData }: MediaScrollContentProps) {
   // Calculate initial estimate to prevent CLS
   const [dimensions, setDimensions] = useState(() => {
     if (typeof window !== "undefined") {
-      const isLargeScreen = window.innerWidth >= 1024;
-      if (isLargeScreen) {
+      const isLargeScreenInitial = window.innerWidth >= 1024;
+      if (isLargeScreenInitial) {
         const viewportWidth = window.innerWidth;
         const viewportHeight = window.innerHeight;
         const cardWidth = 320; // lg:w-80 = 320px
@@ -82,12 +86,6 @@ function MediaScrollContent({ allMediaData }: MediaScrollContentProps) {
       scrollDistance: 0,
       sectionHeight: 0,
     };
-  });
-  const [isLargeScreen, setIsLargeScreen] = useState(() => {
-    if (typeof window !== "undefined") {
-      return window.innerWidth >= 1024;
-    }
-    return false;
   });
 
   // Simple filtering logic
@@ -123,11 +121,9 @@ function MediaScrollContent({ allMediaData }: MediaScrollContentProps) {
 
     const contentWidth = contentRef.current.scrollWidth;
     const viewportWidth = scrollRef.current.offsetWidth;
-    const isLargeScreenCheck = window.innerWidth >= 1024; // lg breakpoint
-    setIsLargeScreen(isLargeScreenCheck);
 
     // Only apply horizontal scroll calculations on large screens
-    if (isLargeScreenCheck) {
+    if (isLargeScreen) {
       // Calculate expected width based on card count and dimensions
       const cardWidth = 320; // lg:w-80 = 320px
       const cardGap = 48; // lg:gap-12 = 48px
@@ -159,7 +155,7 @@ function MediaScrollContent({ allMediaData }: MediaScrollContentProps) {
         sectionHeight: 0, // 0 means auto height
       });
     }
-  }, [displayData]);
+  }, [displayData, isLargeScreen]);
 
   // Recalculate dimensions when filter changes or window resizes
   useEffect(() => {
