@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import type { ProductMedia } from "@/types/commerce";
 
@@ -16,33 +17,86 @@ export function ProductGallery({
   onMediaSelect,
   productTitle,
 }: ProductGalleryProps) {
+  const [showVideo, setShowVideo] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const selectedMedia = mediaItems[selectedMediaIndex];
+
+  // Reset video state when selected media changes
+  useEffect(() => {
+    setShowVideo(false);
+  }, [selectedMediaIndex]);
+
+  // LCP optimization: first media item should be prioritized
+  const isLCPCandidate = selectedMediaIndex === 0;
+  const posterUrl = selectedMedia?.kind === "video" 
+    ? selectedMedia.video.previewImage?.url
+    : null;
+
+  // Auto-swap to video after poster image loads (for LCP optimization)
+  useEffect(() => {
+    if (selectedMedia?.kind === "video" && !showVideo && posterUrl) {
+      // Small delay to ensure poster image loads first for LCP
+      const timer = setTimeout(() => {
+        setShowVideo(true);
+        // Small delay to ensure video element is mounted
+        setTimeout(() => {
+          if (videoRef.current) {
+            videoRef.current.play().catch(() => {
+              // Handle autoplay restrictions gracefully
+            });
+          }
+        }, 100);
+      }, 300); // Delay to prioritize poster image for LCP
+      
+      return () => clearTimeout(timer);
+    }
+  }, [selectedMedia, showVideo, posterUrl, selectedMediaIndex]);
 
   return (
     <div className="flex flex-col gap-4 lg:min-h-[65vh] w-full">
       {selectedMedia ? (
-        <div className="relative w-full overflow-hidden rounded-lg h-[clamp(28vh,36vw,45vh)] min-w-0">
+        <div 
+          className="relative w-full overflow-hidden rounded-lg h-[clamp(28vh,36vw,45vh)] min-w-0"
+        >
           {selectedMedia.kind === "video" ? (
-            <video
-              key={selectedMedia.video.url}
-              src={selectedMedia.video.url}
-              poster={selectedMedia.video.previewImage?.url}
-              muted
-              loop
-              playsInline
-              autoPlay
-              preload="none"
-              aria-label={`${productTitle} preview`}
-              className="h-full w-full object-contain"
-            />
+            <>
+              {!showVideo && posterUrl ? (
+                // Show poster image first (LCP optimized)
+                <Image
+                  src={posterUrl}
+                  alt={selectedMedia.video.previewImage?.altText || productTitle}
+                  fill
+                  priority={isLCPCandidate}
+                  fetchPriority={isLCPCandidate ? "high" : "auto"}
+                  className="object-contain"
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                />
+              ) : null}
+              {/* Video loads on hover */}
+              {showVideo && (
+                <video
+                  ref={videoRef}
+                  key={selectedMedia.video.url}
+                  src={selectedMedia.video.url}
+                  poster={posterUrl}
+                  muted
+                  loop
+                  playsInline
+                  autoPlay
+                  preload="none"
+                  aria-label={`${productTitle} preview`}
+                  className="h-full w-full object-contain"
+                />
+              )}
+            </>
           ) : (
             <Image
               src={selectedMedia.image.url}
               alt={selectedMedia.image.altText || productTitle}
               fill
               className="object-contain"
-              priority
-              fetchPriority="high"
+              priority={isLCPCandidate}
+              fetchPriority={isLCPCandidate ? "high" : "auto"}
               sizes="(max-width: 1024px) 100vw, 50vw"
             />
           )}

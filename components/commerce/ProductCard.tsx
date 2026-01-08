@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import type { Product } from "@/types/commerce";
@@ -11,6 +11,9 @@ interface ProductCardProps {
 }
 
 function ProductCardComponent({ product, index = 0 }: ProductCardProps) {
+  const [showVideo, setShowVideo] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
   if (product.variants.length === 0) {
     return null;
   }
@@ -30,6 +33,30 @@ function ProductCardComponent({ product, index = 0 }: ProductCardProps) {
   });
   const isCompletelySoldOut = !hasAvailableVariant;
 
+  const isLCPCandidate = index === 0;
+  const posterUrl =
+    featuredMedia?.kind === "video" ? product.images[0]?.url || featuredMedia.video.previewImage?.url : null;
+
+  // Auto-swap to video after poster image loads (for LCP optimization)
+  useEffect(() => {
+    if (featuredMedia?.kind === "video" && !showVideo && posterUrl) {
+      // Small delay to ensure poster image loads first for LCP
+      const timer = setTimeout(() => {
+        setShowVideo(true);
+        // Small delay to ensure video element is mounted
+        setTimeout(() => {
+          if (videoRef.current) {
+            videoRef.current.play().catch(() => {
+              // Handle autoplay restrictions gracefully
+            });
+          }
+        }, 100);
+      }, 300); // Delay to prioritize poster image for LCP
+
+      return () => clearTimeout(timer);
+    }
+  }, [featuredMedia, showVideo, posterUrl]);
+
   return (
     <Link href={`/shop/${product.handle}`} className="group block">
       {featuredMedia ? (
@@ -39,17 +66,36 @@ function ProductCardComponent({ product, index = 0 }: ProductCardProps) {
           }`}
         >
           {featuredMedia.kind === "video" ? (
-            <video
-              src={featuredMedia.video.url}
-              poster={product.images[0]?.url || featuredMedia.video.previewImage?.url}
-              muted
-              loop
-              playsInline
-              autoPlay
-              preload="none"
-              aria-label={`${product.title} preview`}
-              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-            />
+            <>
+              {!showVideo && posterUrl ? (
+                // Show poster image first (LCP optimized)
+                <Image
+                  src={posterUrl}
+                  alt={featuredMedia.video.previewImage?.altText || product.title}
+                  fill
+                  priority={isLCPCandidate}
+                  fetchPriority={isLCPCandidate ? "high" : "auto"}
+                  loading={index < 8 ? "eager" : "lazy"}
+                  className="object-cover transition-transform duration-300 group-hover:scale-110"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                />
+              ) : null}
+              {/* Video auto-swaps after poster loads */}
+              {showVideo && (
+                <video
+                  ref={videoRef}
+                  src={featuredMedia.video.url}
+                  poster={posterUrl || undefined}
+                  muted
+                  loop
+                  playsInline
+                  autoPlay
+                  preload="none"
+                  aria-label={`${product.title} preview`}
+                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                />
+              )}
+            </>
           ) : (
             <Image
               src={featuredMedia.image.url}
@@ -92,14 +138,14 @@ function areEqual(prevProps: ProductCardProps, nextProps: ProductCardProps): boo
     prev.featuredMedia?.kind === "image"
       ? prev.featuredMedia.image.url
       : prev.featuredMedia?.kind === "video"
-        ? prev.featuredMedia.video.url
-        : prev.images[0]?.url;
+      ? prev.featuredMedia.video.url
+      : prev.images[0]?.url;
   const nextFeaturedUrl =
     next.featuredMedia?.kind === "image"
       ? next.featuredMedia.image.url
       : next.featuredMedia?.kind === "video"
-        ? next.featuredMedia.video.url
-        : next.images[0]?.url;
+      ? next.featuredMedia.video.url
+      : next.images[0]?.url;
   if (prevFeaturedUrl !== nextFeaturedUrl) return false;
 
   // Compare availability status (check if any variant is available)
