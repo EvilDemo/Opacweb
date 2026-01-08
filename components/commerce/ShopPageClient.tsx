@@ -4,7 +4,7 @@ import { useState, useTransition } from "react";
 import { ProductGrid } from "./ProductGrid";
 import { Button } from "@/components/ui/button";
 import type { Product } from "@/types/commerce";
-import type { PageInfo } from "@/lib/shopify";
+import type { PageInfo } from "@/lib/shopify/types";
 
 interface ShopPageClientProps {
   initialProducts: Product[];
