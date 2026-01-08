@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import type { Product } from "@/types/commerce";
@@ -8,7 +9,7 @@ interface ProductCardProps {
   product: Product;
 }
 
-export function ProductCard({ product }: ProductCardProps) {
+function ProductCardComponent({ product }: ProductCardProps) {
   if (product.variants.length === 0) {
     return null;
   }
@@ -71,3 +72,49 @@ export function ProductCard({ product }: ProductCardProps) {
     </Link>
   );
 }
+
+// Custom comparison function for React.memo
+// Compares product ID, handle, featured media, and availability status
+function areEqual(prevProps: ProductCardProps, nextProps: ProductCardProps): boolean {
+  const prev = prevProps.product;
+  const next = nextProps.product;
+
+  // Compare IDs (most important - should be unique)
+  if (prev.id !== next.id) return false;
+
+  // Compare handles
+  if (prev.handle !== next.handle) return false;
+
+  // Compare featured media
+  const prevFeaturedUrl =
+    prev.featuredMedia?.kind === "image"
+      ? prev.featuredMedia.image.url
+      : prev.featuredMedia?.kind === "video"
+        ? prev.featuredMedia.video.url
+        : prev.images[0]?.url;
+  const nextFeaturedUrl =
+    next.featuredMedia?.kind === "image"
+      ? next.featuredMedia.image.url
+      : next.featuredMedia?.kind === "video"
+        ? next.featuredMedia.video.url
+        : next.images[0]?.url;
+  if (prevFeaturedUrl !== nextFeaturedUrl) return false;
+
+  // Compare availability status (check if any variant is available)
+  const prevHasAvailable = prev.variants.some((v) => {
+    if (!v.availableForSale) return false;
+    if (typeof v.quantityAvailable === "number") return v.quantityAvailable > 0;
+    return true;
+  });
+  const nextHasAvailable = next.variants.some((v) => {
+    if (!v.availableForSale) return false;
+    if (typeof v.quantityAvailable === "number") return v.quantityAvailable > 0;
+    return true;
+  });
+  if (prevHasAvailable !== nextHasAvailable) return false;
+
+  // If all key properties match, components are equal
+  return true;
+}
+
+export const ProductCard = React.memo(ProductCardComponent, areEqual);
