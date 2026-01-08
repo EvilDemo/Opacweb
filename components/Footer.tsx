@@ -25,19 +25,6 @@ export default function Footer() {
           }}
         >
           <source src="/opac-world.webm" type="video/webm" />
-          {/* Fallback to WebP for browsers that don't support WebM */}
-          <Image
-            src="/opac-word-short.webp"
-            alt="Opac background"
-            fill
-            style={{
-              objectPosition: "center bottom",
-              objectFit: "cover",
-            }}
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 100vw"
-            priority={false}
-            quality={60}
-          />
         </video>
       </div>
 

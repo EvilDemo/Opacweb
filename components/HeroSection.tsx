@@ -1,7 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { motion } from "motion/react";
+import Image from "next/image";
+import { Play } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import dynamic from "next/dynamic";
 
@@ -30,10 +32,39 @@ const HomeInteractiveCanvas = dynamic(
 
 // 3D Sphere video from your public folder
 const sphereVideo = "/esfera3D_optimized.webm";
+const posterImage = "/hero-poster.webp";
 
 export default function HeroSection() {
   const [aotyMode, setAotyMode] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
+  const [showVideo, setShowVideo] = useState(false);
+  const [isMobile, setIsMobile] = useState<boolean | null>(null); // null = not detected yet, prevents initial render
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  // Detect mobile vs desktop
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, [isMobile]);
+
+  // Don't render until device type is detected
+  if (isMobile === null) {
+    return (
+      <section
+        className={`relative w-full h-[calc(100vh-6rem)] flex flex-col justify-center overflow-hidden ${
+          !aotyMode ? "padding-global" : ""
+        }`}
+      >
+        {/* Loading state - prevents flash of wrong content */}
+        <div className="relative w-64 h-64 sm:w-80 sm:h-80 md:w-96 md:h-96  2xl:w-[30rem] 2xl:h-[30rem] mx-auto" />
+      </section>
+    );
+  }
 
   return (
     <section
@@ -138,24 +169,78 @@ export default function HeroSection() {
               </motion.div>
             </div>
 
-            {/* Right Column - 3D Sphere Video */}
-            <div className="flex items-center justify-center flex-shrink-0 lg:ml-auto lg:-mt-32 order-1 lg:order-2">
+            {/* Right Column - 3D Sphere Video/Poster */}
+            <div className="relative flex items-center justify-center flex-shrink-0 lg:ml-auto lg:-mt-32 order-1 lg:order-2">
               <motion.div
                 className="relative w-64 h-64 sm:w-80 sm:h-80 md:w-96 md:h-96  2xl:w-[30rem] 2xl:h-[30rem] overflow-hidden rounded-full"
                 initial={{ opacity: 0, scale: 0.8, rotateY: -30 }}
                 animate={{ opacity: 1, scale: 1, rotateY: 0 }}
                 transition={{ duration: 1.2, ease: "easeOut", delay: 0.3 }}
               >
-                <video
-                  src={sphereVideo}
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  aria-label="Animated 3D sphere visualization"
-                  className="w-full h-full object-cover"
-                />
+                {isMobile === true && !showVideo ? (
+                  <>
+                    {/* Poster Image - Mobile Only */}
+                    <Image
+                      src={posterImage}
+                      alt="3D sphere visualization"
+                      width={1440}
+                      height={1440}
+                      priority
+                      fetchPriority="high"
+                      sizes="(max-width: 640px) 256px, (max-width: 768px) 320px, (max-width: 1536px) 384px, 480px"
+                      className="w-full h-full object-cover"
+                    />
+                  </>
+                ) : (
+                  <video
+                    ref={videoRef}
+                    src={sphereVideo}
+                    autoPlay={isMobile === false}
+                    loop
+                    muted
+                    playsInline
+                    preload={isMobile === true ? "none" : "auto"}
+                    aria-label="Animated 3D sphere visualization"
+                    className="w-full h-full object-cover"
+                  />
+                )}
               </motion.div>
+              {/* Play Button - Bottom Right Corner (outside rounded container) */}
+              {isMobile === true && !showVideo && (
+                <motion.div
+                  className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4"
+                  initial={{ opacity: 0, scale: 0.8, rotateY: -30 }}
+                  animate={{ opacity: 1, scale: 1, rotateY: 0 }}
+                  transition={{ duration: 1.2, ease: "easeOut", delay: 0.3 }}
+                >
+                  <motion.button
+                    className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm flex items-center justify-center relative overflow-hidden border border-neutral-200 transition-all duration-200 flex-shrink-0 cursor-pointer z-10"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 400,
+                      damping: 25,
+                      duration: 0.15,
+                    }}
+                    aria-label="Play animated 3D sphere visualization"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setShowVideo(true);
+                      setTimeout(() => {
+                        if (videoRef.current) {
+                          videoRef.current.load();
+                          videoRef.current.play().catch(() => {
+                            // Handle autoplay restrictions gracefully
+                          });
+                        }
+                      }, 100);
+                    }}
+                    >
+                      <Play className="w-4 h-4 sm:w-5 sm:h-5 text-white relative z-10 ml-0.5" fill="currentColor" />
+                    </motion.button>
+                  </motion.div>
+              )}
             </div>
           </div>
         </>
