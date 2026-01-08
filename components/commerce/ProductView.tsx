@@ -131,9 +131,9 @@ export function ProductView({ product }: ProductViewProps) {
         <div className="flex flex-1">
           <div className="grid w-full max-w-6xl grid-cols-1 gap-12 md:items-center lg:grid-cols-2 mx-auto md:my-auto">
             {/* Product Images */}
-            <div className="flex flex-col gap-4 lg:min-h-[65vh]">
+            <div className="flex flex-col gap-4 lg:min-h-[65vh] w-full">
               {selectedMedia ? (
-                <div className="relative w-full overflow-hidden rounded-lg h-[clamp(28vh,36vw,45vh)]">
+                <div className="relative w-full overflow-hidden rounded-lg h-[clamp(28vh,36vw,45vh)] min-w-0">
                   {selectedMedia.kind === "video" ? (
                     <video
                       key={selectedMedia.video.url}

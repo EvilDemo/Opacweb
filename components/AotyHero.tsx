@@ -74,7 +74,7 @@ export default function AotyHero({ isMuted = false, onMuteChange }: AotyHeroProp
       <div className="flex flex-col xl:flex-row items-center justify-center w-full gap-8 xl:gap-0">
         {/* Cross div - enters from left */}
         <motion.div
-          className="flex flex-col w-full xl:w-1/2 h-[70vh] max-h-[70vh] xl:h-auto xl:max-h-none aspect-square items-center justify-center relative"
+          className="flex flex-col w-full xl:w-1/2 aspect-square items-center justify-center relative"
           initial={{ opacity: 0, x: -100 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
@@ -95,7 +95,7 @@ export default function AotyHero({ isMuted = false, onMuteChange }: AotyHeroProp
 
         {/* Video div - enters from right */}
         <motion.div
-          className="flex flex-col w-full xl:w-1/2 h-[70vh] max-h-[70vh] xl:h-auto xl:max-h-none aspect-square items-center justify-center relative"
+          className="flex flex-col w-full xl:w-1/2 aspect-square items-center justify-center relative"
           initial={{ opacity: 0, x: 100 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}

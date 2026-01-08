@@ -147,6 +147,8 @@ export default function PictureGalleryContent({ picture, gallery }: PictureGalle
                 <img
                   {...getResponsiveImageProps(imageUrl, "gallery")}
                   alt={`${picture.title} - Image ${index + 1} of ${imageCount}`}
+                  width={800}
+                  height={800}
                   className="w-full h-full object-cover"
                   loading={index < 8 ? "eager" : "lazy"}
                 />
