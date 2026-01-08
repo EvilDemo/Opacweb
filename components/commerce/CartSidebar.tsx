@@ -181,7 +181,7 @@ export function CartSidebar({ children }: CartSidebarProps) {
         <SheetHeader className="px-4  py-4 flex flex-row items-center justify-between gap-0 flex-shrink-0">
           <SheetTitle className="heading-4">Your Cart</SheetTitle>
           <SheetClose asChild>
-            <Button variant="secondary" size="sm">
+            <Button variant="secondary" size="sm" aria-label="Close shopping cart">
               CLOSE
             </Button>
           </SheetClose>
@@ -240,18 +240,20 @@ export function CartSidebar({ children }: CartSidebarProps) {
                             onClick={() => updateQuantity(line.id, line.quantity - 1)}
                             className="h-8 w-8 p-0"
                             disabled={isPending}
+                            aria-label={`Decrease quantity of ${line.productTitle || line.merchandise.title || 'product'}`}
                           >
-                            -
+                            <span aria-hidden="true">-</span>
                           </Button>
-                          <span className="body-text-sm w-8 text-center">{line.quantity}</span>
+                          <span className="body-text-sm w-8 text-center" aria-label={`Quantity: ${line.quantity}`}>{line.quantity}</span>
                           <Button
                             variant="secondary"
                             size="sm"
                             onClick={() => updateQuantity(line.id, line.quantity + 1)}
                             className="h-8 w-8 p-0"
                             disabled={isPending}
+                            aria-label={`Increase quantity of ${line.productTitle || line.merchandise.title || 'product'}`}
                           >
-                            +
+                            <span aria-hidden="true">+</span>
                           </Button>
                         </div>
                         <Button
@@ -260,6 +262,7 @@ export function CartSidebar({ children }: CartSidebarProps) {
                           onClick={() => removeItem(line.id)}
                           className="text-neutral-400 hover:text-white"
                           disabled={isPending}
+                          aria-label={`Remove ${line.productTitle || line.merchandise.title || 'product'} from cart`}
                         >
                           Remove
                         </Button>
@@ -287,6 +290,7 @@ export function CartSidebar({ children }: CartSidebarProps) {
                     }
                   }}
                   disabled={!optimisticCart?.checkoutUrl}
+                  aria-label={optimisticCart?.checkoutUrl ? "Proceed to checkout" : "Checkout unavailable"}
                 >
                   Checkout
                 </Button>

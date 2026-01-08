@@ -152,6 +152,7 @@ export function AddToCartButton({ variantId, availableForSale, className, quanti
       className={buttonClassName}
       variant={buttonVariant}
       aria-disabled={isDisabled}
+      aria-label={availableForSale ? "Add item to shopping cart" : "This item is sold out"}
     >
       {optimisticState.isAdding || isPending ? "Adding..." : availableForSale ? "Add to Cart" : "Sold Out"}
     </Button>

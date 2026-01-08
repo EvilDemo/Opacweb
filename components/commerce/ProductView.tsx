@@ -175,6 +175,8 @@ export function ProductView({ product }: ProductViewProps) {
                         className={`relative overflow-hidden rounded-lg  border-2 transition-all aspect-square size-[clamp(10vw,12vw,14vw)] sm:size-[clamp(8vw,10vw,12vw)] lg:size-[clamp(5vw,6vw,8vw)] ${
                           isActive ? "border-white" : "border-transparent"
                         }`}
+                        aria-label={`View ${product.title} ${media.kind === "video" ? "video" : "image"} ${index + 1} of ${mediaItems.length}${isActive ? ", currently selected" : ""}`}
+                        aria-pressed={isActive}
                       >
                         {media.kind === "video" ? (
                           <>
@@ -271,8 +273,9 @@ export function ProductView({ product }: ProductViewProps) {
                         onClick={decrementQuantity}
                         className="h-9 w-9 p-0"
                         disabled={!variantAvailable}
+                        aria-label="Decrease quantity"
                       >
-                        -
+                        <span aria-hidden="true">-</span>
                       </Button>
                       <Input
                         type="number"
@@ -283,6 +286,7 @@ export function ProductView({ product }: ProductViewProps) {
                         onChange={(event) => handleQuantityInput(event.target.value)}
                         disabled={!variantAvailable}
                         className="h-9 w-auto px-4 text-center font-medium bg-white text-neutral-900 dark:bg-white dark:text-black rounded-full"
+                        aria-label="Product quantity"
                       />
                       <Button
                         variant="secondary"
@@ -290,8 +294,9 @@ export function ProductView({ product }: ProductViewProps) {
                         onClick={incrementQuantity}
                         className="h-9 w-9 p-0"
                         disabled={!variantAvailable}
+                        aria-label="Increase quantity"
                       >
-                        +
+                        <span aria-hidden="true">+</span>
                       </Button>
                     </div>
                   </div>

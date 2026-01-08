@@ -136,18 +136,20 @@ export function CartPageClient() {
                         onClick={() => updateQuantity(line.id, line.quantity - 1)}
                         className="h-9 w-9 p-0"
                         disabled={isPending}
+                        aria-label={`Decrease quantity of ${line.productTitle || line.merchandise.title || 'product'}`}
                       >
-                        -
+                        <span aria-hidden="true">-</span>
                       </Button>
-                      <span className="body-text w-10 text-center">{line.quantity}</span>
+                      <span className="body-text w-10 text-center" aria-label={`Quantity: ${line.quantity}`}>{line.quantity}</span>
                       <Button
                         variant="secondary"
                         size="sm"
                         onClick={() => updateQuantity(line.id, line.quantity + 1)}
                         className="h-9 w-9 p-0"
                         disabled={isPending}
+                        aria-label={`Increase quantity of ${line.productTitle || line.merchandise.title || 'product'}`}
                       >
-                        +
+                        <span aria-hidden="true">+</span>
                       </Button>
                     </div>
                     <Button
@@ -156,6 +158,7 @@ export function CartPageClient() {
                       onClick={() => removeItem(line.id)}
                       className="text-neutral-400 hover:text-white"
                       disabled={isPending}
+                      aria-label={`Remove ${line.productTitle || line.merchandise.title || 'product'} from cart`}
                     >
                       Remove
                     </Button>
@@ -197,6 +200,7 @@ export function CartPageClient() {
                   }
                 }}
                 disabled={!optimisticCart?.checkoutUrl}
+                aria-label={optimisticCart?.checkoutUrl ? "Proceed to checkout" : "Checkout unavailable"}
               >
                 Proceed to Checkout
               </Button>
