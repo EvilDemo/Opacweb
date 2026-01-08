@@ -175,7 +175,7 @@ export default function HeroSection() {
                     loop
                     muted
                     playsInline
-                    preload={isMobile ? "none" : "auto"}
+                    preload="none"
                     aria-label="Animated 3D sphere visualization"
                     className="w-full h-full object-cover"
                   />

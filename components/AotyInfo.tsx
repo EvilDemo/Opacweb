@@ -157,7 +157,7 @@ export default function AotyInfo() {
                 animate={aboutInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 50 }}
                 transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
               >
-                <Image src="/aoty-img/image-1.webp" alt="Album artwork" fill className="object-cover" />
+                <Image src="/aoty-img/image-1.webp" alt="Album artwork" fill loading="lazy" className="object-cover" />
               </motion.div>
               <motion.div
                 className="relative aspect-video"
@@ -165,7 +165,7 @@ export default function AotyInfo() {
                 animate={aboutInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 50 }}
                 transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
               >
-                <Image src="/aoty-img/image-2.webp" alt="Album artwork" fill className="object-cover" />
+                <Image src="/aoty-img/image-2.webp" alt="Album artwork" fill loading="lazy" className="object-cover" />
               </motion.div>
               <motion.div
                 className="relative aspect-video"
@@ -173,7 +173,7 @@ export default function AotyInfo() {
                 animate={aboutInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 50 }}
                 transition={{ duration: 0.8, delay: 0.7, ease: "easeOut" }}
               >
-                <Image src="/aoty-img/image-3.webp" alt="Album artwork" fill className="object-cover" />
+                <Image src="/aoty-img/image-3.webp" alt="Album artwork" fill loading="lazy" className="object-cover" />
               </motion.div>
               <motion.div
                 className="relative aspect-video"
@@ -181,7 +181,7 @@ export default function AotyInfo() {
                 animate={aboutInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 50 }}
                 transition={{ duration: 0.8, delay: 0.9, ease: "easeOut" }}
               >
-                <Image src="/aoty-img/image-4.webp" alt="Album artwork" fill className="object-cover" />
+                <Image src="/aoty-img/image-4.webp" alt="Album artwork" fill loading="lazy" className="object-cover" />
               </motion.div>
               <motion.div
                 className="relative aspect-video"
@@ -189,7 +189,7 @@ export default function AotyInfo() {
                 animate={aboutInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 50 }}
                 transition={{ duration: 0.8, delay: 1.1, ease: "easeOut" }}
               >
-                <Image src="/aoty-img/image-5.jpg" alt="Album artwork" fill className="object-cover" />
+                <Image src="/aoty-img/image-5.jpg" alt="Album artwork" fill loading="lazy" className="object-cover" />
               </motion.div>
             </div>
           </div>

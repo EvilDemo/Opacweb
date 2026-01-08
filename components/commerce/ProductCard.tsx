@@ -7,9 +7,10 @@ import type { Product } from "@/types/commerce";
 
 interface ProductCardProps {
   product: Product;
+  index?: number;
 }
 
-function ProductCardComponent({ product }: ProductCardProps) {
+function ProductCardComponent({ product, index = 0 }: ProductCardProps) {
   if (product.variants.length === 0) {
     return null;
   }
@@ -45,7 +46,7 @@ function ProductCardComponent({ product }: ProductCardProps) {
               loop
               playsInline
               autoPlay
-              preload="metadata"
+              preload="none"
               aria-label={`${product.title} preview`}
               className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
             />
@@ -54,6 +55,7 @@ function ProductCardComponent({ product }: ProductCardProps) {
               src={featuredMedia.image.url}
               alt={featuredMedia.image.altText || product.title}
               fill
+              loading={index < 8 ? "eager" : "lazy"} // Eager load first 8 images
               className="object-cover transition-transform duration-300 group-hover:scale-110"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />

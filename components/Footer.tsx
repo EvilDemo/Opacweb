@@ -18,6 +18,7 @@ export default function Footer() {
           loop
           muted
           playsInline
+          preload="none"
           aria-label="OPAC world background animation"
           className="w-full h-full object-cover object-center animate-[pulse_2s_ease-in-out_infinite]"
           style={{

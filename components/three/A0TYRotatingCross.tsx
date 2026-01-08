@@ -159,6 +159,80 @@ function RotatingCross({ onModelLoaded, visible = true }: { onModelLoaded?: () =
 // Preload the model - moved to component level to avoid module-level execution
 // useGLTF.preload("/cross.glb");
 
+// Custom hook to detect canvas visibility
+function useCanvasVisibility(containerRef: React.RefObject<HTMLDivElement | null>, canvasReady: boolean): boolean {
+  const [isInViewport, setIsInViewport] = useState(true); // Default to true (assume visible)
+  const [tabVisible, setTabVisible] = useState(true); // Default to true (assume visible)
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !canvasReady) return;
+
+    const container = containerRef.current;
+    if (!container) return;
+
+    // Check for IntersectionObserver support
+    if (!("IntersectionObserver" in window)) {
+      // Fallback: assume always visible if IntersectionObserver is not supported
+      return;
+    }
+
+    let observer: IntersectionObserver | null = null;
+
+    try {
+      // Set up IntersectionObserver
+      observer = new IntersectionObserver(
+        (entries) => {
+          if (entries.length > 0) {
+            const entry = entries[0];
+            setIsInViewport(entry.isIntersecting);
+          }
+        },
+        {
+          threshold: 0.1, // Trigger when 10% visible
+          rootMargin: "0px",
+        }
+      );
+
+      // Initial check - verify if container is in viewport
+      const rect = container.getBoundingClientRect();
+      const initialInViewport =
+        rect.top < window.innerHeight && rect.bottom > 0 && rect.left < window.innerWidth && rect.right > 0;
+      setIsInViewport(initialInViewport);
+
+      // Start observing
+      observer.observe(container);
+    } catch (error) {
+      // If IntersectionObserver fails, fallback to always visible
+      console.warn("IntersectionObserver initialization failed:", error);
+      return;
+    }
+
+    // Set up Page Visibility API
+    // Note: document is guaranteed to exist since we've checked window above
+    const handleVisibilityChange = () => {
+      setTabVisible(!document.hidden);
+    };
+
+    // Set initial tab visibility state
+    setTabVisible(!document.hidden);
+
+    // Listen for visibility changes
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    // Cleanup
+    return () => {
+      if (observer) {
+        observer.disconnect();
+      }
+      // Note: document is guaranteed to exist since we've checked window above
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, [containerRef, canvasReady]);
+
+  // Combine both conditions: render only when BOTH in viewport AND tab visible
+  return isInViewport && tabVisible;
+}
+
 // Scene Content
 function SceneContent({
   isMobile,
@@ -208,6 +282,9 @@ export function A0TYRotatingCross() {
   const [hideLoader, setHideLoader] = useState(false);
   const [modelLoaded, setModelLoaded] = useState(false);
   const canvasContainerRef = useRef<HTMLDivElement>(null);
+
+  // Track canvas visibility for performance optimization
+  const isVisible = useCanvasVisibility(canvasContainerRef, canvasReady);
 
   // Ensure component is mounted on client before rendering Canvas
   useEffect(() => {
@@ -332,7 +409,7 @@ export function A0TYRotatingCross() {
             }}
             dpr={isMobile ? CONFIG.mobile.dpr : [1, 1.5]}
             performance={{ min: 0.5 }}
-            frameloop="always"
+            frameloop={isVisible ? "always" : "demand"}
             style={{ background: "transparent" }} // Ensure transparent background
           >
             <PerspectiveCamera makeDefault position={CONFIG.camera.position} fov={CONFIG.camera.fov} />

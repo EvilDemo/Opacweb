@@ -31,7 +31,7 @@ export function ProductGallery({
               loop
               playsInline
               autoPlay
-              preload="metadata"
+              preload="none"
               aria-label={`${productTitle} preview`}
               className="h-full w-full object-contain"
             />
@@ -42,6 +42,7 @@ export function ProductGallery({
               fill
               className="object-contain"
               priority
+              fetchPriority="high"
               sizes="(max-width: 1024px) 100vw, 50vw"
             />
           )}
@@ -73,6 +74,7 @@ export function ProductGallery({
                         src={media.video.previewImage.url}
                         alt={media.video.previewImage.altText || `${productTitle} preview`}
                         fill
+                        loading="lazy"
                         className="object-cover"
                         sizes="(max-width: 1024px) 25vw, 12.5vw"
                       />
@@ -90,6 +92,7 @@ export function ProductGallery({
                     src={media.image.url}
                     alt={media.image.altText || `${productTitle} - Image ${index + 1}`}
                     fill
+                    loading="lazy"
                     className="object-cover"
                     sizes="(max-width: 1024px) 25vw, 12.5vw"
                   />

@@ -130,6 +130,7 @@ export default function AotyHero({ isMuted = false, onMuteChange }: AotyHeroProp
             loop
             muted
             playsInline
+            preload="none"
             aria-label="A0TY album promotional video"
             className="w-full h-full object-cover"
           />
