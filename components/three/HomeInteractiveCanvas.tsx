@@ -79,8 +79,8 @@ const CONFIG = {
     },
   },
   timing: {
-    crossAppearDelay: 1600,
-    instructionsAppearDelay: 2600,
+    crossAppearDelay: 800,
+    instructionsAppearDelay: 1800,
     textAnimationDuration: 1.5,
   },
   animation: {
@@ -445,6 +445,7 @@ export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }
   const [isMobile, setIsMobile] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [canvasReady, setCanvasReady] = useState(false);
+  const [hideLoader, setHideLoader] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const canvasContainerRef = useRef<HTMLDivElement>(null);
 
@@ -535,6 +536,11 @@ export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }
   }, []);
 
   useEffect(() => {
+    // Hide loader slightly before cross appears for smooth transition
+    const loaderTimer = setTimeout(() => {
+      setHideLoader(true);
+    }, CONFIG.timing.crossAppearDelay - 100); // 100ms before cross appears
+
     // Show cross after text animation completes
     const crossTimer = setTimeout(() => {
       setShowCross(true);
@@ -546,6 +552,7 @@ export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }
     }, CONFIG.timing.instructionsAppearDelay);
 
     return () => {
+      clearTimeout(loaderTimer);
       clearTimeout(crossTimer);
       clearTimeout(instructionsTimer);
     };
@@ -596,7 +603,14 @@ export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }
 
   // Don't render Canvas until mounted on client and in browser
   if (!mounted || typeof window === "undefined") {
-    return null;
+    return (
+      <div className="absolute inset-0 flex items-center justify-center z-10">
+        <div className="flex flex-col items-center gap-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-2 border-white/20 border-t-white"></div>
+          <p className="body-text-sm text-white/80">Loading A0TY mode...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -610,6 +624,15 @@ export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }
         WebkitTouchCallout: "none", // Disable iOS callout menu
       }}
     >
+      {/* Show loading until cross is ready (hides slightly earlier for smooth transition) */}
+      {!hideLoader && (
+        <div className="absolute inset-0 flex items-center justify-center z-10">
+          <div className="flex flex-col items-center gap-4">
+            <div className="animate-spin rounded-full h-12 w-12 border-2 border-white/20 border-t-white"></div>
+            <p className="body-text-sm text-white/80">Loading A0TY mode...</p>
+          </div>
+        </div>
+      )}
       {/* AOTY Album Card - Centered */}
       {showButton && (
         <motion.div
