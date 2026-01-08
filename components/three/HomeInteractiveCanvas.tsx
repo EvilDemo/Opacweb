@@ -247,6 +247,24 @@ function InteractiveCross() {
       // Only handle if we're not already grabbed and on mobile
       if (isGrabbed || !rigidBodyRef.current) return;
 
+      // Check if touch target is an interactive element (button, link, or within card)
+      const target = event.target as HTMLElement;
+      if (target) {
+        // Check if target is a button, link, or within a card/button/link
+        const isInteractive =
+          target.tagName === "BUTTON" ||
+          target.tagName === "A" ||
+          target.closest("button") !== null ||
+          target.closest("a") !== null ||
+          target.closest('[role="button"]') !== null ||
+          target.closest("[data-interactive]") !== null;
+
+        if (isInteractive) {
+          // Don't prevent default or throw cross if clicking on interactive element
+          return;
+        }
+      }
+
       // Check if hero section is in view
       const heroSection = document.querySelector("section");
       if (!heroSection) return;
@@ -429,6 +447,7 @@ export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }
   const [showButton, setShowButton] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const canvasContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // Detect mobile screen size
@@ -497,6 +516,16 @@ export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }
     };
   }, []);
 
+  // Disable pointer events on canvas when popup is visible
+  useEffect(() => {
+    if (!canvasContainerRef.current) return;
+
+    const canvasElement = canvasContainerRef.current.querySelector("canvas");
+    if (canvasElement) {
+      canvasElement.style.pointerEvents = showButton ? "none" : "auto";
+    }
+  }, [showButton]);
+
   return (
     <div
       className="w-full relative"
@@ -511,12 +540,20 @@ export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }
       {/* AOTY Album Card - Centered */}
       {showButton && (
         <motion.div
-          className="absolute inset-0 flex flex-col items-center justify-center z-20 pointer-events-none padding-global -translate-y-14"
+          className="absolute inset-0 flex flex-col items-center justify-center z-50 pointer-events-none padding-global -translate-y-14"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
         >
-          <div className="pointer-events-auto w-full max-w-[200px] md:max-w-[240px] lg:max-w-[320px]">
+          <div
+            className="pointer-events-auto w-full max-w-[200px] md:max-w-[240px] lg:max-w-[320px] relative z-50"
+            data-interactive="true"
+            style={{
+              touchAction: "auto",
+              WebkitUserSelect: "auto",
+              userSelect: "auto",
+            }}
+          >
             <AotyAlbumCard />
           </div>
         </motion.div>
@@ -546,7 +583,11 @@ export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }
       </motion.div>
 
       {/* 3D Canvas Layer */}
-      <div className="absolute inset-0 z-0">
+      <div
+        ref={canvasContainerRef}
+        className="absolute inset-0 z-0"
+        style={showButton ? { pointerEvents: "none" } : {}}
+      >
         {/* Interactive Music Player (reacts to physics) */}
         <HomeInteractiveMusic audioSrc="/aoty-mode-home.m4a" autoPlay={true} isMuted={isMuted} />
 
