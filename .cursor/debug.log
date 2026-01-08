@@ -1,0 +1,238 @@
+{"location":"AotyHero.tsx:114","message":"Rendering A0TYRotatingCross","data":{},"timestamp":1767891178058,"sessionId":"debug-session","runId":"run1","hypothesisId":"F"}
+{"location":"AotyHero.tsx:114","message":"Rendering A0TYRotatingCross","data":{},"timestamp":1767891178059,"sessionId":"debug-session","runId":"run1","hypothesisId":"F"}
+{"location":"A0TYRotatingCross.tsx:201","message":"Rendering Canvas","data":{},"timestamp":1767891178061,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"A0TYRotatingCross.tsx:201","message":"Rendering Canvas","data":{},"timestamp":1767891178062,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"A0TYRotatingCross.tsx:169","message":"Component mounted","data":{"timestamp":1767891178084},"timestamp":1767891178084,"sessionId":"debug-session","runId":"run1","hypothesisId":"A"}
+{"location":"A0TYRotatingCross.tsx:172","message":"useGLTF.preload called","data":{"windowAvailable":true},"timestamp":1767891178084,"sessionId":"debug-session","runId":"run1","hypothesisId":"A"}
+{"location":"A0TYRotatingCross.tsx:186","message":"WebGL check","data":{"webglAvailable":true},"timestamp":1767891178089,"sessionId":"debug-session","runId":"run1","hypothesisId":"B"}
+{"location":"A0TYRotatingCross.tsx:53","message":"RotatingCross component mounting","data":{},"timestamp":1767891178102,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:60","message":"Calling useGLTF","data":{"path":"/cross.glb"},"timestamp":1767891178102,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:65","message":"useGLTF result","data":{"hasScene":true},"timestamp":1767891178102,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:127","message":"Modifying scene materials","data":{"hasScene":true},"timestamp":1767891178102,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:145","message":"Scene materials modified successfully","data":{},"timestamp":1767891178102,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:176","message":"PostProcessingEffects mounted","data":{"hasGl":true,"glAlpha":null},"timestamp":1767891178102,"sessionId":"debug-session","runId":"run1","hypothesisId":"H"}
+{"location":"A0TYRotatingCross.tsx:186","message":"GL context ready","data":{"alpha":null},"timestamp":1767891178103,"sessionId":"debug-session","runId":"run1","hypothesisId":"H"}
+{"location":"A0TYRotatingCross.tsx:220","message":"Canvas created","data":{"gl":true},"timestamp":1767891178171,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"AotyHero.tsx:114","message":"Rendering A0TYRotatingCross","data":{},"timestamp":1767891178165,"sessionId":"debug-session","runId":"run1","hypothesisId":"F"}
+{"location":"AotyHero.tsx:114","message":"Rendering A0TYRotatingCross","data":{},"timestamp":1767891178657,"sessionId":"debug-session","runId":"run1","hypothesisId":"F"}
+{"location":"AotyHero.tsx:114","message":"Rendering A0TYRotatingCross","data":{},"timestamp":1767891178657,"sessionId":"debug-session","runId":"run1","hypothesisId":"F"}
+{"location":"AotyHero.tsx:20","message":"Dynamic import started","data":{},"timestamp":1767891178677,"sessionId":"debug-session","runId":"run1","hypothesisId":"E"}
+{"location":"AotyHero.tsx:25","message":"Dynamic import resolved","data":{"hasExport":true},"timestamp":1767891178773,"sessionId":"debug-session","runId":"run1","hypothesisId":"E"}
+{"location":"A0TYRotatingCross.tsx:201","message":"Rendering Canvas","data":{},"timestamp":1767891178775,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"A0TYRotatingCross.tsx:201","message":"Rendering Canvas","data":{},"timestamp":1767891178776,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"A0TYRotatingCross.tsx:169","message":"Component mounted","data":{"timestamp":1767891178778},"timestamp":1767891178778,"sessionId":"debug-session","runId":"run1","hypothesisId":"A"}
+{"location":"A0TYRotatingCross.tsx:172","message":"useGLTF.preload called","data":{"windowAvailable":true},"timestamp":1767891178779,"sessionId":"debug-session","runId":"run1","hypothesisId":"A"}
+{"location":"A0TYRotatingCross.tsx:186","message":"WebGL check","data":{"webglAvailable":true},"timestamp":1767891178785,"sessionId":"debug-session","runId":"run1","hypothesisId":"B"}
+{"location":"A0TYRotatingCross.tsx:169","message":"Component mounted","data":{"timestamp":1767891178785},"timestamp":1767891178785,"sessionId":"debug-session","runId":"run1","hypothesisId":"A"}
+{"location":"A0TYRotatingCross.tsx:172","message":"useGLTF.preload called","data":{"windowAvailable":true},"timestamp":1767891178785,"sessionId":"debug-session","runId":"run1","hypothesisId":"A"}
+{"location":"A0TYRotatingCross.tsx:186","message":"WebGL check","data":{"webglAvailable":true},"timestamp":1767891178788,"sessionId":"debug-session","runId":"run1","hypothesisId":"B"}
+{"location":"A0TYRotatingCross.tsx:220","message":"Canvas created","data":{"gl":true},"timestamp":1767891178854,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"A0TYRotatingCross.tsx:53","message":"RotatingCross component mounting","data":{},"timestamp":1767891179155,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:60","message":"Calling useGLTF","data":{"path":"/cross.glb"},"timestamp":1767891179155,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:65","message":"useGLTF result","data":{"hasScene":true},"timestamp":1767891179155,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:127","message":"Modifying scene materials","data":{"hasScene":true},"timestamp":1767891179155,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:145","message":"Scene materials modified successfully","data":{},"timestamp":1767891179156,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:176","message":"PostProcessingEffects mounted","data":{"hasGl":true,"glAlpha":null},"timestamp":1767891179156,"sessionId":"debug-session","runId":"run1","hypothesisId":"H"}
+{"location":"A0TYRotatingCross.tsx:186","message":"GL context ready","data":{"alpha":8},"timestamp":1767891179158,"sessionId":"debug-session","runId":"run1","hypothesisId":"H"}
+{"location":"A0TYRotatingCross.tsx:53","message":"RotatingCross component mounting","data":{},"timestamp":1767891179158,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:60","message":"Calling useGLTF","data":{"path":"/cross.glb"},"timestamp":1767891179159,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:65","message":"useGLTF result","data":{"hasScene":true},"timestamp":1767891179159,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:127","message":"Modifying scene materials","data":{"hasScene":true},"timestamp":1767891179159,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:145","message":"Scene materials modified successfully","data":{},"timestamp":1767891179159,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:176","message":"PostProcessingEffects mounted","data":{"hasGl":true,"glAlpha":null},"timestamp":1767891179159,"sessionId":"debug-session","runId":"run1","hypothesisId":"H"}
+{"location":"A0TYRotatingCross.tsx:186","message":"GL context ready","data":{"alpha":8},"timestamp":1767891179159,"sessionId":"debug-session","runId":"run1","hypothesisId":"H"}
+{"location":"A0TYRotatingCross.tsx:169","message":"Component mounted","data":{"timestamp":1767891179247},"timestamp":1767891179247,"sessionId":"debug-session","runId":"run1","hypothesisId":"A"}
+{"location":"A0TYRotatingCross.tsx:172","message":"useGLTF.preload called","data":{"windowAvailable":true},"timestamp":1767891179247,"sessionId":"debug-session","runId":"run1","hypothesisId":"A"}
+{"location":"A0TYRotatingCross.tsx:186","message":"WebGL check","data":{"webglAvailable":true},"timestamp":1767891179253,"sessionId":"debug-session","runId":"run1","hypothesisId":"B"}
+{"location":"A0TYRotatingCross.tsx:220","message":"Canvas created","data":{"gl":true},"timestamp":1767891179307,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"A0TYRotatingCross.tsx:53","message":"RotatingCross component mounting","data":{},"timestamp":1767891179308,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:60","message":"Calling useGLTF","data":{"path":"/cross.glb"},"timestamp":1767891179308,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:65","message":"useGLTF result","data":{"hasScene":true},"timestamp":1767891179308,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:127","message":"Modifying scene materials","data":{"hasScene":true},"timestamp":1767891179308,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:145","message":"Scene materials modified successfully","data":{},"timestamp":1767891179308,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:176","message":"PostProcessingEffects mounted","data":{"hasGl":true,"glAlpha":null},"timestamp":1767891179308,"sessionId":"debug-session","runId":"run1","hypothesisId":"H"}
+{"location":"A0TYRotatingCross.tsx:186","message":"GL context ready","data":{"alpha":8},"timestamp":1767891179309,"sessionId":"debug-session","runId":"run1","hypothesisId":"H"}
+{"location":"AotyHero.tsx:114","message":"Rendering A0TYRotatingCross","data":{},"timestamp":1767891198102,"sessionId":"debug-session","runId":"run1","hypothesisId":"F"}
+{"location":"AotyHero.tsx:114","message":"Rendering A0TYRotatingCross","data":{},"timestamp":1767891198246,"sessionId":"debug-session","runId":"run1","hypothesisId":"F"}
+{"location":"AotyHero.tsx:114","message":"Rendering A0TYRotatingCross","data":{},"timestamp":1767891198246,"sessionId":"debug-session","runId":"run1","hypothesisId":"F"}
+{"location":"AotyHero.tsx:20","message":"Dynamic import started","data":{},"timestamp":1767891198266,"sessionId":"debug-session","runId":"run1","hypothesisId":"E"}
+{"location":"AotyHero.tsx:25","message":"Dynamic import resolved","data":{"hasExport":true},"timestamp":1767891198373,"sessionId":"debug-session","runId":"run1","hypothesisId":"E"}
+{"location":"A0TYRotatingCross.tsx:201","message":"Rendering Canvas","data":{},"timestamp":1767891198375,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"A0TYRotatingCross.tsx:201","message":"Rendering Canvas","data":{},"timestamp":1767891198375,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"A0TYRotatingCross.tsx:169","message":"Component mounted","data":{"timestamp":1767891198409},"timestamp":1767891198409,"sessionId":"debug-session","runId":"run1","hypothesisId":"A"}
+{"location":"A0TYRotatingCross.tsx:172","message":"useGLTF.preload called","data":{"windowAvailable":true},"timestamp":1767891198410,"sessionId":"debug-session","runId":"run1","hypothesisId":"A"}
+{"location":"A0TYRotatingCross.tsx:186","message":"WebGL check","data":{"webglAvailable":true},"timestamp":1767891198414,"sessionId":"debug-session","runId":"run1","hypothesisId":"B"}
+{"location":"A0TYRotatingCross.tsx:169","message":"Component mounted","data":{"timestamp":1767891198414},"timestamp":1767891198414,"sessionId":"debug-session","runId":"run1","hypothesisId":"A"}
+{"location":"A0TYRotatingCross.tsx:172","message":"useGLTF.preload called","data":{"windowAvailable":true},"timestamp":1767891198415,"sessionId":"debug-session","runId":"run1","hypothesisId":"A"}
+{"location":"A0TYRotatingCross.tsx:186","message":"WebGL check","data":{"webglAvailable":true},"timestamp":1767891198417,"sessionId":"debug-session","runId":"run1","hypothesisId":"B"}
+{"location":"A0TYRotatingCross.tsx:220","message":"Canvas created","data":{"gl":true},"timestamp":1767891198488,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"A0TYRotatingCross.tsx:53","message":"RotatingCross component mounting","data":{},"timestamp":1767891198790,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:60","message":"Calling useGLTF","data":{"path":"/cross.glb"},"timestamp":1767891198790,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:65","message":"useGLTF result","data":{"hasScene":true},"timestamp":1767891198790,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:127","message":"Modifying scene materials","data":{"hasScene":true},"timestamp":1767891198790,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:145","message":"Scene materials modified successfully","data":{},"timestamp":1767891198791,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:176","message":"PostProcessingEffects mounted","data":{"hasGl":true},"timestamp":1767891198791,"sessionId":"debug-session","runId":"run1","hypothesisId":"H"}
+{"location":"A0TYRotatingCross.tsx:53","message":"RotatingCross component mounting","data":{},"timestamp":1767891198791,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:60","message":"Calling useGLTF","data":{"path":"/cross.glb"},"timestamp":1767891198791,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:65","message":"useGLTF result","data":{"hasScene":true},"timestamp":1767891198791,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:127","message":"Modifying scene materials","data":{"hasScene":true},"timestamp":1767891198791,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:145","message":"Scene materials modified successfully","data":{},"timestamp":1767891198791,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:176","message":"PostProcessingEffects mounted","data":{"hasGl":true},"timestamp":1767891198791,"sessionId":"debug-session","runId":"run1","hypothesisId":"H"}
+{"location":"A0TYRotatingCross.tsx:169","message":"Component mounted","data":{"timestamp":1767891198793},"timestamp":1767891198793,"sessionId":"debug-session","runId":"run1","hypothesisId":"A"}
+{"location":"A0TYRotatingCross.tsx:172","message":"useGLTF.preload called","data":{"windowAvailable":true},"timestamp":1767891198793,"sessionId":"debug-session","runId":"run1","hypothesisId":"A"}
+{"location":"A0TYRotatingCross.tsx:186","message":"WebGL check","data":{"webglAvailable":true},"timestamp":1767891198797,"sessionId":"debug-session","runId":"run1","hypothesisId":"B"}
+{"location":"A0TYRotatingCross.tsx:220","message":"Canvas created","data":{"gl":true},"timestamp":1767891198851,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"A0TYRotatingCross.tsx:53","message":"RotatingCross component mounting","data":{},"timestamp":1767891198852,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:60","message":"Calling useGLTF","data":{"path":"/cross.glb"},"timestamp":1767891198852,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:65","message":"useGLTF result","data":{"hasScene":true},"timestamp":1767891198852,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:127","message":"Modifying scene materials","data":{"hasScene":true},"timestamp":1767891198852,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:145","message":"Scene materials modified successfully","data":{},"timestamp":1767891198852,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:176","message":"PostProcessingEffects mounted","data":{"hasGl":true},"timestamp":1767891198852,"sessionId":"debug-session","runId":"run1","hypothesisId":"H"}
+{"location":"A0TYRotatingCross.tsx:189","message":"GL context ready","data":{"hasCanvas":true},"timestamp":1767891198920,"sessionId":"debug-session","runId":"run1","hypothesisId":"H"}
+{"location":"AotyHero.tsx:114","message":"Rendering A0TYRotatingCross","data":{},"timestamp":1767891273379,"sessionId":"debug-session","runId":"run1","hypothesisId":"F"}
+{"location":"AotyHero.tsx:114","message":"Rendering A0TYRotatingCross","data":{},"timestamp":1767891273583,"sessionId":"debug-session","runId":"run1","hypothesisId":"F"}
+{"location":"AotyHero.tsx:114","message":"Rendering A0TYRotatingCross","data":{},"timestamp":1767891273583,"sessionId":"debug-session","runId":"run1","hypothesisId":"F"}
+{"location":"AotyHero.tsx:20","message":"Dynamic import started","data":{},"timestamp":1767891273605,"sessionId":"debug-session","runId":"run1","hypothesisId":"E"}
+{"location":"AotyHero.tsx:25","message":"Dynamic import resolved","data":{"hasExport":true},"timestamp":1767891273717,"sessionId":"debug-session","runId":"run1","hypothesisId":"E"}
+{"location":"A0TYRotatingCross.tsx:258","message":"Component mounted","data":{"timestamp":1767891273720},"timestamp":1767891273720,"sessionId":"debug-session","runId":"run1","hypothesisId":"A"}
+{"location":"A0TYRotatingCross.tsx:264","message":"Setting up mount check","data":{},"timestamp":1767891273720,"sessionId":"debug-session","runId":"run1","hypothesisId":"I"}
+{"location":"A0TYRotatingCross.tsx:258","message":"Component mounted","data":{"timestamp":1767891273721},"timestamp":1767891273721,"sessionId":"debug-session","runId":"run1","hypothesisId":"A"}
+{"location":"A0TYRotatingCross.tsx:264","message":"Setting up mount check","data":{},"timestamp":1767891273721,"sessionId":"debug-session","runId":"run1","hypothesisId":"I"}
+{"location":"A0TYRotatingCross.tsx:270","message":"Mounted set to true","data":{},"timestamp":1767891273733,"sessionId":"debug-session","runId":"run1","hypothesisId":"I"}
+{"location":"A0TYRotatingCross.tsx:339","message":"Rendering Canvas container","data":{"canvasReady":false},"timestamp":1767891273735,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"A0TYRotatingCross.tsx:339","message":"Rendering Canvas container","data":{"canvasReady":false},"timestamp":1767891273735,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"A0TYRotatingCross.tsx:328","message":"useGLTF.preload called","data":{"windowAvailable":true},"timestamp":1767891273736,"sessionId":"debug-session","runId":"run1","hypothesisId":"A"}
+{"location":"A0TYRotatingCross.tsx:286","message":"WebGL check","data":{"webglAvailable":true},"timestamp":1767891273746,"sessionId":"debug-session","runId":"run1","hypothesisId":"B"}
+{"location":"A0TYRotatingCross.tsx:310","message":"Canvas ready set to true","data":{},"timestamp":1767891273796,"sessionId":"debug-session","runId":"run1","hypothesisId":"I"}
+{"location":"A0TYRotatingCross.tsx:339","message":"Rendering Canvas container","data":{"canvasReady":true},"timestamp":1767891273797,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"A0TYRotatingCross.tsx:339","message":"Rendering Canvas container","data":{"canvasReady":true},"timestamp":1767891273797,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"A0TYRotatingCross.tsx:220","message":"Canvas created","data":{"gl":true},"timestamp":1767891273870,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"A0TYRotatingCross.tsx:53","message":"RotatingCross component mounting","data":{},"timestamp":1767891274171,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:60","message":"Calling useGLTF","data":{"path":"/cross.glb"},"timestamp":1767891274171,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:65","message":"useGLTF result","data":{"hasScene":true},"timestamp":1767891274172,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:127","message":"Modifying scene materials","data":{"hasScene":true},"timestamp":1767891274172,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:145","message":"Scene materials modified successfully","data":{},"timestamp":1767891274172,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:176","message":"PostProcessingEffects mounted","data":{"hasGl":true},"timestamp":1767891274172,"sessionId":"debug-session","runId":"run1","hypothesisId":"H"}
+{"location":"A0TYRotatingCross.tsx:53","message":"RotatingCross component mounting","data":{},"timestamp":1767891274172,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:60","message":"Calling useGLTF","data":{"path":"/cross.glb"},"timestamp":1767891274173,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:65","message":"useGLTF result","data":{"hasScene":true},"timestamp":1767891274173,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:127","message":"Modifying scene materials","data":{"hasScene":true},"timestamp":1767891274173,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:145","message":"Scene materials modified successfully","data":{},"timestamp":1767891274173,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:176","message":"PostProcessingEffects mounted","data":{"hasGl":true},"timestamp":1767891274173,"sessionId":"debug-session","runId":"run1","hypothesisId":"H"}
+{"location":"A0TYRotatingCross.tsx:258","message":"Component mounted","data":{"timestamp":1767891274174},"timestamp":1767891274174,"sessionId":"debug-session","runId":"run1","hypothesisId":"A"}
+{"location":"A0TYRotatingCross.tsx:264","message":"Setting up mount check","data":{},"timestamp":1767891274174,"sessionId":"debug-session","runId":"run1","hypothesisId":"I"}
+{"location":"A0TYRotatingCross.tsx:328","message":"useGLTF.preload called","data":{"windowAvailable":true},"timestamp":1767891274175,"sessionId":"debug-session","runId":"run1","hypothesisId":"A"}
+{"location":"A0TYRotatingCross.tsx:286","message":"WebGL check","data":{"webglAvailable":true},"timestamp":1767891274181,"sessionId":"debug-session","runId":"run1","hypothesisId":"B"}
+{"location":"A0TYRotatingCross.tsx:270","message":"Mounted set to true","data":{},"timestamp":1767891274183,"sessionId":"debug-session","runId":"run1","hypothesisId":"I"}
+{"location":"A0TYRotatingCross.tsx:310","message":"Canvas ready set to true","data":{},"timestamp":1767891274234,"sessionId":"debug-session","runId":"run1","hypothesisId":"I"}
+{"location":"A0TYRotatingCross.tsx:220","message":"Canvas created","data":{"gl":true},"timestamp":1767891274236,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"A0TYRotatingCross.tsx:53","message":"RotatingCross component mounting","data":{},"timestamp":1767891274237,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:60","message":"Calling useGLTF","data":{"path":"/cross.glb"},"timestamp":1767891274237,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:65","message":"useGLTF result","data":{"hasScene":true},"timestamp":1767891274237,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:127","message":"Modifying scene materials","data":{"hasScene":true},"timestamp":1767891274237,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:145","message":"Scene materials modified successfully","data":{},"timestamp":1767891274237,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:176","message":"PostProcessingEffects mounted","data":{"hasGl":true},"timestamp":1767891274237,"sessionId":"debug-session","runId":"run1","hypothesisId":"H"}
+{"location":"A0TYRotatingCross.tsx:189","message":"GL context ready","data":{"hasCanvas":true},"timestamp":1767891274307,"sessionId":"debug-session","runId":"run1","hypothesisId":"H"}
+{"location":"AotyHero.tsx:114","message":"Rendering A0TYRotatingCross","data":{},"timestamp":1767891294368,"sessionId":"debug-session","runId":"run1","hypothesisId":"F"}
+{"location":"AotyHero.tsx:114","message":"Rendering A0TYRotatingCross","data":{},"timestamp":1767891294547,"sessionId":"debug-session","runId":"run1","hypothesisId":"F"}
+{"location":"AotyHero.tsx:114","message":"Rendering A0TYRotatingCross","data":{},"timestamp":1767891294547,"sessionId":"debug-session","runId":"run1","hypothesisId":"F"}
+{"location":"AotyHero.tsx:20","message":"Dynamic import started","data":{},"timestamp":1767891294570,"sessionId":"debug-session","runId":"run1","hypothesisId":"E"}
+{"location":"AotyHero.tsx:25","message":"Dynamic import resolved","data":{"hasExport":true},"timestamp":1767891294671,"sessionId":"debug-session","runId":"run1","hypothesisId":"E"}
+{"location":"A0TYRotatingCross.tsx:258","message":"Component mounted","data":{"timestamp":1767891294673},"timestamp":1767891294673,"sessionId":"debug-session","runId":"run1","hypothesisId":"A"}
+{"location":"A0TYRotatingCross.tsx:264","message":"Setting up mount check","data":{},"timestamp":1767891294674,"sessionId":"debug-session","runId":"run1","hypothesisId":"I"}
+{"location":"A0TYRotatingCross.tsx:258","message":"Component mounted","data":{"timestamp":1767891294674},"timestamp":1767891294674,"sessionId":"debug-session","runId":"run1","hypothesisId":"A"}
+{"location":"A0TYRotatingCross.tsx:264","message":"Setting up mount check","data":{},"timestamp":1767891294674,"sessionId":"debug-session","runId":"run1","hypothesisId":"I"}
+{"location":"A0TYRotatingCross.tsx:270","message":"Mounted set to true","data":{},"timestamp":1767891294683,"sessionId":"debug-session","runId":"run1","hypothesisId":"I"}
+{"location":"A0TYRotatingCross.tsx:339","message":"Rendering Canvas container","data":{"canvasReady":false},"timestamp":1767891294684,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"A0TYRotatingCross.tsx:339","message":"Rendering Canvas container","data":{"canvasReady":false},"timestamp":1767891294684,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"A0TYRotatingCross.tsx:328","message":"useGLTF.preload called","data":{"windowAvailable":true},"timestamp":1767891294686,"sessionId":"debug-session","runId":"run1","hypothesisId":"A"}
+{"location":"A0TYRotatingCross.tsx:286","message":"WebGL check","data":{"webglAvailable":true},"timestamp":1767891294721,"sessionId":"debug-session","runId":"run1","hypothesisId":"B"}
+{"location":"A0TYRotatingCross.tsx:310","message":"Canvas ready set to true","data":{},"timestamp":1767891294773,"sessionId":"debug-session","runId":"run1","hypothesisId":"I"}
+{"location":"A0TYRotatingCross.tsx:339","message":"Rendering Canvas container","data":{"canvasReady":true},"timestamp":1767891294773,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"A0TYRotatingCross.tsx:339","message":"Rendering Canvas container","data":{"canvasReady":true},"timestamp":1767891294774,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"A0TYRotatingCross.tsx:220","message":"Canvas created","data":{"gl":true},"timestamp":1767891294841,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"A0TYRotatingCross.tsx:53","message":"RotatingCross component mounting","data":{},"timestamp":1767891295145,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:60","message":"Calling useGLTF","data":{"path":"/cross.glb"},"timestamp":1767891295145,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:65","message":"useGLTF result","data":{"hasScene":true},"timestamp":1767891295145,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:127","message":"Modifying scene materials","data":{"hasScene":true},"timestamp":1767891295145,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:145","message":"Scene materials modified successfully","data":{},"timestamp":1767891295146,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:176","message":"PostProcessingEffects mounted","data":{"hasGl":true},"timestamp":1767891295146,"sessionId":"debug-session","runId":"run1","hypothesisId":"H"}
+{"location":"A0TYRotatingCross.tsx:53","message":"RotatingCross component mounting","data":{},"timestamp":1767891295146,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:60","message":"Calling useGLTF","data":{"path":"/cross.glb"},"timestamp":1767891295146,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:65","message":"useGLTF result","data":{"hasScene":true},"timestamp":1767891295146,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:127","message":"Modifying scene materials","data":{"hasScene":true},"timestamp":1767891295146,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:145","message":"Scene materials modified successfully","data":{},"timestamp":1767891295146,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:176","message":"PostProcessingEffects mounted","data":{"hasGl":true},"timestamp":1767891295146,"sessionId":"debug-session","runId":"run1","hypothesisId":"H"}
+{"location":"A0TYRotatingCross.tsx:258","message":"Component mounted","data":{"timestamp":1767891295148},"timestamp":1767891295148,"sessionId":"debug-session","runId":"run1","hypothesisId":"A"}
+{"location":"A0TYRotatingCross.tsx:264","message":"Setting up mount check","data":{},"timestamp":1767891295149,"sessionId":"debug-session","runId":"run1","hypothesisId":"I"}
+{"location":"A0TYRotatingCross.tsx:328","message":"useGLTF.preload called","data":{"windowAvailable":true},"timestamp":1767891295149,"sessionId":"debug-session","runId":"run1","hypothesisId":"A"}
+{"location":"A0TYRotatingCross.tsx:286","message":"WebGL check","data":{"webglAvailable":true},"timestamp":1767891295157,"sessionId":"debug-session","runId":"run1","hypothesisId":"B"}
+{"location":"A0TYRotatingCross.tsx:270","message":"Mounted set to true","data":{},"timestamp":1767891295160,"sessionId":"debug-session","runId":"run1","hypothesisId":"I"}
+{"location":"A0TYRotatingCross.tsx:310","message":"Canvas ready set to true","data":{},"timestamp":1767891295224,"sessionId":"debug-session","runId":"run1","hypothesisId":"I"}
+{"location":"A0TYRotatingCross.tsx:220","message":"Canvas created","data":{"gl":true},"timestamp":1767891295231,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"A0TYRotatingCross.tsx:53","message":"RotatingCross component mounting","data":{},"timestamp":1767891295232,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:60","message":"Calling useGLTF","data":{"path":"/cross.glb"},"timestamp":1767891295232,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:65","message":"useGLTF result","data":{"hasScene":true},"timestamp":1767891295232,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:127","message":"Modifying scene materials","data":{"hasScene":true},"timestamp":1767891295232,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:145","message":"Scene materials modified successfully","data":{},"timestamp":1767891295232,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:176","message":"PostProcessingEffects mounted","data":{"hasGl":true},"timestamp":1767891295232,"sessionId":"debug-session","runId":"run1","hypothesisId":"H"}
+{"location":"A0TYRotatingCross.tsx:189","message":"GL context ready","data":{"hasCanvas":true},"timestamp":1767891295302,"sessionId":"debug-session","runId":"run1","hypothesisId":"H"}
+{"location":"AotyHero.tsx:114","message":"Rendering A0TYRotatingCross","data":{},"timestamp":1767891315506,"sessionId":"debug-session","runId":"run1","hypothesisId":"F"}
+{"location":"AotyHero.tsx:114","message":"Rendering A0TYRotatingCross","data":{},"timestamp":1767891315645,"sessionId":"debug-session","runId":"run1","hypothesisId":"F"}
+{"location":"AotyHero.tsx:114","message":"Rendering A0TYRotatingCross","data":{},"timestamp":1767891315646,"sessionId":"debug-session","runId":"run1","hypothesisId":"F"}
+{"location":"AotyHero.tsx:20","message":"Dynamic import started","data":{},"timestamp":1767891315665,"sessionId":"debug-session","runId":"run1","hypothesisId":"E"}
+{"location":"AotyHero.tsx:25","message":"Dynamic import resolved","data":{"hasExport":true},"timestamp":1767891315757,"sessionId":"debug-session","runId":"run1","hypothesisId":"E"}
+{"location":"A0TYRotatingCross.tsx:258","message":"Component mounted","data":{"timestamp":1767891315759},"timestamp":1767891315759,"sessionId":"debug-session","runId":"run1","hypothesisId":"A"}
+{"location":"A0TYRotatingCross.tsx:264","message":"Setting up mount check","data":{},"timestamp":1767891315760,"sessionId":"debug-session","runId":"run1","hypothesisId":"I"}
+{"location":"A0TYRotatingCross.tsx:258","message":"Component mounted","data":{"timestamp":1767891315760},"timestamp":1767891315760,"sessionId":"debug-session","runId":"run1","hypothesisId":"A"}
+{"location":"A0TYRotatingCross.tsx:264","message":"Setting up mount check","data":{},"timestamp":1767891315760,"sessionId":"debug-session","runId":"run1","hypothesisId":"I"}
+{"location":"A0TYRotatingCross.tsx:270","message":"Mounted set to true","data":{},"timestamp":1767891315775,"sessionId":"debug-session","runId":"run1","hypothesisId":"I"}
+{"location":"A0TYRotatingCross.tsx:339","message":"Rendering Canvas container","data":{"canvasReady":false},"timestamp":1767891315776,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"A0TYRotatingCross.tsx:339","message":"Rendering Canvas container","data":{"canvasReady":false},"timestamp":1767891315776,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"A0TYRotatingCross.tsx:328","message":"useGLTF.preload called","data":{"windowAvailable":true},"timestamp":1767891315777,"sessionId":"debug-session","runId":"run1","hypothesisId":"A"}
+{"location":"A0TYRotatingCross.tsx:286","message":"WebGL check","data":{"webglAvailable":true},"timestamp":1767891315814,"sessionId":"debug-session","runId":"run1","hypothesisId":"B"}
+{"location":"A0TYRotatingCross.tsx:310","message":"Canvas ready set to true","data":{},"timestamp":1767891315865,"sessionId":"debug-session","runId":"run1","hypothesisId":"I"}
+{"location":"A0TYRotatingCross.tsx:339","message":"Rendering Canvas container","data":{"canvasReady":true},"timestamp":1767891315866,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"A0TYRotatingCross.tsx:339","message":"Rendering Canvas container","data":{"canvasReady":true},"timestamp":1767891315866,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"A0TYRotatingCross.tsx:375","message":"Canvas created","data":{"gl":true},"timestamp":1767891315933,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"A0TYRotatingCross.tsx:53","message":"RotatingCross component mounting","data":{},"timestamp":1767891316236,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:60","message":"Calling useGLTF","data":{"path":"/cross.glb"},"timestamp":1767891316237,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:65","message":"useGLTF result","data":{"hasScene":true},"timestamp":1767891316237,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:127","message":"Modifying scene materials","data":{"hasScene":true},"timestamp":1767891316237,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:145","message":"Scene materials modified successfully","data":{},"timestamp":1767891316237,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:176","message":"PostProcessingEffects mounted","data":{"hasGl":true},"timestamp":1767891316237,"sessionId":"debug-session","runId":"run1","hypothesisId":"H"}
+{"location":"A0TYRotatingCross.tsx:53","message":"RotatingCross component mounting","data":{},"timestamp":1767891316238,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:60","message":"Calling useGLTF","data":{"path":"/cross.glb"},"timestamp":1767891316238,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:65","message":"useGLTF result","data":{"hasScene":true},"timestamp":1767891316238,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:127","message":"Modifying scene materials","data":{"hasScene":true},"timestamp":1767891316238,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:145","message":"Scene materials modified successfully","data":{},"timestamp":1767891316238,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:176","message":"PostProcessingEffects mounted","data":{"hasGl":true},"timestamp":1767891316238,"sessionId":"debug-session","runId":"run1","hypothesisId":"H"}
+{"location":"A0TYRotatingCross.tsx:189","message":"GL context ready","data":{"hasCanvas":true},"timestamp":1767891316307,"sessionId":"debug-session","runId":"run1","hypothesisId":"H"}
+{"location":"A0TYRotatingCross.tsx:339","message":"Rendering Canvas container","data":{"canvasReady":true},"timestamp":1767891340265,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"A0TYRotatingCross.tsx:339","message":"Rendering Canvas container","data":{"canvasReady":true},"timestamp":1767891340265,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"A0TYRotatingCross.tsx:339","message":"Rendering Canvas container","data":{"canvasReady":true},"timestamp":1767891344032,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"A0TYRotatingCross.tsx:339","message":"Rendering Canvas container","data":{"canvasReady":true},"timestamp":1767891344033,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"A0TYRotatingCross.tsx:339","message":"Rendering Canvas container","data":{"canvasReady":true},"timestamp":1767891386524,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"A0TYRotatingCross.tsx:339","message":"Rendering Canvas container","data":{"canvasReady":true},"timestamp":1767891386524,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"A0TYRotatingCross.tsx:127","message":"Modifying scene materials","data":{"hasScene":true},"timestamp":1767891386527,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:145","message":"Scene materials modified successfully","data":{},"timestamp":1767891386527,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"A0TYRotatingCross.tsx:339","message":"Rendering Canvas container","data":{"canvasReady":true},"timestamp":1767891397904,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"A0TYRotatingCross.tsx:339","message":"Rendering Canvas container","data":{"canvasReady":true},"timestamp":1767891397905,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"A0TYRotatingCross.tsx:339","message":"Rendering Canvas container","data":{"canvasReady":true},"timestamp":1767891408443,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"A0TYRotatingCross.tsx:339","message":"Rendering Canvas container","data":{"canvasReady":true},"timestamp":1767891408443,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"A0TYRotatingCross.tsx:339","message":"Rendering Canvas container","data":{"canvasReady":false},"timestamp":1767891416667,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"A0TYRotatingCross.tsx:339","message":"Rendering Canvas container","data":{"canvasReady":false},"timestamp":1767891416668,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"A0TYRotatingCross.tsx:328","message":"useGLTF.preload called","data":{"windowAvailable":true},"timestamp":1767891416669,"sessionId":"debug-session","runId":"run1","hypothesisId":"A"}
+{"location":"A0TYRotatingCross.tsx:293","message":"WebGL check passed","data":{"webglAvailable":true,"alpha":8},"timestamp":1767891416679,"sessionId":"debug-session","runId":"run1","hypothesisId":"B"}
+{"location":"A0TYRotatingCross.tsx:325","message":"Canvas ready set to true","data":{},"timestamp":1767891416780,"sessionId":"debug-session","runId":"run1","hypothesisId":"I"}
+{"location":"A0TYRotatingCross.tsx:339","message":"Rendering Canvas container","data":{"canvasReady":true},"timestamp":1767891416780,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"A0TYRotatingCross.tsx:339","message":"Rendering Canvas container","data":{"canvasReady":true},"timestamp":1767891416781,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"A0TYRotatingCross.tsx:375","message":"Canvas created","data":{"gl":true},"timestamp":1767891416875,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"A0TYRotatingCross.tsx:339","message":"Rendering Canvas container","data":{"canvasReady":true},"timestamp":1767891424500,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"A0TYRotatingCross.tsx:339","message":"Rendering Canvas container","data":{"canvasReady":true},"timestamp":1767891424500,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"A0TYRotatingCross.tsx:339","message":"Rendering Canvas container","data":{"canvasReady":true},"timestamp":1767891427375,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"A0TYRotatingCross.tsx:339","message":"Rendering Canvas container","data":{"canvasReady":true},"timestamp":1767891427376,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"A0TYRotatingCross.tsx:339","message":"Rendering Canvas container","data":{"canvasReady":true},"timestamp":1767891430394,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"A0TYRotatingCross.tsx:339","message":"Rendering Canvas container","data":{"canvasReady":true},"timestamp":1767891430395,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"AotyHero.tsx:114","message":"Rendering A0TYRotatingCross","data":{},"timestamp":1767891446635,"sessionId":"debug-session","runId":"run1","hypothesisId":"F"}
+{"location":"AotyHero.tsx:114","message":"Rendering A0TYRotatingCross","data":{},"timestamp":1767891446636,"sessionId":"debug-session","runId":"run1","hypothesisId":"F"}

@@ -1,5 +1,5 @@
-import { HomeInteractiveCanvas } from "@/components/three/HomeInteractiveCanvas";
 import type { Metadata } from "next";
+import HomeInteractiveCanvasClient from "@/components/three/HomeInteractiveCanvasClient";
 
 export const metadata: Metadata = {
   title: "Cross | Opac - Interactive Experience",
@@ -61,7 +61,7 @@ export const metadata: Metadata = {
 export default function CrossPage() {
   return (
     <main className="w-full h-screen overflow-hidden">
-      <HomeInteractiveCanvas />
+      <HomeInteractiveCanvasClient />
     </main>
   );
 }

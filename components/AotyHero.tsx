@@ -1,9 +1,32 @@
 "use client";
 
-import { A0TYRotatingCross } from "@/components/three/A0TYRotatingCross";
 import { motion } from "motion/react";
 import { useRef, useEffect } from "react";
 import Image from "next/image";
+import dynamic from "next/dynamic";
+
+// Loading component for A0TY Rotating Cross
+function CrossLoadingState() {
+  return (
+    <div className="absolute inset-0 flex items-center justify-center z-10">
+      <div className="flex flex-col items-center gap-4">
+        <div className="animate-spin rounded-full h-12 w-12 border-2 border-white/20 border-t-white"></div>
+        <p className="body-text-sm text-white/80">Loading cross...</p>
+      </div>
+    </div>
+  );
+}
+
+const A0TYRotatingCross = dynamic(
+  () =>
+    import("@/components/three/A0TYRotatingCross").then((mod) => ({
+      default: mod.A0TYRotatingCross,
+    })),
+  {
+    ssr: false,
+    loading: () => <CrossLoadingState />,
+  }
+);
 
 const songs = [
   {
@@ -74,7 +97,7 @@ export default function AotyHero({ isMuted = false, onMuteChange }: AotyHeroProp
       <div className="flex flex-col xl:flex-row items-center justify-center w-full gap-8 xl:gap-0">
         {/* Cross div - enters from left */}
         <motion.div
-          className="flex flex-col w-full xl:w-1/2 h-[70vh] max-h-[70vh] xl:h-auto xl:max-h-none aspect-square items-center justify-center relative"
+          className="flex flex-col w-full xl:w-1/2 aspect-square items-center justify-center relative"
           initial={{ opacity: 0, x: -100 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
@@ -95,7 +118,7 @@ export default function AotyHero({ isMuted = false, onMuteChange }: AotyHeroProp
 
         {/* Video div - enters from right */}
         <motion.div
-          className="flex flex-col w-full xl:w-1/2 h-[70vh] max-h-[70vh] xl:h-auto xl:max-h-none aspect-square items-center justify-center relative"
+          className="flex flex-col w-full xl:w-1/2 aspect-square items-center justify-center relative"
           initial={{ opacity: 0, x: 100 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
@@ -107,6 +130,7 @@ export default function AotyHero({ isMuted = false, onMuteChange }: AotyHeroProp
             loop
             muted
             playsInline
+            preload="none"
             aria-label="A0TY album promotional video"
             className="w-full h-full object-cover"
           />

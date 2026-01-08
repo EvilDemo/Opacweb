@@ -3,10 +3,26 @@
 import AotyHero from "@/components/AotyHero";
 import AotyInfo from "@/components/AotyInfo";
 import { motion } from "motion/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function A0TYPage() {
   const [isMuted, setIsMuted] = useState(false);
+
+  // Preload the model file using HTML preload link for earliest possible download
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      // Check if link already exists
+      const existingLink = document.querySelector('link[href="/cross.glb"]');
+      if (!existingLink) {
+        const link = document.createElement("link");
+        link.rel = "preload";
+        link.href = "/cross.glb";
+        link.as = "fetch";
+        link.crossOrigin = "anonymous";
+        document.head.appendChild(link);
+      }
+    }
+  }, []);
 
   return (
     <>

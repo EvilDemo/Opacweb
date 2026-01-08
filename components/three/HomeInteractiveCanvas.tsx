@@ -3,7 +3,7 @@
 import { Canvas, useThree } from "@react-three/fiber";
 import { Physics, RigidBody, CuboidCollider } from "@react-three/rapier";
 import { Environment, PerspectiveCamera, useGLTF } from "@react-three/drei";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, Suspense } from "react";
 import * as THREE from "three";
 import type { RapierRigidBody } from "@react-three/rapier";
 import type { ThreeEvent } from "@react-three/fiber";
@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { ExternalLink } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useMediaQuery } from "@/lib/hooks";
 
 /**
  * Configuration for the Interactive Canvas
@@ -39,7 +40,7 @@ const CONFIG = {
       thickness: 0.5,
     },
     interaction: {
-      throwForceMultiplier: 25, // Reduced force for gentler interaction
+      throwForceMultiplier: 32, // Balanced force for desktop interaction
       mobileThrowForceMultiplier: 30, // Reduced force for mobile - gentler interaction
       torqueMultipliers: [0.15, 0.15, 0.1] as [number, number, number], // Reduced torque for gentler rotation
     },
@@ -79,23 +80,28 @@ const CONFIG = {
     },
   },
   timing: {
-    crossAppearDelay: 1600,
-    instructionsAppearDelay: 2600,
+    crossAppearDelay: 800,
+    instructionsAppearDelay: 1800,
     textAnimationDuration: 1.5,
   },
   animation: {
     textInitialDepth: "-500px",
     textFinalDepth: "0px",
   },
+  mobile: {
+    dpr: [1, 1] as [number, number],
+    environmentResolution: 64,
+    bloomEnabled: false,
+  },
 };
 
 // Invisible Walls Component
-function BoundaryWalls() {
+function BoundaryWalls({ isMobile }: { isMobile: boolean }) {
   const { width, height, depth, ceilingHeightMultiplier, mobileWidth } = CONFIG.boundaries;
   const { thickness, restitution } = CONFIG.physics.walls;
 
   // Use responsive width - smaller on mobile
-  const effectiveWidth = typeof window !== "undefined" && window.innerWidth < 768 ? mobileWidth : width;
+  const effectiveWidth = isMobile ? mobileWidth : width;
   const ceilingHeight = (height / 2) * ceilingHeightMultiplier;
   const wallHeight = height * 1.5; // Make walls taller to ensure they catch everything
 
@@ -153,7 +159,7 @@ function BoundaryWalls() {
 }
 
 // Interactive Cross Component
-function InteractiveCross() {
+function InteractiveCross({ isMobileRef }: { isMobileRef: React.RefObject<boolean> }) {
   const { scene } = useGLTF("/cross.glb");
   const rigidBodyRef = useRef<RapierRigidBody>(null);
   const [isGrabbed, setIsGrabbed] = useState(false);
@@ -165,7 +171,7 @@ function InteractiveCross() {
     if (!isGrabbed) return;
 
     // Check if we're on mobile - if so, don't attach global listeners
-    const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+    const isMobile = isMobileRef.current;
     if (isMobile) return;
 
     const handleMove = (event: PointerEvent) => {
@@ -240,12 +246,30 @@ function InteractiveCross() {
 
   // Mobile tap interaction - tap anywhere on screen to throw cross
   useEffect(() => {
-    const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+    const isMobile = isMobileRef.current;
     if (!isMobile) return;
 
     const handleMobileTap = (event: TouchEvent) => {
       // Only handle if we're not already grabbed and on mobile
       if (isGrabbed || !rigidBodyRef.current) return;
+
+      // Check if touch target is an interactive element (button, link, or within card)
+      const target = event.target as HTMLElement;
+      if (target) {
+        // Check if target is a button, link, or within a card/button/link
+        const isInteractive =
+          target.tagName === "BUTTON" ||
+          target.tagName === "A" ||
+          target.closest("button") !== null ||
+          target.closest("a") !== null ||
+          target.closest('[role="button"]') !== null ||
+          target.closest("[data-interactive]") !== null;
+
+        if (isInteractive) {
+          // Don't prevent default or throw cross if clicking on interactive element
+          return;
+        }
+      }
 
       // Check if hero section is in view
       const heroSection = document.querySelector("section");
@@ -285,7 +309,7 @@ function InteractiveCross() {
 
   const handlePointerDown = (event: ThreeEvent<PointerEvent>) => {
     // Only handle on desktop
-    if (window.innerWidth < 768) return;
+    if (isMobileRef.current) return;
 
     event.stopPropagation();
 
@@ -341,11 +365,8 @@ function InteractiveCross() {
   );
 }
 
-// Preload the model
-useGLTF.preload("/cross.glb");
-
 // Scene Content
-function SceneContent() {
+function SceneContent({ isMobile, isMobileRef }: { isMobile: boolean; isMobileRef: React.RefObject<boolean> }) {
   return (
     <>
       {/* Lighting */}
@@ -355,26 +376,102 @@ function SceneContent() {
         intensity={CONFIG.lighting.directional.intensity}
       />
 
-      {/* Environment */}
-      <Environment preset="studio" resolution={128} />
+      {/* Environment - Lower resolution on mobile */}
+      <Environment preset="studio" resolution={isMobile ? CONFIG.mobile.environmentResolution : 128} />
 
       {/* Physics World */}
       <Physics gravity={CONFIG.physics.gravity}>
-        <BoundaryWalls />
-        <InteractiveCross />
+        <BoundaryWalls isMobile={isMobile} />
+        <InteractiveCross isMobileRef={isMobileRef} />
       </Physics>
 
-      {/* Post-Processing Effects */}
-      <EffectComposer multisampling={0}>
-        <Bloom
-          intensity={CONFIG.effects.bloom.intensity}
-          luminanceThreshold={CONFIG.effects.bloom.luminanceThreshold}
-          luminanceSmoothing={CONFIG.effects.bloom.luminanceSmoothing}
-          mipmapBlur={CONFIG.effects.bloom.mipmapBlur}
-        />
-      </EffectComposer>
+      {/* Post-Processing Effects - Desktop Only */}
+      {!isMobile && (
+        <EffectComposer multisampling={0}>
+          <Bloom
+            intensity={CONFIG.effects.bloom.intensity}
+            luminanceThreshold={CONFIG.effects.bloom.luminanceThreshold}
+            luminanceSmoothing={CONFIG.effects.bloom.luminanceSmoothing}
+            mipmapBlur={CONFIG.effects.bloom.mipmapBlur}
+          />
+        </EffectComposer>
+      )}
     </>
   );
+}
+
+// Custom hook to detect canvas visibility
+function useCanvasVisibility(containerRef: React.RefObject<HTMLDivElement | null>, canvasReady: boolean): boolean {
+  const [isInViewport, setIsInViewport] = useState(true); // Default to true (assume visible)
+  const [tabVisible, setTabVisible] = useState(true); // Default to true (assume visible)
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !canvasReady) return;
+
+    const container = containerRef.current;
+    if (!container) return;
+
+    // Check for IntersectionObserver support
+    if (!("IntersectionObserver" in window)) {
+      // Fallback: assume always visible if IntersectionObserver is not supported
+      return;
+    }
+
+    let observer: IntersectionObserver | null = null;
+
+    try {
+      // Set up IntersectionObserver
+      observer = new IntersectionObserver(
+        (entries) => {
+          if (entries.length > 0) {
+            const entry = entries[0];
+            setIsInViewport(entry.isIntersecting);
+          }
+        },
+        {
+          threshold: 0.1, // Trigger when 10% visible
+          rootMargin: "0px",
+        }
+      );
+
+      // Initial check - verify if container is in viewport
+      const rect = container.getBoundingClientRect();
+      const initialInViewport =
+        rect.top < window.innerHeight && rect.bottom > 0 && rect.left < window.innerWidth && rect.right > 0;
+      setIsInViewport(initialInViewport);
+
+      // Start observing
+      observer.observe(container);
+    } catch (error) {
+      // If IntersectionObserver fails, fallback to always visible
+      console.warn("IntersectionObserver initialization failed:", error);
+      return;
+    }
+
+    // Set up Page Visibility API
+    // Note: document is guaranteed to exist since we've checked window above
+    const handleVisibilityChange = () => {
+      setTabVisible(!document.hidden);
+    };
+
+    // Set initial tab visibility state
+    setTabVisible(!document.hidden);
+
+    // Listen for visibility changes
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    // Cleanup
+    return () => {
+      if (observer) {
+        observer.disconnect();
+      }
+      // Note: document is guaranteed to exist since we've checked window above
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, [containerRef, canvasReady]);
+
+  // Combine both conditions: render only when BOTH in viewport AND tab visible
+  return isInViewport && tabVisible;
 }
 
 // AOTY Album Card Component
@@ -386,7 +483,7 @@ function AotyAlbumCard() {
 
   return (
     <Card variant="media" background="media" className={cardClasses}>
-      <div className="aspect-[3/2] overflow-hidden -m-6 mb-0 rounded-t-xl relative">
+      <div className="aspect-3/2 overflow-hidden -m-6 mb-0 rounded-t-xl relative">
         <Image
           src="/aoty-mode-card.webp"
           alt="AOTY - Album of the Year"
@@ -394,6 +491,7 @@ function AotyAlbumCard() {
           className="object-contain"
           sizes="(max-width: 768px) 320px, 384px"
           priority
+          fetchPriority="high"
         />
       </div>
       <CardHeader className={headerClasses}>
@@ -427,27 +525,95 @@ export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }
   const [showCross, setShowCross] = useState(false);
   const [showInstructions, setShowInstructions] = useState(false);
   const [showButton, setShowButton] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [canvasReady, setCanvasReady] = useState(false);
+  const [hideLoader, setHideLoader] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const canvasContainerRef = useRef<HTMLDivElement>(null);
 
+  // Use media query for mobile detection
+  const isMobile = useMediaQuery("(max-width: 767px)");
+  const isMobileRef = useRef(isMobile);
+
+  // Track canvas visibility for performance optimization
+  const isVisible = useCanvasVisibility(canvasContainerRef, canvasReady);
+
+  // Ensure component is mounted on client before rendering Canvas
   useEffect(() => {
-    // Detect mobile screen size
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
-    // Check on mount
-    checkMobile();
-
-    // Listen for resize events
-    window.addEventListener("resize", checkMobile);
-
-    return () => {
-      window.removeEventListener("resize", checkMobile);
-    };
+    if (typeof window !== "undefined") {
+      // Use double requestAnimationFrame to ensure browser is ready and DOM is fully rendered
+      const rafId = requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setMounted(true);
+        });
+      });
+      return () => cancelAnimationFrame(rafId);
+    }
   }, []);
 
+  // Wait for container to be in DOM and WebGL to be available before rendering Canvas
   useEffect(() => {
+    if (mounted && canvasContainerRef.current && typeof window !== "undefined") {
+      let timeoutId: NodeJS.Timeout | null = null;
+      let rafId: number | null = null;
+      let cancelled = false;
+
+      // Check if WebGL is available
+      const checkWebGL = () => {
+        try {
+          const canvas = document.createElement("canvas");
+          const gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+          return !!gl;
+        } catch (e) {
+          return false;
+        }
+      };
+
+      // Additional check to ensure container is actually in the DOM and WebGL is available
+      const checkReady = () => {
+        if (cancelled) return;
+
+        if (canvasContainerRef.current && document.body.contains(canvasContainerRef.current) && checkWebGL()) {
+          // Small delay to ensure everything is settled
+          timeoutId = setTimeout(() => {
+            if (!cancelled) {
+              setCanvasReady(true);
+            }
+          }, 50);
+        } else {
+          // Retry if not ready yet
+          rafId = requestAnimationFrame(checkReady);
+        }
+      };
+      // Use requestAnimationFrame to ensure DOM is ready
+      rafId = requestAnimationFrame(checkReady);
+
+      return () => {
+        cancelled = true;
+        if (timeoutId) clearTimeout(timeoutId);
+        if (rafId) cancelAnimationFrame(rafId);
+      };
+    }
+  }, [mounted]);
+
+  // Preload the GLTF model when component mounts
+  useEffect(() => {
+    if (mounted && typeof window !== "undefined") {
+      useGLTF.preload("/cross.glb");
+    }
+  }, [mounted]);
+
+  // Update mobile ref when isMobile changes
+  useEffect(() => {
+    isMobileRef.current = isMobile;
+  }, [isMobile]);
+
+  useEffect(() => {
+    // Hide loader slightly before cross appears for smooth transition
+    const loaderTimer = setTimeout(() => {
+      setHideLoader(true);
+    }, CONFIG.timing.crossAppearDelay - 100); // 100ms before cross appears
+
     // Show cross after text animation completes
     const crossTimer = setTimeout(() => {
       setShowCross(true);
@@ -459,6 +625,7 @@ export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }
     }, CONFIG.timing.instructionsAppearDelay);
 
     return () => {
+      clearTimeout(loaderTimer);
       clearTimeout(crossTimer);
       clearTimeout(instructionsTimer);
     };
@@ -497,6 +664,28 @@ export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }
     };
   }, []);
 
+  // Disable pointer events on canvas when popup is visible
+  useEffect(() => {
+    if (!canvasContainerRef.current) return;
+
+    const canvasElement = canvasContainerRef.current.querySelector("canvas");
+    if (canvasElement) {
+      canvasElement.style.pointerEvents = showButton ? "none" : "auto";
+    }
+  }, [showButton]);
+
+  // Don't render Canvas until mounted on client and in browser
+  if (!mounted || typeof window === "undefined") {
+    return (
+      <div className="absolute inset-0 flex items-center justify-center z-10">
+        <div className="flex flex-col items-center gap-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-2 border-white/20 border-t-white"></div>
+          <p className="body-text-sm text-white/80">Loading A0TY mode...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div
       className="w-full relative"
@@ -508,15 +697,32 @@ export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }
         WebkitTouchCallout: "none", // Disable iOS callout menu
       }}
     >
+      {/* Show loading until cross is ready (hides slightly earlier for smooth transition) */}
+      {!hideLoader && (
+        <div className="absolute inset-0 flex items-center justify-center z-10">
+          <div className="flex flex-col items-center gap-4">
+            <div className="animate-spin rounded-full h-12 w-12 border-2 border-white/20 border-t-white"></div>
+            <p className="body-text-sm text-white/80">Loading A0TY mode...</p>
+          </div>
+        </div>
+      )}
       {/* AOTY Album Card - Centered */}
       {showButton && (
         <motion.div
-          className="absolute inset-0 flex flex-col items-center justify-center z-20 pointer-events-none padding-global -translate-y-14"
+          className="absolute inset-0 flex flex-col items-center justify-center z-50 pointer-events-none padding-global -translate-y-14"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
         >
-          <div className="pointer-events-auto w-full max-w-[200px] md:max-w-[240px] lg:max-w-[320px]">
+          <div
+            className="pointer-events-auto w-full max-w-[200px] md:max-w-[240px] lg:max-w-[320px] relative z-50"
+            data-interactive="true"
+            style={{
+              touchAction: "auto",
+              WebkitUserSelect: "auto",
+              userSelect: "auto",
+            }}
+          >
             <AotyAlbumCard />
           </div>
         </motion.div>
@@ -546,28 +752,38 @@ export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }
       </motion.div>
 
       {/* 3D Canvas Layer */}
-      <div className="absolute inset-0 z-0">
-        {/* Interactive Music Player (reacts to physics) */}
-        <HomeInteractiveMusic audioSrc="/aoty-mode-home.m4a" autoPlay={true} isMuted={isMuted} />
-
-        <Canvas
-          gl={{
-            alpha: true,
-            antialias: false,
-            powerPreference: "high-performance",
-            preserveDrawingBuffer: false,
-            failIfMajorPerformanceCaveat: false,
-            stencil: false,
-            depth: true,
-          }}
-          dpr={[1, 1.5]}
-          performance={{ min: 0.5 }}
-          frameloop="always"
+      {mounted && (
+        <div
+          ref={canvasContainerRef}
+          className="absolute inset-0 z-0"
+          style={showButton ? { pointerEvents: "none" } : {}}
         >
-          <PerspectiveCamera makeDefault position={CONFIG.camera.position} fov={CONFIG.camera.fov} />
-          {showCross && <SceneContent />}
-        </Canvas>
-      </div>
+          {/* Interactive Music Player (reacts to physics) */}
+          <HomeInteractiveMusic audioSrc="/aoty-mode-home.m4a" autoPlay={true} isMuted={isMuted} />
+
+          {canvasReady && typeof window !== "undefined" && (
+            <Suspense fallback={null}>
+              <Canvas
+                gl={{
+                  alpha: true,
+                  antialias: false,
+                  powerPreference: "high-performance",
+                  preserveDrawingBuffer: false,
+                  failIfMajorPerformanceCaveat: false,
+                  stencil: false,
+                  depth: true,
+                }}
+                dpr={isMobile ? CONFIG.mobile.dpr : [1, 1.5]}
+                performance={{ min: 0.5 }}
+                frameloop={isVisible ? "always" : "demand"}
+              >
+                <PerspectiveCamera makeDefault position={CONFIG.camera.position} fov={CONFIG.camera.fov} />
+                {showCross && <SceneContent isMobile={isMobile} isMobileRef={isMobileRef} />}
+              </Canvas>
+            </Suspense>
+          )}
+        </div>
+      )}
     </div>
   );
 }

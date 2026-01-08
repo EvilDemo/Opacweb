@@ -1,10 +1,10 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import Image from "next/image";
+import { useMemo, useState, useCallback, useTransition } from "react";
 import Link from "next/link";
 import { Price } from "./Price";
 import { AddToCartButton } from "./AddToCartButton";
+import { ProductGallery } from "./ProductGallery";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import type { Product, ProductMedia, ProductVariant } from "@/types/commerce";
@@ -44,43 +44,50 @@ export function ProductView({ product }: ProductViewProps) {
     return media;
   }, [product]);
   const [selectedMediaIndex, setSelectedMediaIndex] = useState(0);
-  const selectedMedia = mediaItems[selectedMediaIndex];
+  const [isPending, startTransition] = useTransition();
 
   // Update selected variant when options change
-  const handleOptionChange = (optionName: string, value: string) => {
-    const newOptions = { ...selectedOptions, [optionName]: value };
-    setSelectedOptions(newOptions);
+  // Use startTransition to mark variant selection as non-urgent and batch state updates
+  const handleOptionChange = useCallback(
+    (optionName: string, value: string) => {
+      const newOptions = { ...selectedOptions, [optionName]: value };
 
-    // Find matching variant
-    const matchingVariant = product.variants.find((variant) => {
-      return variant.selectedOptions.every((opt) => newOptions[opt.name] === opt.value);
-    });
+      startTransition(() => {
+        setSelectedOptions(newOptions);
 
-    if (matchingVariant) {
-      setSelectedVariant(matchingVariant);
-      // Update selected image if variant has its own image
-      if (matchingVariant.image) {
-        const mediaIndex = mediaItems.findIndex(
-          (item) => item.kind === "image" && item.image.id === matchingVariant.image?.id
-        );
-        if (mediaIndex !== -1) {
-          setSelectedMediaIndex(mediaIndex);
+        // Find matching variant
+        const matchingVariant = product.variants.find((variant) => {
+          return variant.selectedOptions.every((opt) => newOptions[opt.name] === opt.value);
+        });
+
+        if (matchingVariant) {
+          setSelectedVariant(matchingVariant);
+          // Update selected image if variant has its own image
+          if (matchingVariant.image) {
+            const mediaIndex = mediaItems.findIndex(
+              (item) => item.kind === "image" && item.image.id === matchingVariant.image?.id
+            );
+            if (mediaIndex !== -1) {
+              setSelectedMediaIndex(mediaIndex);
+            }
+          }
+        } else {
+          setSelectedVariant(null);
         }
-      }
-    } else {
-      setSelectedVariant(null);
-    }
-  };
+      });
+    },
+    [selectedOptions, product.variants, mediaItems]
+  );
 
-  const decrementQuantity = () => {
+  const decrementQuantity = useCallback(() => {
     setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
-  };
+  }, []);
 
-  const incrementQuantity = () => {
+  const incrementQuantity = useCallback(() => {
     setQuantity((prev) => (prev < 99 ? prev + 1 : 99));
-  };
+  }, []);
 
-  const handleQuantityInput = (value: string) => {
+  const handleQuantityInput = useCallback((value: string) => {
     const parsed = Number.parseInt(value, 10);
     if (Number.isNaN(parsed)) {
       setQuantity(1);
@@ -88,14 +95,25 @@ export function ProductView({ product }: ProductViewProps) {
     }
     const clamped = Math.min(Math.max(parsed, 1), 99);
     setQuantity(clamped);
-  };
+  }, []);
+
+  const handleMediaSelection = useCallback(
+    (index: number) => {
+      setSelectedMediaIndex(index);
+    },
+    []
+  );
 
   const variantAvailable = Boolean(selectedVariant?.availableForSale);
   const productHasAvailableVariants = product.variants.some((variant) => variant.availableForSale);
   const entireProductSoldOut =
     product.variants.length === 0 || !productHasAvailableVariants || !product.availableForSale;
-  const filteredOptions = product.options.filter(
-    (option) => !(option.name === "Title" && option.values.length === 1 && option.values[0] === "Default Title")
+  const filteredOptions = useMemo(
+    () =>
+      product.options.filter(
+        (option) => !(option.name === "Title" && option.values.length === 1 && option.values[0] === "Default Title")
+      ),
+    [product.options]
   );
 
   return (
@@ -131,85 +149,12 @@ export function ProductView({ product }: ProductViewProps) {
         <div className="flex flex-1">
           <div className="grid w-full max-w-6xl grid-cols-1 gap-12 md:items-center lg:grid-cols-2 mx-auto md:my-auto">
             {/* Product Images */}
-            <div className="flex flex-col gap-4 lg:min-h-[65vh]">
-              {selectedMedia ? (
-                <div className="relative w-full overflow-hidden rounded-lg h-[clamp(28vh,36vw,45vh)]">
-                  {selectedMedia.kind === "video" ? (
-                    <video
-                      key={selectedMedia.video.url}
-                      src={selectedMedia.video.url}
-                      poster={selectedMedia.video.previewImage?.url}
-                      muted
-                      loop
-                      playsInline
-                      autoPlay
-                      preload="metadata"
-                      aria-label={`${product.title} preview`}
-                      className="h-full w-full object-contain"
-                    />
-                  ) : (
-                    <Image
-                      src={selectedMedia.image.url}
-                      alt={selectedMedia.image.altText || product.title}
-                      fill
-                      className="object-contain"
-                      priority
-                      sizes="(max-width: 1024px) 100vw, 50vw"
-                    />
-                  )}
-                </div>
-              ) : (
-                <div className="flex h-[clamp(28vh,36vw,45vh)] items-center justify-center rounded-lg text-neutral-500">
-                  No media available
-                </div>
-              )}
-              {mediaItems.length > 1 && (
-                <div className="flex flex-wrap gap-3 lg:gap-4">
-                  {mediaItems.map((media, index) => {
-                    const isActive = selectedMediaIndex === index;
-                    const key = media.kind === "video" ? `video-${media.video.url}` : `image-${media.image.id}`;
-                    return (
-                      <button
-                        key={key}
-                        onClick={() => setSelectedMediaIndex(index)}
-                        className={`relative overflow-hidden rounded-lg  border-2 transition-all aspect-square size-[clamp(10vw,12vw,14vw)] sm:size-[clamp(8vw,10vw,12vw)] lg:size-[clamp(5vw,6vw,8vw)] ${
-                          isActive ? "border-white" : "border-transparent"
-                        }`}
-                      >
-                        {media.kind === "video" ? (
-                          <>
-                            {media.video.previewImage ? (
-                              <Image
-                                src={media.video.previewImage.url}
-                                alt={media.video.previewImage.altText || `${product.title} preview`}
-                                fill
-                                className="object-cover"
-                                sizes="(max-width: 1024px) 25vw, 12.5vw"
-                              />
-                            ) : (
-                              <div className="flex h-full w-full items-center justify-center bg-neutral-900 text-xs uppercase tracking-wide text-white">
-                                Video
-                              </div>
-                            )}
-                            <span className="absolute bottom-1 right-1 rounded bg-black/70 px-1 py-0.5 text-[10px] font-medium uppercase text-white">
-                              Video
-                            </span>
-                          </>
-                        ) : (
-                          <Image
-                            src={media.image.url}
-                            alt={media.image.altText || `${product.title} - Image ${index + 1}`}
-                            fill
-                            className="object-cover"
-                            sizes="(max-width: 1024px) 25vw, 12.5vw"
-                          />
-                        )}
-                      </button>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
+            <ProductGallery
+              mediaItems={mediaItems}
+              selectedMediaIndex={selectedMediaIndex}
+              onMediaSelect={handleMediaSelection}
+              productTitle={product.title}
+            />
 
             {/* Product Info */}
             <div className="space-y-6">
@@ -271,8 +216,9 @@ export function ProductView({ product }: ProductViewProps) {
                         onClick={decrementQuantity}
                         className="h-9 w-9 p-0"
                         disabled={!variantAvailable}
+                        aria-label="Decrease quantity"
                       >
-                        -
+                        <span aria-hidden="true">-</span>
                       </Button>
                       <Input
                         type="number"
@@ -283,6 +229,7 @@ export function ProductView({ product }: ProductViewProps) {
                         onChange={(event) => handleQuantityInput(event.target.value)}
                         disabled={!variantAvailable}
                         className="h-9 w-auto px-4 text-center font-medium bg-white text-neutral-900 dark:bg-white dark:text-black rounded-full"
+                        aria-label="Product quantity"
                       />
                       <Button
                         variant="secondary"
@@ -290,8 +237,9 @@ export function ProductView({ product }: ProductViewProps) {
                         onClick={incrementQuantity}
                         className="h-9 w-9 p-0"
                         disabled={!variantAvailable}
+                        aria-label="Increase quantity"
                       >
-                        +
+                        <span aria-hidden="true">+</span>
                       </Button>
                     </div>
                   </div>
