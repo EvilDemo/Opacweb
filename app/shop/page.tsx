@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { ShopPageClient } from "@/components/commerce/ShopPageClient";
 import { getProducts, isShopifyConfigured } from "@/lib/shopify";
 import type { Product } from "@/types/commerce";
+import type { PageInfo } from "@/lib/shopify/types";
 
 export const metadata: Metadata = {
   title: "Shop | Opac - Merchandise & Music",
@@ -61,7 +62,7 @@ export const metadata: Metadata = {
 
 export default async function ShopPage() {
   let products: Product[] = [];
-  let pageInfo = { hasNextPage: false, hasPreviousPage: false, startCursor: null, endCursor: null };
+  let pageInfo: PageInfo = { hasNextPage: false, hasPreviousPage: false, startCursor: null, endCursor: null };
   let error: string | null = null;
   const shopifyConfigured = isShopifyConfigured();
 

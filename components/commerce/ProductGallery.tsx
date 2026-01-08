@@ -78,7 +78,7 @@ export function ProductGallery({
                   ref={videoRef}
                   key={selectedMedia.video.url}
                   src={selectedMedia.video.url}
-                  poster={posterUrl}
+                  poster={posterUrl || undefined}
                   muted
                   loop
                   playsInline
