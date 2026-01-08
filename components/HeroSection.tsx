@@ -3,7 +3,30 @@
 import React, { useState } from "react";
 import { motion } from "motion/react";
 import { Switch } from "@/components/ui/switch";
-import { HomeInteractiveCanvas } from "@/components/three/HomeInteractiveCanvas";
+import dynamic from "next/dynamic";
+
+// Loading component for AOTY mode
+function AotyLoadingState() {
+  return (
+    <div className="absolute inset-0 flex items-center justify-center z-10">
+      <div className="flex flex-col items-center gap-4">
+        <div className="animate-spin rounded-full h-12 w-12 border-2 border-white/20 border-t-white"></div>
+        <p className="body-text-sm text-white/80">Loading A0TY mode...</p>
+      </div>
+    </div>
+  );
+}
+
+const HomeInteractiveCanvas = dynamic(
+  () =>
+    import("@/components/three/HomeInteractiveCanvas").then((mod) => ({
+      default: mod.HomeInteractiveCanvas,
+    })),
+  { 
+    ssr: false,
+    loading: () => <AotyLoadingState />
+  }
+);
 
 // 3D Sphere video from your public folder
 const sphereVideo = "/esfera3D_optimized.webm";

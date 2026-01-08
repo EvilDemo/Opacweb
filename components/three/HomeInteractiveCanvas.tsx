@@ -3,7 +3,7 @@
 import { Canvas, useThree } from "@react-three/fiber";
 import { Physics, RigidBody, CuboidCollider } from "@react-three/rapier";
 import { Environment, PerspectiveCamera, useGLTF } from "@react-three/drei";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, Suspense } from "react";
 import * as THREE from "three";
 import type { RapierRigidBody } from "@react-three/rapier";
 import type { ThreeEvent } from "@react-three/fiber";
@@ -39,7 +39,7 @@ const CONFIG = {
       thickness: 0.5,
     },
     interaction: {
-      throwForceMultiplier: 25, // Reduced force for gentler interaction
+      throwForceMultiplier: 32, // Balanced force for desktop interaction
       mobileThrowForceMultiplier: 30, // Reduced force for mobile - gentler interaction
       torqueMultipliers: [0.15, 0.15, 0.1] as [number, number, number], // Reduced torque for gentler rotation
     },
@@ -359,9 +359,6 @@ function InteractiveCross() {
   );
 }
 
-// Preload the model
-useGLTF.preload("/cross.glb");
-
 // Scene Content
 function SceneContent() {
   return (
@@ -404,7 +401,7 @@ function AotyAlbumCard() {
 
   return (
     <Card variant="media" background="media" className={cardClasses}>
-      <div className="aspect-[3/2] overflow-hidden -m-6 mb-0 rounded-t-xl relative">
+      <div className="aspect-3/2 overflow-hidden -m-6 mb-0 rounded-t-xl relative">
         <Image
           src="/aoty-mode-card.webp"
           alt="AOTY - Album of the Year"
@@ -446,8 +443,79 @@ export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }
   const [showInstructions, setShowInstructions] = useState(false);
   const [showButton, setShowButton] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [canvasReady, setCanvasReady] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const canvasContainerRef = useRef<HTMLDivElement>(null);
+
+  // Ensure component is mounted on client before rendering Canvas
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      // Use double requestAnimationFrame to ensure browser is ready and DOM is fully rendered
+      const rafId = requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setMounted(true);
+        });
+      });
+      return () => cancelAnimationFrame(rafId);
+    }
+  }, []);
+
+  // Wait for container to be in DOM and WebGL to be available before rendering Canvas
+  useEffect(() => {
+    if (mounted && canvasContainerRef.current && typeof window !== "undefined") {
+      let timeoutId: NodeJS.Timeout | null = null;
+      let rafId: number | null = null;
+      let cancelled = false;
+
+      // Check if WebGL is available
+      const checkWebGL = () => {
+        try {
+          const canvas = document.createElement("canvas");
+          const gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+          return !!gl;
+        } catch (e) {
+          return false;
+        }
+      };
+
+      // Additional check to ensure container is actually in the DOM and WebGL is available
+      const checkReady = () => {
+        if (cancelled) return;
+
+        if (
+          canvasContainerRef.current &&
+          document.body.contains(canvasContainerRef.current) &&
+          checkWebGL()
+        ) {
+          // Small delay to ensure everything is settled
+          timeoutId = setTimeout(() => {
+            if (!cancelled) {
+              setCanvasReady(true);
+            }
+          }, 50);
+        } else {
+          // Retry if not ready yet
+          rafId = requestAnimationFrame(checkReady);
+        }
+      };
+      // Use requestAnimationFrame to ensure DOM is ready
+      rafId = requestAnimationFrame(checkReady);
+
+      return () => {
+        cancelled = true;
+        if (timeoutId) clearTimeout(timeoutId);
+        if (rafId) cancelAnimationFrame(rafId);
+      };
+    }
+  }, [mounted]);
+
+  // Preload the GLTF model when component mounts
+  useEffect(() => {
+    if (mounted && typeof window !== "undefined") {
+      useGLTF.preload("/cross.glb");
+    }
+  }, [mounted]);
 
   useEffect(() => {
     // Detect mobile screen size
@@ -526,6 +594,11 @@ export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }
     }
   }, [showButton]);
 
+  // Don't render Canvas until mounted on client and in browser
+  if (!mounted || typeof window === "undefined") {
+    return null;
+  }
+
   return (
     <div
       className="w-full relative"
@@ -583,32 +656,38 @@ export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }
       </motion.div>
 
       {/* 3D Canvas Layer */}
-      <div
-        ref={canvasContainerRef}
-        className="absolute inset-0 z-0"
-        style={showButton ? { pointerEvents: "none" } : {}}
-      >
-        {/* Interactive Music Player (reacts to physics) */}
-        <HomeInteractiveMusic audioSrc="/aoty-mode-home.m4a" autoPlay={true} isMuted={isMuted} />
-
-        <Canvas
-          gl={{
-            alpha: true,
-            antialias: false,
-            powerPreference: "high-performance",
-            preserveDrawingBuffer: false,
-            failIfMajorPerformanceCaveat: false,
-            stencil: false,
-            depth: true,
-          }}
-          dpr={[1, 1.5]}
-          performance={{ min: 0.5 }}
-          frameloop="always"
+      {mounted && (
+        <div
+          ref={canvasContainerRef}
+          className="absolute inset-0 z-0"
+          style={showButton ? { pointerEvents: "none" } : {}}
         >
-          <PerspectiveCamera makeDefault position={CONFIG.camera.position} fov={CONFIG.camera.fov} />
-          {showCross && <SceneContent />}
-        </Canvas>
-      </div>
+          {/* Interactive Music Player (reacts to physics) */}
+          <HomeInteractiveMusic audioSrc="/aoty-mode-home.m4a" autoPlay={true} isMuted={isMuted} />
+
+          {canvasReady && typeof window !== "undefined" && (
+            <Suspense fallback={null}>
+              <Canvas
+                gl={{
+                  alpha: true,
+                  antialias: false,
+                  powerPreference: "high-performance",
+                  preserveDrawingBuffer: false,
+                  failIfMajorPerformanceCaveat: false,
+                  stencil: false,
+                  depth: true,
+                }}
+                dpr={[1, 1.5]}
+                performance={{ min: 0.5 }}
+                frameloop="always"
+              >
+                <PerspectiveCamera makeDefault position={CONFIG.camera.position} fov={CONFIG.camera.fov} />
+                {showCross && <SceneContent />}
+              </Canvas>
+            </Suspense>
+          )}
+        </div>
+      )}
     </div>
   );
 }
