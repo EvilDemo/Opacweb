@@ -1,9 +1,32 @@
 "use client";
 
-import { A0TYRotatingCross } from "@/components/three/A0TYRotatingCross";
 import { motion } from "motion/react";
 import { useRef, useEffect } from "react";
 import Image from "next/image";
+import dynamic from "next/dynamic";
+
+// Loading component for A0TY Rotating Cross
+function CrossLoadingState() {
+  return (
+    <div className="absolute inset-0 flex items-center justify-center z-10">
+      <div className="flex flex-col items-center gap-4">
+        <div className="animate-spin rounded-full h-12 w-12 border-2 border-white/20 border-t-white"></div>
+        <p className="body-text-sm text-white/80">Loading cross...</p>
+      </div>
+    </div>
+  );
+}
+
+const A0TYRotatingCross = dynamic(
+  () =>
+    import("@/components/three/A0TYRotatingCross").then((mod) => ({
+      default: mod.A0TYRotatingCross,
+    })),
+  {
+    ssr: false,
+    loading: () => <CrossLoadingState />,
+  }
+);
 
 const songs = [
   {

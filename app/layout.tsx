@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
-import { SpeedInsights } from "@vercel/speed-insights/next";
-import { Analytics } from "@vercel/analytics/react";
 
 //Importing Components
 import Footer from "@/components/Footer";
@@ -11,6 +9,7 @@ import RouteLoader from "@/components/RouteLoader";
 import { LoaderProvider } from "@/components/loaders/LoaderContext";
 import { CartProvider } from "@/components/commerce/CartContext";
 import { Toaster } from "@/components/ui/sonner";
+import DelayedAnalytics from "@/components/DelayedAnalytics";
 
 //Importing Font
 const geist = Geist({
@@ -103,8 +102,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://va.vercel-scripts.com" />
         <link rel="preconnect" href="https://cdn.sanity.io" />
       </head>
-      <SpeedInsights />
-      <Analytics />
+      <DelayedAnalytics />
       <body className={`${geist.variable} antialiased`}>
         <a
           href="#main-content"
