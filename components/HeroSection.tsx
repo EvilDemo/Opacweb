@@ -56,7 +56,9 @@ export default function HeroSection() {
   if (isMobile === null) {
     return (
       <section
-        className="relative w-full h-[calc(100vh-6rem)] flex flex-col justify-center overflow-hidden padding-global"
+        className={`relative w-full h-[calc(100vh-6rem)] flex flex-col justify-center overflow-hidden ${
+          !aotyMode ? "padding-global" : ""
+        }`}
       >
         {/* Loading state - prevents flash of wrong content */}
         <div className="relative w-64 h-64 sm:w-80 sm:h-80 md:w-96 md:h-96  2xl:w-[30rem] 2xl:h-[30rem] mx-auto" />
@@ -66,7 +68,9 @@ export default function HeroSection() {
 
   return (
     <section
-      className="relative w-full h-[calc(100vh-6rem)] flex flex-col justify-center overflow-hidden padding-global"
+      className={`relative w-full h-[calc(100vh-6rem)] flex flex-col justify-center overflow-hidden ${
+        !aotyMode ? "padding-global" : ""
+      }`}
     >
       {/* Controls - Always visible in bottom right corner */}
       <motion.div

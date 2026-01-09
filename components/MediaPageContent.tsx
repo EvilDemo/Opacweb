@@ -46,49 +46,13 @@ function MediaScrollContent({ allMediaData }: MediaScrollContentProps) {
   const [activeFilter, setActiveFilter] = useState<FilterType>("all");
   const scrollRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
-  
-  // Calculate initial filtered data for "all" filter to estimate dimensions
-  const initialFilteredData = allMediaData.filter((item) => {
-    if (item.type === "video") {
-      return item.thumbnailUrl;
-    }
-    return true;
+  const [dimensions, setDimensions] = useState({
+    contentWidth: 0,
+    viewportWidth: 0,
+    scrollDistance: 0,
+    sectionHeight: 0,
   });
-  
-  // Calculate initial estimate to prevent CLS
-  const [dimensions, setDimensions] = useState(() => {
-    if (typeof window !== "undefined") {
-      const isLargeScreen = window.innerWidth >= 1024;
-      if (isLargeScreen) {
-        const viewportWidth = window.innerWidth;
-        const viewportHeight = window.innerHeight;
-        const cardWidth = 320; // lg:w-80 = 320px
-        const cardGap = 48; // lg:gap-12 = 48px
-        const titleSectionWidth = Math.min(viewportWidth * 0.4, 600); // 40vw max 600px
-        const estimatedContentWidth =
-          titleSectionWidth + initialFilteredData.length * cardWidth + (initialFilteredData.length - 1) * cardGap;
-        const estimatedScrollDistance = Math.max(0, estimatedContentWidth - viewportWidth + 500);
-        return {
-          contentWidth: estimatedContentWidth,
-          viewportWidth,
-          scrollDistance: estimatedScrollDistance,
-          sectionHeight: viewportHeight + estimatedScrollDistance,
-        };
-      }
-    }
-    return {
-      contentWidth: 0,
-      viewportWidth: 0,
-      scrollDistance: 0,
-      sectionHeight: 0,
-    };
-  });
-  const [isLargeScreen, setIsLargeScreen] = useState(() => {
-    if (typeof window !== "undefined") {
-      return window.innerWidth >= 1024;
-    }
-    return false;
-  });
+  const [isLargeScreen, setIsLargeScreen] = useState(false);
 
   // Simple filtering logic
   const getFilteredData = useCallback(
