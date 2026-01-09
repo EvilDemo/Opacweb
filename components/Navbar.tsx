@@ -123,7 +123,7 @@ const AnimatedNavLink = ({ item, index }: { item: NavItem; index: number }) => {
             transition: { duration: 0.15, ease: "easeOut" },
           }}
         >
-          <Link href={item.href} className="block">
+          <Link href={item.href} className="block" aria-label={`Navigate to ${item.label}`}>
             <Button variant="secondary" className="">
               {item.label}
             </Button>
@@ -162,7 +162,7 @@ const ShopButton = () => {
       }}
       className="hidden lg:block"
     >
-      <Link href={shopItem.href} className="block">
+      <Link href={shopItem.href} className="block" aria-label={`Navigate to ${shopItem.label}`}>
         <Button variant="default" className="">
           {shopItem.label}
         </Button>
@@ -192,7 +192,7 @@ const CartIcon = () => {
     >
       <CartSidebar>
         <div className="relative inline-block focus:outline-none focus-visible:outline-none focus-visible:ring-0 [&:has(button:focus-visible)]:outline-none [&:has(button:focus-visible)]:ring-0">
-          <Button variant="secondary" className="h-10 w-10 p-0">
+          <Button variant="secondary" className="h-10 w-10 p-0" aria-label={`Open cart${cartItemCount > 0 ? ` with ${cartItemCount} ${cartItemCount === 1 ? 'item' : 'items'}` : ''}`}>
             <ShoppingCart className="h-5 w-5" />
           </Button>
           {cartItemCount > 0 && (
@@ -200,6 +200,7 @@ const CartIcon = () => {
               className="absolute -top-1 -right-1 bg-white text-black rounded-full w-5 h-5 flex items-center justify-center text-xs font-semibold z-10 pointer-events-none focus-visible:outline-none"
               style={{ outline: 'none', boxShadow: 'none', border: 'none' }}
               tabIndex={-1}
+              aria-hidden="true"
             >
               {cartItemCount}
             </span>
@@ -226,7 +227,7 @@ const MobileMenuButton = ({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (
   >
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
-        <Button variant="secondary" className="lg:hidden">
+        <Button variant="secondary" className="lg:hidden" aria-label="Open navigation menu">
           MENU
         </Button>
       </SheetTrigger>
@@ -323,7 +324,7 @@ const MobileMenu = ({ setIsOpen }: { setIsOpen: (open: boolean) => void }) => {
                 className="pt-4 flex justify-center"
               >
                 <div className="w-32">
-                  <Link href={shopItem.href} onClick={() => setIsOpen(false)}>
+                  <Link href={shopItem.href} onClick={() => setIsOpen(false)} aria-label={`Navigate to ${shopItem.label}`}>
                     <Button variant="default" className="w-full">
                       {shopItem.label}
                     </Button>

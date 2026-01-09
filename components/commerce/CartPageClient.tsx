@@ -86,7 +86,7 @@ export function CartPageClient() {
         <h1 className="heading-1">Shopping Cart</h1>
         <p className="body-text-lg text-neutral-400">Your cart is empty</p>
         <Button variant="default" asChild>
-          <Link href="/shop">Continue Shopping</Link>
+          <Link href="/shop" aria-label="Continue shopping">Continue Shopping</Link>
         </Button>
       </div>
     );
@@ -136,16 +136,18 @@ export function CartPageClient() {
                         onClick={() => updateQuantity(line.id, line.quantity - 1)}
                         className="h-9 w-9 p-0"
                         disabled={isPending}
+                        aria-label={`Decrease quantity of ${line.productTitle || 'item'}`}
                       >
                         -
                       </Button>
-                      <span className="body-text w-10 text-center">{line.quantity}</span>
+                      <span className="body-text w-10 text-center" aria-label={`Quantity: ${line.quantity}`}>{line.quantity}</span>
                       <Button
                         variant="secondary"
                         size="sm"
                         onClick={() => updateQuantity(line.id, line.quantity + 1)}
                         className="h-9 w-9 p-0"
                         disabled={isPending}
+                        aria-label={`Increase quantity of ${line.productTitle || 'item'}`}
                       >
                         +
                       </Button>
@@ -156,6 +158,7 @@ export function CartPageClient() {
                       onClick={() => removeItem(line.id)}
                       className="text-neutral-400 hover:text-white"
                       disabled={isPending}
+                      aria-label={`Remove ${line.productTitle || 'item'} from cart`}
                     >
                       Remove
                     </Button>
@@ -197,11 +200,12 @@ export function CartPageClient() {
                   }
                 }}
                 disabled={!optimisticCart?.checkoutUrl}
+                aria-label="Proceed to checkout"
               >
                 Proceed to Checkout
               </Button>
               <Button variant="secondary" className="w-full" asChild>
-                <Link href="/shop">Continue Shopping</Link>
+                <Link href="/shop" aria-label="Continue shopping">Continue Shopping</Link>
               </Button>
             </div>
           </div>

@@ -79,7 +79,7 @@ export function CheckoutForm() {
       <div className="flex flex-col items-center justify-center min-h-[400px] space-y-4">
         <p className="body-text-lg text-neutral-400">Your cart is empty</p>
         <Button variant="secondary" asChild>
-          <Link href="/shop">Continue Shopping</Link>
+          <Link href="/shop" aria-label="Continue shopping">Continue Shopping</Link>
         </Button>
       </div>
     );
@@ -211,7 +211,7 @@ export function CheckoutForm() {
             </div>
           </div>
 
-          <Button type="submit" variant="default" className="w-full" disabled={submitting}>
+          <Button type="submit" variant="default" className="w-full" disabled={submitting} aria-label={submitting ? "Processing checkout" : "Continue to payment"}>
             {submitting ? "Processing..." : "Continue to Payment"}
           </Button>
 

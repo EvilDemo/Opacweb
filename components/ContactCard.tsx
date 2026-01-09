@@ -60,6 +60,7 @@ export function ContactCard({
           <Button
             className="w-full hover:scale-101"
             onClick={onButtonClick}
+            aria-label={buttonText}
             aria-describedby={`${title.toLowerCase()}-description`}
             variant="secondary"
           >

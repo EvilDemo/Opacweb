@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useRef } from "react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
@@ -259,8 +260,8 @@ export default function AotyInfo() {
                   Edition pieces inspired by the album’s dark pulse. <br />
                   Wear the sound, not the trend.
                 </p>
-                <Button variant="secondary" size="default" className="w-fit">
-                  Visit Shop
+                <Button variant="secondary" size="default" className="w-fit" asChild>
+                  <Link href="/shop" aria-label="Visit shop">Visit Shop</Link>
                 </Button>
               </div>
             </div>

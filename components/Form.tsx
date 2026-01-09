@@ -324,7 +324,7 @@ export default function ContactForm() {
 
             <p className="text-xs text-white/40 text-left"> * required</p>
 
-            <Button type="submit" variant="default" disabled={isSubmitting}>
+            <Button type="submit" variant="default" disabled={isSubmitting} aria-label={isSubmitting ? "Submitting form" : "Submit form"}>
               {isSubmitting ? "Sending..." : "Submit"}
             </Button>
           </form>

@@ -145,6 +145,13 @@ export function AddToCartButton({ variantId, availableForSale, className, quanti
       : ""
   );
 
+  const buttonText = optimisticState.isAdding || isPending ? "Adding..." : availableForSale ? "Add to Cart" : "Sold Out";
+  const ariaLabel = optimisticState.isAdding || isPending 
+    ? "Adding item to cart" 
+    : availableForSale 
+    ? `Add ${quantity} ${quantity === 1 ? 'item' : 'items'} to cart` 
+    : "Item is sold out";
+
   return (
     <Button
       onClick={handleAddToCart}
@@ -152,8 +159,9 @@ export function AddToCartButton({ variantId, availableForSale, className, quanti
       className={buttonClassName}
       variant={buttonVariant}
       aria-disabled={isDisabled}
+      aria-label={ariaLabel}
     >
-      {optimisticState.isAdding || isPending ? "Adding..." : availableForSale ? "Add to Cart" : "Sold Out"}
+      {buttonText}
     </Button>
   );
 }

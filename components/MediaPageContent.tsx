@@ -210,6 +210,8 @@ function MediaScrollContent({ allMediaData }: MediaScrollContentProps) {
                               variant={activeFilter === type ? "default" : "secondary"}
                               size="sm"
                               onClick={() => setActiveFilter(type)}
+                              aria-label={`Filter by ${label.toLowerCase()}${activeFilter === type ? ' (active)' : ''}`}
+                              aria-pressed={activeFilter === type}
                             >
                               {Icon && <Icon className="h-4 w-4" />}
                               {label}

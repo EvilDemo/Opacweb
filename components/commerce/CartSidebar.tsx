@@ -160,12 +160,15 @@ export function CartSidebar({ children }: CartSidebarProps) {
       <SheetTrigger asChild>
         {children || (
           <div className="relative inline-block focus:outline-none focus-visible:outline-none focus-visible:ring-0 [&:has(button:focus-visible)]:outline-none [&:has(button:focus-visible)]:ring-0">
-            <Button variant="secondary">CART</Button>
+            <Button variant="secondary" aria-label={`Open cart${cartItemCount > 0 ? ` with ${cartItemCount} ${cartItemCount === 1 ? 'item' : 'items'}` : ''}`}>
+              CART
+            </Button>
             {cartItemCount > 0 && (
               <span
                 className="absolute -top-2 -right-2 bg-white text-black rounded-full w-5 h-5 flex items-center justify-center text-xs font-semibold z-10 pointer-events-none focus-visible:outline-none"
                 style={{ outline: "none", boxShadow: "none", border: "none" }}
                 tabIndex={-1}
+                aria-hidden="true"
               >
                 {cartItemCount}
               </span>
@@ -181,7 +184,7 @@ export function CartSidebar({ children }: CartSidebarProps) {
         <SheetHeader className="px-4  py-4 flex flex-row items-center justify-between gap-0 flex-shrink-0">
           <SheetTitle className="heading-4">Your Cart</SheetTitle>
           <SheetClose asChild>
-            <Button variant="secondary" size="sm">
+            <Button variant="secondary" size="sm" aria-label="Close cart">
               CLOSE
             </Button>
           </SheetClose>
@@ -196,7 +199,7 @@ export function CartSidebar({ children }: CartSidebarProps) {
             <div className="flex-1 flex flex-col items-center justify-center text-center space-y-2 ">
               <p className="body-text-sm text-neutral-400">Your cart is empty</p>
               <Button variant="link" onClick={() => setOpen(false)} asChild>
-                <Link href="/shop">Continue Shopping</Link>
+                <Link href="/shop" aria-label="Continue shopping">Continue Shopping</Link>
               </Button>
             </div>
           ) : (
@@ -240,16 +243,18 @@ export function CartSidebar({ children }: CartSidebarProps) {
                             onClick={() => updateQuantity(line.id, line.quantity - 1)}
                             className="h-8 w-8 p-0"
                             disabled={isPending}
+                            aria-label={`Decrease quantity of ${line.productTitle || line.merchandise.title || 'item'}`}
                           >
                             -
                           </Button>
-                          <span className="body-text-sm w-8 text-center">{line.quantity}</span>
+                          <span className="body-text-sm w-8 text-center" aria-label={`Quantity: ${line.quantity}`}>{line.quantity}</span>
                           <Button
                             variant="secondary"
                             size="sm"
                             onClick={() => updateQuantity(line.id, line.quantity + 1)}
                             className="h-8 w-8 p-0"
                             disabled={isPending}
+                            aria-label={`Increase quantity of ${line.productTitle || line.merchandise.title || 'item'}`}
                           >
                             +
                           </Button>
@@ -260,6 +265,7 @@ export function CartSidebar({ children }: CartSidebarProps) {
                           onClick={() => removeItem(line.id)}
                           className="text-neutral-400 hover:text-white"
                           disabled={isPending}
+                          aria-label={`Remove ${line.productTitle || line.merchandise.title || 'item'} from cart`}
                         >
                           Remove
                         </Button>
@@ -287,11 +293,12 @@ export function CartSidebar({ children }: CartSidebarProps) {
                     }
                   }}
                   disabled={!optimisticCart?.checkoutUrl}
+                  aria-label="Proceed to checkout"
                 >
                   Checkout
                 </Button>
                 <Button variant="link" size="sm" className="w-full" onClick={() => setOpen(false)} asChild>
-                  <Link href="/shop">Continue Shopping</Link>
+                  <Link href="/shop" aria-label="Continue shopping">Continue Shopping</Link>
                 </Button>
               </div>
             </>

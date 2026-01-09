@@ -69,7 +69,7 @@ function SheetContent({
           <SheetPrimitive.Close asChild>
             <div className="absolute top-4 padding-global w-full grid grid-cols-2">
               <div className="flex items-center col-span-2 justify-end min-h-[62.5px]">
-                <Button variant="secondary" className="">
+                <Button variant="secondary" className="" aria-label="Close dialog">
                   CLOSE
                 </Button>
               </div>
