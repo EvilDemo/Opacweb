@@ -247,6 +247,23 @@ function InteractiveCross() {
       // Only handle if we're not already grabbed and on mobile
       if (isGrabbed || !rigidBodyRef.current) return;
 
+      // Check if the touch target is within the album card or button - if so, don't interfere
+      const target = event.target as HTMLElement;
+      if (target) {
+        // Check if touch is on a button, link, or within a card
+        const isInteractiveElement =
+          target.closest("button") ||
+          target.closest("a") ||
+          target.closest('[role="button"]') ||
+          target.closest('[data-card]') ||
+          target.closest(".pointer-events-auto");
+        
+        if (isInteractiveElement) {
+          // Don't prevent default or throw cross if user is clicking interactive elements
+          return;
+        }
+      }
+
       // Check if hero section is in view
       const heroSection = document.querySelector("section");
       if (!heroSection) return;
@@ -516,7 +533,7 @@ export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
         >
-          <div className="pointer-events-auto w-full max-w-[200px] md:max-w-[240px] lg:max-w-[320px]">
+          <div className="pointer-events-auto w-full max-w-[200px] md:max-w-[240px] lg:max-w-[320px]" data-card="true">
             <AotyAlbumCard />
           </div>
         </motion.div>
