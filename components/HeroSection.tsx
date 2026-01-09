@@ -6,7 +6,6 @@ import Image from "next/image";
 import { Play } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import dynamic from "next/dynamic";
-import { useMediaQuery } from "@/lib/hooks";
 
 // Loading component for AOTY mode
 function AotyLoadingState() {
@@ -39,10 +38,31 @@ export default function HeroSection() {
   const [aotyMode, setAotyMode] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [showVideo, setShowVideo] = useState(false);
+  const [isMobile, setIsMobile] = useState<boolean | null>(null); // null = not detected yet, prevents initial render
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  // Use media query for mobile detection
-  const isMobile = useMediaQuery('(max-width: 767px)');
+  // Detect mobile vs desktop
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, [isMobile]);
+
+  // Don't render until device type is detected
+  if (isMobile === null) {
+    return (
+      <section
+        className="relative w-full h-[calc(100vh-6rem)] flex flex-col justify-center overflow-hidden padding-global"
+      >
+        {/* Loading state - prevents flash of wrong content */}
+        <div className="relative w-64 h-64 sm:w-80 sm:h-80 md:w-96 md:h-96  2xl:w-[30rem] 2xl:h-[30rem] mx-auto" />
+      </section>
+    );
+  }
 
   return (
     <section
@@ -153,7 +173,7 @@ export default function HeroSection() {
                 animate={{ opacity: 1, scale: 1, rotateY: 0 }}
                 transition={{ duration: 1.2, ease: "easeOut", delay: 0.3 }}
               >
-                {isMobile && !showVideo ? (
+                {isMobile === true && !showVideo ? (
                   <>
                     {/* Poster Image - Mobile Only */}
                     <Image
@@ -171,18 +191,18 @@ export default function HeroSection() {
                   <video
                     ref={videoRef}
                     src={sphereVideo}
-                    autoPlay={!isMobile}
+                    autoPlay={isMobile === false}
                     loop
                     muted
                     playsInline
-                    preload="none"
+                    preload={isMobile === true ? "none" : "auto"}
                     aria-label="Animated 3D sphere visualization"
                     className="w-full h-full object-cover"
                   />
                 )}
               </motion.div>
               {/* Play Button - Bottom Right Corner (outside rounded container) */}
-              {isMobile && !showVideo && (
+              {isMobile === true && !showVideo && (
                 <motion.div
                   className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4"
                   initial={{ opacity: 0, scale: 0.8, rotateY: -30 }}
