@@ -18,7 +18,6 @@ export default function Footer() {
           loop
           muted
           playsInline
-          preload="none"
           aria-label="OPAC world background animation"
           className="w-full h-full object-cover object-center animate-[pulse_2s_ease-in-out_infinite]"
           style={{
@@ -26,6 +25,19 @@ export default function Footer() {
           }}
         >
           <source src="/opac-world.webm" type="video/webm" />
+          {/* Fallback to WebP for browsers that don't support WebM */}
+          <Image
+            src="/opac-word-short.webp"
+            alt="Opac background"
+            fill
+            style={{
+              objectPosition: "center bottom",
+              objectFit: "cover",
+            }}
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 100vw"
+            priority={false}
+            quality={60}
+          />
         </video>
       </div>
 

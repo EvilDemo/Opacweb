@@ -30,7 +30,7 @@ function SimplePageLoader({ isExiting = false }: SimplePageLoaderProps) {
           isVisible && !isExiting ? "opacity-100 scale-100" : "opacity-0 scale-90"
         }`}
       >
-        <video src={sphereVideo} autoPlay loop muted playsInline preload="none" className="w-full h-full object-contain" />
+        <video src={sphereVideo} autoPlay loop muted playsInline className="w-full h-full object-contain" />
       </div>
     </div>
   );

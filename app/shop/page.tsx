@@ -1,8 +1,7 @@
 import { Metadata } from "next";
-import { ShopPageClient } from "@/components/commerce/ShopPageClient";
+import { ProductGrid } from "@/components/commerce/ProductGrid";
 import { getProducts, isShopifyConfigured } from "@/lib/shopify";
 import type { Product } from "@/types/commerce";
-import type { PageInfo } from "@/lib/shopify/types";
 
 export const metadata: Metadata = {
   title: "Shop | Opac - Merchandise & Music",
@@ -62,7 +61,6 @@ export const metadata: Metadata = {
 
 export default async function ShopPage() {
   let products: Product[] = [];
-  let pageInfo: PageInfo = { hasNextPage: false, hasPreviousPage: false, startCursor: null, endCursor: null };
   let error: string | null = null;
   const shopifyConfigured = isShopifyConfigured();
 
@@ -72,7 +70,6 @@ export default async function ShopPage() {
     try {
       const result = await getProducts(20);
       products = result.products;
-      pageInfo = result.pageInfo;
     } catch (err) {
       console.error("Error fetching products:", err);
       error = err instanceof Error ? err.message : "Failed to load products";
@@ -104,7 +101,7 @@ NEXT_PUBLIC_SHOP_ENABLED=true`}
           </div>
         </div>
       ) : (
-        <ShopPageClient initialProducts={products} initialPageInfo={pageInfo} />
+        <ProductGrid products={products} />
       )}
     </section>
   );

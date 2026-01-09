@@ -19,7 +19,7 @@ export default function AotyInfo() {
   const ctaInView = useInView(ctaRef, { once: true, margin: "-100px" });
 
   return (
-    <div className="w-full padding-global overflow-x-hidden max-w-full">
+    <div className="w-full padding-global">
       {/* Album Header Section */}
       <motion.section
         ref={headerRef}
@@ -157,7 +157,7 @@ export default function AotyInfo() {
                 animate={aboutInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 50 }}
                 transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
               >
-                <Image src="/aoty-img/image-1.webp" alt="Album artwork" fill loading="lazy" className="object-cover" />
+                <Image src="/aoty-img/image-1.webp" alt="Album artwork" fill className="object-cover" />
               </motion.div>
               <motion.div
                 className="relative aspect-video"
@@ -165,7 +165,7 @@ export default function AotyInfo() {
                 animate={aboutInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 50 }}
                 transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
               >
-                <Image src="/aoty-img/image-2.webp" alt="Album artwork" fill loading="lazy" className="object-cover" />
+                <Image src="/aoty-img/image-2.webp" alt="Album artwork" fill className="object-cover" />
               </motion.div>
               <motion.div
                 className="relative aspect-video"
@@ -173,7 +173,7 @@ export default function AotyInfo() {
                 animate={aboutInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 50 }}
                 transition={{ duration: 0.8, delay: 0.7, ease: "easeOut" }}
               >
-                <Image src="/aoty-img/image-3.webp" alt="Album artwork" fill loading="lazy" className="object-cover" />
+                <Image src="/aoty-img/image-3.webp" alt="Album artwork" fill className="object-cover" />
               </motion.div>
               <motion.div
                 className="relative aspect-video"
@@ -181,7 +181,7 @@ export default function AotyInfo() {
                 animate={aboutInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 50 }}
                 transition={{ duration: 0.8, delay: 0.9, ease: "easeOut" }}
               >
-                <Image src="/aoty-img/image-4.webp" alt="Album artwork" fill loading="lazy" className="object-cover" />
+                <Image src="/aoty-img/image-4.webp" alt="Album artwork" fill className="object-cover" />
               </motion.div>
               <motion.div
                 className="relative aspect-video"
@@ -189,7 +189,7 @@ export default function AotyInfo() {
                 animate={aboutInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 50 }}
                 transition={{ duration: 0.8, delay: 1.1, ease: "easeOut" }}
               >
-                <Image src="/aoty-img/image-5.jpg" alt="Album artwork" fill loading="lazy" className="object-cover" />
+                <Image src="/aoty-img/image-5.jpg" alt="Album artwork" fill className="object-cover" />
               </motion.div>
             </div>
           </div>
@@ -239,7 +239,7 @@ export default function AotyInfo() {
       {/* CTA Section */}
       <motion.section
         ref={ctaRef}
-        className="w-full overflow-hidden"
+        className="w-full"
         initial={{ opacity: 0, y: 50 }}
         animate={ctaInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
@@ -247,7 +247,7 @@ export default function AotyInfo() {
         <div className="flex flex-col md:flex-row items-stretch">
           {/* Left Content */}
           <motion.div
-            className="flex-1 py-16 md:py-20 lg:py-28 flex items-center justify-start lg:justify-end md:max-w-1/3 px-4 sm:px-6 md:px-0"
+            className="flex-1 py-16 md:py-20 lg:py-28 flex items-center justify-start lg:justify-end md:max-w-1/3"
             initial={{ opacity: 0, x: -50 }}
             animate={ctaInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -50 }}
             transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
@@ -256,7 +256,7 @@ export default function AotyInfo() {
               <div className="flex flex-col gap-6">
                 <h2 className="heading-2 text-white">A0TY Merch</h2>
                 <p className="body-text text-white text-pretty">
-                  Edition pieces inspired by the album's dark pulse. <br />
+                  Edition pieces inspired by the album’s dark pulse. <br />
                   Wear the sound, not the trend.
                 </p>
                 <Button variant="secondary" size="default" className="w-fit">

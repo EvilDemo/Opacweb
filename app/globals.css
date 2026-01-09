@@ -124,15 +124,12 @@
   }
   html {
     scroll-behavior: smooth;
-    overflow-x: hidden;
-    max-width: 100vw;
   }
   body {
     @apply bg-black text-white;
     font-family: var(--font-geist), system-ui, sans-serif;
     cursor: url("/custom-cursor-32.png") 0 0, auto;
     overflow-x: hidden;
-    max-width: 100vw;
     -webkit-overflow-scrolling: touch;
   }
 

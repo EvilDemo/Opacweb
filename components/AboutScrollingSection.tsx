@@ -1,8 +1,7 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
-import { useMediaQuery } from "@/lib/hooks";
 
 interface AboutScrollingSectionProps {
   text?: string;
@@ -12,14 +11,23 @@ export const AboutScrollingSection = ({
   text = "Embracing individuality. Embracing the difference.",
 }: AboutScrollingSectionProps = {}) => {
   const horizontalScrollRef = useRef<HTMLDivElement>(null);
-  
-  // Use media query for mobile detection (< 1024px to match lg breakpoint)
-  const isMobile = useMediaQuery('(max-width: 1023px)');
+  const [isMobile, setIsMobile] = useState(false);
 
   const { scrollYProgress: horizontalScrollProgress } = useScroll({
     target: horizontalScrollRef,
     offset: ["start start", "end start"],
   });
+
+  // Check if screen is mobile (< 1024px to match lg breakpoint)
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   // Only apply horizontal transform on desktop, disable on mobile
   const xTransform = useTransform(horizontalScrollProgress, [0, 1], isMobile ? ["0%", "0%"] : ["0%", "-100%"]);

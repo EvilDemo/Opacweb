@@ -50,7 +50,7 @@ function InitialPageLoader({ minimumLoadTime, onComplete }: InitialPageLoaderPro
       {/* Video - takes remaining space and centers content */}
       <div className="flex-1 flex items-center justify-center overflow-hidden">
         <div className="relative w-96 h-96 lg:w-[32rem] lg:h-[32rem] xl:w-[40rem] xl:h-[40rem] overflow-hidden rounded-full">
-          <video src={sphereVideo} autoPlay loop muted playsInline preload="none" className="w-full h-full object-contain" />
+          <video src={sphereVideo} autoPlay loop muted playsInline className="w-full h-full object-contain" />
         </div>
       </div>
 

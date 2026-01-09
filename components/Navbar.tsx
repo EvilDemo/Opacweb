@@ -192,19 +192,14 @@ const CartIcon = () => {
     >
       <CartSidebar>
         <div className="relative inline-block focus:outline-none focus-visible:outline-none focus-visible:ring-0 [&:has(button:focus-visible)]:outline-none [&:has(button:focus-visible)]:ring-0">
-          <Button 
-            variant="secondary" 
-            className="h-10 w-10 p-0"
-            aria-label={`Shopping cart${cartItemCount > 0 ? `, ${cartItemCount} item${cartItemCount !== 1 ? 's' : ''} in cart` : ', empty'}`}
-          >
-            <ShoppingCart className="h-5 w-5" aria-hidden="true" />
+          <Button variant="secondary" className="h-10 w-10 p-0">
+            <ShoppingCart className="h-5 w-5" />
           </Button>
           {cartItemCount > 0 && (
             <span 
               className="absolute -top-1 -right-1 bg-white text-black rounded-full w-5 h-5 flex items-center justify-center text-xs font-semibold z-10 pointer-events-none focus-visible:outline-none"
               style={{ outline: 'none', boxShadow: 'none', border: 'none' }}
               tabIndex={-1}
-              aria-hidden="true"
             >
               {cartItemCount}
             </span>
@@ -231,7 +226,7 @@ const MobileMenuButton = ({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (
   >
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
-        <Button variant="secondary" className="lg:hidden" aria-label="Open navigation menu">
+        <Button variant="secondary" className="lg:hidden">
           MENU
         </Button>
       </SheetTrigger>

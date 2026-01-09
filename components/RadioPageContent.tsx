@@ -4,7 +4,6 @@ import { useState, useRef, useCallback, useEffect } from "react";
 import { motion, useScroll, useTransform, AnimatePresence } from "motion/react";
 import { type Radio } from "@/lib/mediaData";
 import { RadioCard } from "@/components/RadioCard";
-import { useMediaQuery } from "@/lib/hooks";
 
 interface RadioPageContentProps {
   initialData: Radio[];
@@ -29,38 +28,13 @@ interface RadioScrollContentProps {
 function RadioScrollContent({ displayData }: RadioScrollContentProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
-  
-  // Use media query for large screen detection
-  const isLargeScreen = useMediaQuery('(min-width: 1024px)');
-  
-  // Calculate initial estimate to prevent CLS
-  const [dimensions, setDimensions] = useState(() => {
-    if (typeof window !== "undefined") {
-      const isLargeScreenInitial = window.innerWidth >= 1024;
-      if (isLargeScreenInitial) {
-        const viewportWidth = window.innerWidth;
-        const viewportHeight = window.innerHeight;
-        const cardWidth = 320; // lg:w-80 = 320px
-        const cardGap = 48; // lg:gap-12 = 48px
-        const titleSectionWidth = Math.min(viewportWidth * 0.4, 600); // 40vw max 600px
-        const estimatedContentWidth =
-          titleSectionWidth + displayData.length * cardWidth + (displayData.length - 1) * cardGap;
-        const estimatedScrollDistance = Math.max(0, estimatedContentWidth - viewportWidth + 500);
-        return {
-          contentWidth: estimatedContentWidth,
-          viewportWidth,
-          scrollDistance: estimatedScrollDistance,
-          sectionHeight: viewportHeight + estimatedScrollDistance,
-        };
-      }
-    }
-    return {
-      contentWidth: 0,
-      viewportWidth: 0,
-      scrollDistance: 0,
-      sectionHeight: 0,
-    };
+  const [dimensions, setDimensions] = useState({
+    contentWidth: 0,
+    viewportWidth: 0,
+    scrollDistance: 0,
+    sectionHeight: 0,
   });
+  const [isLargeScreen, setIsLargeScreen] = useState(false);
 
   // Set up scroll tracking with sticky container
   const { scrollYProgress } = useScroll({
@@ -74,9 +48,11 @@ function RadioScrollContent({ displayData }: RadioScrollContentProps) {
 
     const contentWidth = contentRef.current.scrollWidth;
     const viewportWidth = scrollRef.current.offsetWidth;
+    const isLargeScreenCheck = window.innerWidth >= 1024; // lg breakpoint
+    setIsLargeScreen(isLargeScreenCheck);
 
     // Only apply horizontal scroll calculations on large screens
-    if (isLargeScreen) {
+    if (isLargeScreenCheck) {
       // Calculate expected width based on card count and dimensions
       const cardWidth = 320; // lg:w-80 = 320px
       const cardGap = 48; // lg:gap-12 = 48px
@@ -127,7 +103,7 @@ function RadioScrollContent({ displayData }: RadioScrollContentProps) {
         sectionHeight: 0, // 0 means auto height
       });
     }
-  }, [displayData, isLargeScreen]);
+  }, [displayData]);
 
   // Recalculate dimensions when data changes or window resizes
   useEffect(() => {
