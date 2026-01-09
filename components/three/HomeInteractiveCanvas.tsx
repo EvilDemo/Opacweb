@@ -525,9 +525,33 @@ export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }
   const [showCross, setShowCross] = useState(false);
   const [showInstructions, setShowInstructions] = useState(false);
   const [showButton, setShowButton] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [canvasReady, setCanvasReady] = useState(false);
+  const [hideLoader, setHideLoader] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const canvasContainerRef = useRef<HTMLDivElement>(null);
 
+  // Use media query for mobile detection
+  const isMobile = useMediaQuery("(max-width: 767px)");
+  const isMobileRef = useRef(isMobile);
+
+  // Track canvas visibility for performance optimization
+  const isVisible = useCanvasVisibility(canvasContainerRef, canvasReady);
+
+  // Ensure component is mounted on client before rendering Canvas
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      // Use double requestAnimationFrame to ensure browser is ready and DOM is fully rendered
+      const rafId = requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setMounted(true);
+        });
+      });
+      return () => cancelAnimationFrame(rafId);
+    }
+  }, []);
+
+  // Wait for container to be in DOM and WebGL to be available before rendering Canvas
   useEffect(() => {
     if (mounted && canvasContainerRef.current && typeof window !== "undefined") {
       let timeoutId: NodeJS.Timeout | null = null;
@@ -737,24 +761,29 @@ export function HomeInteractiveCanvas({ isMuted = false }: { isMuted?: boolean }
           {/* Interactive Music Player (reacts to physics) */}
           <HomeInteractiveMusic audioSrc="/aoty-mode-home.m4a" autoPlay={true} isMuted={isMuted} />
 
-        <Canvas
-          gl={{
-            alpha: true,
-            antialias: false,
-            powerPreference: "high-performance",
-            preserveDrawingBuffer: false,
-            failIfMajorPerformanceCaveat: false,
-            stencil: false,
-            depth: true,
-          }}
-          dpr={[1, 1.5]}
-          performance={{ min: 0.5 }}
-          frameloop="always"
-        >
-          <PerspectiveCamera makeDefault position={CONFIG.camera.position} fov={CONFIG.camera.fov} />
-          {showCross && <SceneContent />}
-        </Canvas>
-      </div>
+          {canvasReady && typeof window !== "undefined" && (
+            <Suspense fallback={null}>
+              <Canvas
+                gl={{
+                  alpha: true,
+                  antialias: false,
+                  powerPreference: "high-performance",
+                  preserveDrawingBuffer: false,
+                  failIfMajorPerformanceCaveat: false,
+                  stencil: false,
+                  depth: true,
+                }}
+                dpr={isMobile ? CONFIG.mobile.dpr : [1, 1.5]}
+                performance={{ min: 0.5 }}
+                frameloop={isVisible ? "always" : "demand"}
+              >
+                <PerspectiveCamera makeDefault position={CONFIG.camera.position} fov={CONFIG.camera.fov} />
+                {showCross && <SceneContent isMobile={isMobile} isMobileRef={isMobileRef} />}
+              </Canvas>
+            </Suspense>
+          )}
+        </div>
+      )}
     </div>
   );
 }
