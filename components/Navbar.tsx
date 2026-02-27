@@ -412,7 +412,11 @@ const MobileMenu = ({ setIsOpen }: { setIsOpen: (open: boolean) => void }) => {
 // Main Component
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const visibleItems = getVisibleNavItems();
+  const allVisibleItems = getVisibleNavItems();
+  const leftItems = SHOP_CONFIG.ENABLED
+    ? allVisibleItems
+    : allVisibleItems.filter((item) => item.href !== "/contact");
+  const contactItem = allVisibleItems.find((item) => item.href === "/contact");
 
   return (
     <motion.nav
@@ -422,24 +426,42 @@ export function Navbar() {
       transition={{ duration: 0.6, ease: "easeOut" }}
     >
       <div className="mx-auto padding-global py-4">
-        <div className="flex items-center justify-between lg:justify-between">
+        <div className="flex items-center justify-between lg:grid lg:grid-cols-3">
           {/* Left side - Navigation items (hidden on mobile) */}
-          <div className="hidden lg:flex flex-1 max-w-1/3">
-            <NavigationLinks items={visibleItems} className="" />
+          <div className="hidden lg:flex items-center justify-start space-x-2.5">
+            <NavigationLinks items={leftItems} className="" />
           </div>
 
           {/* Center - Logo */}
           <Link
             href="/"
-            className="flex justify-center items-center bg-transparent hover:scale-105 hover:bg-transparent transition-all duration-300 lg:flex-1"
+            className="flex justify-center items-center bg-transparent hover:scale-105 hover:bg-transparent transition-all duration-300"
           >
             <Logo />
           </Link>
 
-          {/* Right side - Shop button (desktop), Cart icon, and Mobile menu button */}
-          <div className="flex-1 max-w-1/3 flex items-center justify-end space-x-2.5">
-            <ShopButton />
-            <CartIcon />
+          {/* Right side - Shop/Cart when enabled, Contact when disabled */}
+          <div className="flex items-center justify-end space-x-2.5">
+            {SHOP_CONFIG.ENABLED ? (
+              <>
+                <ShopButton />
+                <CartIcon />
+              </>
+            ) : (
+              contactItem && (
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.6, ease: "easeOut", delay: 0.6 }}
+                  whileHover={{ scale: 1.05, transition: { duration: 0.15, ease: "easeOut" } }}
+                  className="hidden lg:block"
+                >
+                  <Link href={contactItem.href} className="block" aria-label={`Navigate to ${contactItem.label}`}>
+                    <Button variant="default">{contactItem.label}</Button>
+                  </Link>
+                </motion.div>
+              )
+            )}
             <MobileMenuButton isOpen={isOpen} setIsOpen={setIsOpen} />
           </div>
         </div>
