@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { motion, useInView } from "motion/react";
+import { SHOP_CONFIG } from "@/lib/constants";
 
 export default function AotyInfo() {
   const headerRef = useRef(null);
@@ -260,9 +261,11 @@ export default function AotyInfo() {
                   Edition pieces inspired by the album’s dark pulse. <br />
                   Wear the sound, not the trend.
                 </p>
-                <Button variant="secondary" size="default" className="w-fit" asChild>
-                  <Link href="/shop" aria-label="Visit shop">Visit Shop</Link>
-                </Button>
+                {SHOP_CONFIG.ENABLED && (
+                  <Button variant="secondary" size="default" className="w-fit" asChild>
+                    <Link href="/shop" aria-label="Visit shop">Visit Shop</Link>
+                  </Button>
+                )}
               </div>
             </div>
           </motion.div>

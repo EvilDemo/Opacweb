@@ -1,6 +1,8 @@
 import { Metadata } from "next";
+import Link from "next/link";
 import { ProductGrid } from "@/components/commerce/ProductGrid";
 import { getProducts, isShopifyConfigured } from "@/lib/shopify";
+import { isShopEnabled } from "@/lib/constants";
 import type { Product } from "@/types/commerce";
 
 export const metadata: Metadata = {
@@ -60,6 +62,30 @@ export const metadata: Metadata = {
 };
 
 export default async function ShopPage() {
+  if (!isShopEnabled()) {
+    return (
+      <section className="flex flex-col bg-black text-white min-h-[calc(100vh-6rem)] py-16 items-center justify-center">
+        <div className="padding-global">
+          <div className="text-center max-w-xl mx-auto space-y-6">
+            <h1 className="heading-2">Shop Currently Unavailable</h1>
+            <p className="body-text text-gray-400">
+              Our shop is not available right now. Follow us on social media
+              for updates on when we&apos;re back online.
+            </p>
+            <div className="flex items-center justify-center gap-4 pt-4">
+              <Link href="https://www.instagram.com/opac.__/" target="_blank" rel="noopener noreferrer" className="text-white underline underline-offset-4 hover:text-gray-300 transition-colors">
+                Instagram
+              </Link>
+              <Link href="/" className="text-white underline underline-offset-4 hover:text-gray-300 transition-colors">
+                Home
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   let products: Product[] = [];
   let error: string | null = null;
   const shopifyConfigured = isShopifyConfigured();

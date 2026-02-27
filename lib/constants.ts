@@ -1,7 +1,7 @@
 // Feature flags and configuration
 export const SHOP_CONFIG = {
   // Main shop toggle - change this to enable/disable shop functionality
-  ENABLED: process.env.NEXT_PUBLIC_SHOP_ENABLED === "false",
+  ENABLED: process.env.NEXT_PUBLIC_SHOP_ENABLED === "true",
 
   // Shop-related navigation items
   NAV_ITEMS: [

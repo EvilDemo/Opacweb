@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { ProductView } from "@/components/commerce/ProductView";
 import { getProductByHandle, isShopifyConfigured } from "@/lib/shopify";
+import { isShopEnabled } from "@/lib/constants";
 
 interface ProductPageProps {
   params: Promise<{
@@ -10,6 +11,10 @@ interface ProductPageProps {
 }
 
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
+  if (!isShopEnabled()) {
+    return { title: "Shop Unavailable | Opac" };
+  }
+
   const { slug } = await params;
   const product = await getProductByHandle(slug);
 
@@ -48,6 +53,10 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
 }
 
 export default async function ProductPage({ params }: ProductPageProps) {
+  if (!isShopEnabled()) {
+    redirect("/shop");
+  }
+
   const { slug } = await params;
 
   if (!isShopifyConfigured()) {
