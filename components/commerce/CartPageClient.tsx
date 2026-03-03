@@ -1,17 +1,16 @@
 "use client";
 
-import { useOptimistic, useTransition } from "react";
+import { useOptimistic } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Price } from "./Price";
-import { useCart } from "./CartContext";
-import { updateCartLineAction, removeFromCartAction } from "@/lib/shopify/actions";
+import { useCartData } from "./CartContext";
 import type { Cart } from "@/types/commerce";
+import { useCartMutations } from "./useCartMutations";
 
 export function CartPageClient() {
-  const { cart, isLoading, updateCart } = useCart();
-  const [isPending, startTransition] = useTransition();
+  const { cart, isLoading, updateCart, refreshCart } = useCartData();
 
   // Optimistic cart state for instant UI updates
   const [optimisticCart, setOptimisticCart] = useOptimistic(
@@ -40,37 +39,11 @@ export function CartPageClient() {
     }
   );
 
-  const updateQuantity = async (lineId: string, quantity: number) => {
-    if (quantity < 1) return;
-
-    startTransition(async () => {
-      // Optimistic update
-      setOptimisticCart({ type: "update", lineId, quantity });
-
-      const result = await updateCartLineAction(lineId, quantity);
-
-      if (result.error) {
-        // Only refresh on error to get correct state
-      } else {
-        updateCart(result.cart);
-      }
-    });
-  };
-
-  const removeItem = async (lineId: string) => {
-    startTransition(async () => {
-      // Optimistic update
-      setOptimisticCart({ type: "remove", lineId });
-
-      const result = await removeFromCartAction([lineId]);
-
-      if (result.error) {
-        // Only refresh on error to get correct state
-      } else {
-        updateCart(result.cart);
-      }
-    });
-  };
+  const { isPending, updateQuantity, removeItem } = useCartMutations({
+    updateCart,
+    refreshCart,
+    setOptimisticCart,
+  });
 
   if (isLoading) {
     return (

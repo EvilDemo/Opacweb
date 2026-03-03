@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getProducts, getProductByHandle } from "@/lib/shopify";
+import { getProducts, getProductByHandle } from "@/lib/shopify/index";
 
 // GET - Fetch products or single product by handle
 export async function GET(request: NextRequest) {
@@ -32,4 +32,3 @@ export async function GET(request: NextRequest) {
     );
   }
 }
-

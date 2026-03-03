@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { ProductGrid } from "@/components/commerce/ProductGrid";
-import { getProducts, isShopifyConfigured } from "@/lib/shopify";
+import { getProducts, isShopifyConfigured } from "@/lib/shopify/index";
 import { isShopEnabled } from "@/lib/constants";
 import type { Product } from "@/types/commerce";
 

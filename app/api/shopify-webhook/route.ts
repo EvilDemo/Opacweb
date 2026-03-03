@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { revalidateTag, revalidatePath } from "next/cache";
 
 const SHOPIFY_WEBHOOK_SECRET = process.env.SHOPIFY_WEBHOOK_SECRET;
+const isDevelopment = process.env.NODE_ENV !== "production";
 const SHOPIFY_WEBHOOK_ALLOWED_TOPICS = new Set([
   "products/create",
   "products/update",
@@ -10,9 +11,15 @@ const SHOPIFY_WEBHOOK_ALLOWED_TOPICS = new Set([
   "inventory_levels/update",
 ]);
 
+function debugLog(message: string, metadata?: Record<string, unknown>) {
+  if (isDevelopment) {
+    console.debug(message, metadata ?? {});
+  }
+}
+
 function isSignatureValid(rawBody: string, signature: string): boolean {
   if (!SHOPIFY_WEBHOOK_SECRET) {
-    console.warn("⚠️ SHOPIFY_WEBHOOK_SECRET is not configured. Skipping signature verification.");
+    console.warn("Shopify webhook secret not configured; skipping signature validation");
     return true;
   }
 
@@ -25,11 +32,9 @@ function isSignatureValid(rawBody: string, signature: string): boolean {
     const signatureBuffer = Buffer.from(signature, "base64");
 
     if (computedBuffer.length !== signatureBuffer.length) {
-      console.error("❌ Signature length mismatch", {
+      debugLog("Shopify signature length mismatch", {
         computedLength: computedBuffer.length,
         signatureLength: signatureBuffer.length,
-        computed: computedHash.substring(0, 20) + "...",
-        received: signature.substring(0, 20) + "...",
       });
       return false;
     }
@@ -37,15 +42,12 @@ function isSignatureValid(rawBody: string, signature: string): boolean {
     const isValid = crypto.timingSafeEqual(computedBuffer, signatureBuffer);
 
     if (!isValid) {
-      console.error("❌ Signature mismatch", {
-        computed: computedHash.substring(0, 20) + "...",
-        received: signature.substring(0, 20) + "...",
-      });
+      debugLog("Shopify signature mismatch");
     }
 
     return isValid;
   } catch (error) {
-    console.error("❌ Error validating signature:", error);
+    console.error("Error validating Shopify webhook signature:", error);
     return false;
   }
 }
@@ -60,11 +62,11 @@ export async function POST(request: NextRequest) {
     const topic = request.headers.get("x-shopify-topic");
     const shop = request.headers.get("x-shopify-shop-domain");
 
-    console.log("📥 Webhook received", { topic, shop });
+    debugLog("Shopify webhook received", { topic, shop });
 
     // Check if secret is configured
     if (!SHOPIFY_WEBHOOK_SECRET) {
-      console.error("❌ SHOPIFY_WEBHOOK_SECRET environment variable is not set!");
+      console.error("Shopify webhook secret is not configured");
       return NextResponse.json(
         {
           success: false,
@@ -77,7 +79,7 @@ export async function POST(request: NextRequest) {
 
     // Check for signature header
     if (!signature) {
-      console.error("❌ Missing x-shopify-hmac-sha256 header");
+      console.warn("Shopify webhook rejected: missing signature header");
       return NextResponse.json(
         {
           success: false,
@@ -89,7 +91,7 @@ export async function POST(request: NextRequest) {
 
     // Validate signature
     if (!isSignatureValid(rawBody, signature)) {
-      console.error("❌ Invalid webhook signature", { topic, shop });
+      console.warn("Shopify webhook rejected: invalid signature", { topic, shop });
       return NextResponse.json(
         {
           success: false,
@@ -101,7 +103,7 @@ export async function POST(request: NextRequest) {
 
     // Check if topic is allowed
     if (topic && !SHOPIFY_WEBHOOK_ALLOWED_TOPICS.has(topic)) {
-      console.log(`ℹ️ Topic ${topic} not in allowed list, ignoring`);
+      debugLog("Shopify webhook ignored: topic not allowed", { topic });
       return NextResponse.json(
         {
           success: true,
@@ -124,7 +126,7 @@ export async function POST(request: NextRequest) {
     }
 
     const processingTime = Date.now() - startTime;
-    console.log(`✅ Webhook processed: ${topic} in ${processingTime}ms`);
+    debugLog("Shopify webhook processed", { topic, processingTimeMs: processingTime });
 
     return NextResponse.json({
       success: true,
@@ -134,11 +136,10 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     const processingTime = Date.now() - startTime;
-    console.error("❌ Error handling Shopify webhook:", {
+    console.error("Error handling Shopify webhook:", {
       error: error instanceof Error ? error.message : String(error),
-      stack: error instanceof Error ? error.stack : undefined,
       bodyLength: rawBody.length,
-      processingTime: `${processingTime}ms`,
+      processingTimeMs: processingTime,
     });
 
     return NextResponse.json(

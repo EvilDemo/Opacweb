@@ -9,7 +9,7 @@ import Footer from "@/components/Footer";
 import { Navbar } from "@/components/Navbar";
 import RouteLoader from "@/components/RouteLoader";
 import { LoaderProvider } from "@/components/loaders/LoaderContext";
-import { CartProvider } from "@/components/commerce/CartContext";
+import { CartProviderBoundary } from "@/components/commerce/CartProviderBoundary";
 import { Toaster } from "@/components/ui/sonner";
 
 //Importing Font
@@ -95,6 +95,17 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const appContent = (
+    <>
+      <Navbar />
+      <RouteLoader minimumLoadTime={3000}>
+        <main id="main-content">{children}</main>
+        <Footer />
+      </RouteLoader>
+      <Toaster />
+    </>
+  );
+
   return (
     <html lang="en" className="dark">
       <head>
@@ -113,14 +124,7 @@ export default function RootLayout({
           Skip to main content
         </a>
         <LoaderProvider>
-          <CartProvider>
-            <Navbar />
-            <RouteLoader minimumLoadTime={3000}>
-              <main id="main-content">{children}</main>
-              <Footer />
-            </RouteLoader>
-            <Toaster />
-          </CartProvider>
+          <CartProviderBoundary>{appContent}</CartProviderBoundary>
         </LoaderProvider>
       </body>
     </html>

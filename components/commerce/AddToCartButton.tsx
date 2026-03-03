@@ -5,7 +5,7 @@ import { useOptimistic, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { addToCartAction } from "@/lib/shopify/actions";
-import { useCart } from "./CartContext";
+import { useCartData, useCartUI } from "./CartContext";
 import { toast } from "sonner";
 
 interface AddToCartButtonProps {
@@ -43,7 +43,8 @@ function getErrorMessage(error: string): string {
 
 export function AddToCartButton({ variantId, availableForSale, className, quantity = 1 }: AddToCartButtonProps) {
   const [isPending, startTransition] = useTransition();
-  const { cart, updateCart, openCartSidebar, refreshCart } = useCart();
+  const { cart, updateCart, refreshCart } = useCartData();
+  const { openCartSidebar } = useCartUI();
   const [optimisticState, setOptimisticState] = useOptimistic(
     { isAdding: false },
     (state, newState: { isAdding: boolean }) => newState

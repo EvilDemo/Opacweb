@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { createCart, addToCart, getCart, updateCartLines, removeFromCart } from "@/lib/shopify";
+import { createCart, addToCart, getCart, updateCartLines, removeFromCart } from "@/lib/shopify/index";
 
 const CART_COOKIE = "cart_id";
 const CART_COOKIE_MAX_AGE = 60 * 60 * 24 * 30; // 30 days
@@ -138,4 +138,3 @@ export async function DELETE(request: NextRequest) {
     );
   }
 }
-

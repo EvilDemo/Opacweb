@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { ProductView } from "@/components/commerce/ProductView";
-import { getProductByHandle, isShopifyConfigured } from "@/lib/shopify";
+import { getProductByHandle, isShopifyConfigured } from "@/lib/shopify/index";
 import { isShopEnabled } from "@/lib/constants";
 
 interface ProductPageProps {
@@ -75,4 +75,3 @@ export default async function ProductPage({ params }: ProductPageProps) {
     </section>
   );
 }
-

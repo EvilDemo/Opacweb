@@ -1,6 +1,14 @@
 import { revalidateTag } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 
+const isDevelopment = process.env.NODE_ENV !== "production";
+
+function debugLog(message: string, metadata?: Record<string, unknown>) {
+  if (isDevelopment) {
+    console.debug(message, metadata ?? {});
+  }
+}
+
 // Test endpoint to verify webhook is reachable
 export async function GET() {
   return NextResponse.json({
@@ -13,23 +21,17 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
-    // Add comprehensive logging
-    console.log("=== WEBHOOK RECEIVED ===");
-    console.log("Timestamp:", new Date().toISOString());
-    console.log("Body:", JSON.stringify(body, null, 2));
-    console.log("Headers:", Object.fromEntries(request.headers.entries()));
-
     // Verify this is a valid Sanity webhook
     const signature = request.headers.get("sanity-webhook-signature");
 
     if (!signature) {
-      console.log("❌ Missing webhook signature");
+      console.warn("Sanity webhook rejected: missing signature");
       return NextResponse.json({ message: "Missing webhook signature" }, { status: 401 });
     }
 
     // Get the document type from the webhook payload
     const { _type, _id } = body;
-    console.log("Document type:", _type, "Document ID:", _id);
+    debugLog("Sanity webhook received", { documentType: _type, documentId: _id });
 
     // Handle delete operations (no _type field)
     if (!_type && _id) {
@@ -64,9 +66,8 @@ export async function POST(request: NextRequest) {
 
     if (tag) {
       // Revalidate the specific tag
-      console.log(`🔄 Revalidating tag: ${tag}`);
       revalidateTag(tag, "page");
-      console.log(`✅ Tag ${tag} revalidated successfully`);
+      debugLog("Sanity tag revalidated", { tag, documentType: _type, documentId: _id });
 
       return NextResponse.json({
         revalidated: true,
@@ -82,7 +83,7 @@ export async function POST(request: NextRequest) {
       documentType: _type,
     });
   } catch (err) {
-    console.error("Error in Sanity webhook:", err);
+    console.error("Error processing Sanity webhook:", err);
     return NextResponse.json({ message: "Error processing webhook" }, { status: 500 });
   }
 }

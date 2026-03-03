@@ -1,24 +1,25 @@
 "use client";
 
-import React, { useState, useOptimistic, useTransition } from "react";
+import React, { useState, useOptimistic } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetClose } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Price } from "./Price";
-import { useCart } from "./CartContext";
-import { updateCartLineAction, removeFromCartAction } from "@/lib/shopify/actions";
+import { useCartData, useCartUI } from "./CartContext";
+import { updateCartLineAction } from "@/lib/shopify/actions";
 import { toast } from "sonner";
 import type { Cart } from "@/types/commerce";
+import { useCartMutations } from "./useCartMutations";
 
 interface CartSidebarProps {
   children?: React.ReactNode;
 }
 
 export function CartSidebar({ children }: CartSidebarProps) {
-  const { cart, isLoading, updateCart, setOpenCartSidebar, refreshCart } = useCart();
+  const { cart, isLoading, updateCart, refreshCart } = useCartData();
+  const { setOpenCartSidebar } = useCartUI();
   const [open, setOpen] = useState(false);
-  const [isPending, startTransition] = useTransition();
 
   // Register the open function with the cart context
   React.useEffect(() => {
@@ -79,6 +80,17 @@ export function CartSidebar({ children }: CartSidebarProps) {
     return error || "Unable to update cart. Please try again.";
   };
 
+  const { isPending, startTransition, removeItem } = useCartMutations({
+    updateCart,
+    refreshCart,
+    setOptimisticCart,
+    onError: (message) => {
+      setTimeout(() => {
+        toast.error(getErrorMessage(message));
+      }, 0);
+    },
+  });
+
   const updateQuantity = async (lineId: string, quantity: number) => {
     if (quantity < 1) return;
 
@@ -136,21 +148,6 @@ export function CartSidebar({ children }: CartSidebarProps) {
       }, 0);
       await refreshCart();
     }
-  };
-
-  const removeItem = async (lineId: string) => {
-    startTransition(async () => {
-      // Optimistic update
-      setOptimisticCart({ type: "remove", lineId });
-
-      const result = await removeFromCartAction([lineId]);
-
-      if (result.error) {
-        // Only refresh on error to get correct state
-      } else {
-        updateCart(result.cart);
-      }
-    });
   };
 
   const cartItemCount = optimisticCart?.totalQuantity || 0;

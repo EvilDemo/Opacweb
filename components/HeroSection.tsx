@@ -1,9 +1,18 @@
 "use client";
 
 import React, { useState } from "react";
+import dynamic from "next/dynamic";
 import { motion } from "motion/react";
 import { Switch } from "@/components/ui/switch";
-import { HomeInteractiveCanvas } from "@/components/three/HomeInteractiveCanvas";
+import { InlineSphereLoader } from "@/components/loaders/InlineSphereLoader";
+
+const HomeInteractiveCanvas = dynamic(
+  () => import("@/components/three/HomeInteractiveCanvas").then((mod) => mod.HomeInteractiveCanvas),
+  {
+    ssr: false,
+    loading: () => <InlineSphereLoader />,
+  }
+);
 
 // 3D Sphere video from your public folder
 const sphereVideo = "/esfera3D_optimized.webm";

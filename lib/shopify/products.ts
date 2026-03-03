@@ -1,4 +1,5 @@
 import { unstable_cache } from "next/cache";
+import { cache } from "react";
 import { getShopifyClient } from "./client";
 import { isShopifyConfigured } from "./constants";
 import { PRODUCTS_QUERY, PRODUCT_BY_HANDLE_QUERY } from "./queries/product";
@@ -103,7 +104,7 @@ export async function getProducts(first: number = 20, after?: string) {
   return fetchProducts(first, after);
 }
 
-const fetchProductByHandle = async (handle: string) => {
+const fetchProductByHandle = cache(async (handle: string) => {
   if (!isShopifyConfigured()) {
     return null;
   }
@@ -123,9 +124,8 @@ const fetchProductByHandle = async (handle: string) => {
     console.error("Error fetching product:", error);
     throw error;
   }
-};
+});
 
 export async function getProductByHandle(handle: string): Promise<Product | null> {
   return fetchProductByHandle(handle);
 }
-

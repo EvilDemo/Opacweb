@@ -1,4 +1,5 @@
 import { sanityClient, picturesQuery, galleryQuery, videosQuery, musicQuery, radioQuery } from "./sanity";
+import { cache } from "react";
 
 export interface Pictures {
   _id: string;
@@ -40,49 +41,47 @@ export interface Radio {
   _updatedAt: string;
 }
 
-export async function getPictures(): Promise<Pictures[]> {
+function hasSanityConfiguration(): boolean {
+  return !!(
+    process.env.NEXT_PUBLIC_SANITY_PROJECT_ID &&
+    process.env.NEXT_PUBLIC_SANITY_PROJECT_ID !== "dummy-project-id"
+  );
+}
+
+const fetchPictures = cache(async (): Promise<Pictures[]> => {
   try {
-    // Skip Sanity calls during build if no project ID is configured
-    if (
-      !process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ||
-      process.env.NEXT_PUBLIC_SANITY_PROJECT_ID === "dummy-project-id"
-    ) {
-      console.log("Skipping Sanity call - no project ID configured");
+    if (!hasSanityConfiguration()) {
       return [];
     }
 
-    const result = await sanityClient.fetch(
+    return await sanityClient.fetch(
       picturesQuery,
       {},
       {
         next: {
-          revalidate: process.env.NODE_ENV === "development" ? 0 : 3600, // No cache in dev, 1 hour in prod with webhook revalidation
+          revalidate: process.env.NODE_ENV === "development" ? 0 : 3600,
           tags: ["pictures"],
         },
       }
     );
-    return result;
   } catch (error) {
     console.error("Error fetching pictures:", error);
     return [];
   }
-}
+});
 
-export async function getVideos(): Promise<Video[]> {
+const fetchVideos = cache(async (): Promise<Video[]> => {
   try {
-    // Skip Sanity calls during build if no project ID is configured
-    if (
-      !process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ||
-      process.env.NEXT_PUBLIC_SANITY_PROJECT_ID === "dummy-project-id"
-    ) {
+    if (!hasSanityConfiguration()) {
       return [];
     }
+
     return await sanityClient.fetch(
       videosQuery,
       {},
       {
         next: {
-          revalidate: process.env.NODE_ENV === "development" ? 0 : 3600, // No cache in dev, 1 hour in prod with webhook revalidation
+          revalidate: process.env.NODE_ENV === "development" ? 0 : 3600,
           tags: ["videos"],
         },
       }
@@ -91,23 +90,20 @@ export async function getVideos(): Promise<Video[]> {
     console.error("Error fetching videos:", error);
     return [];
   }
-}
+});
 
-export async function getMusic(): Promise<Music[]> {
+const fetchMusic = cache(async (): Promise<Music[]> => {
   try {
-    // Skip Sanity calls during build if no project ID is configured
-    if (
-      !process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ||
-      process.env.NEXT_PUBLIC_SANITY_PROJECT_ID === "dummy-project-id"
-    ) {
+    if (!hasSanityConfiguration()) {
       return [];
     }
+
     return await sanityClient.fetch(
       musicQuery,
       {},
       {
         next: {
-          revalidate: process.env.NODE_ENV === "development" ? 0 : 3600, // No cache in dev, 1 hour in prod with webhook revalidation
+          revalidate: process.env.NODE_ENV === "development" ? 0 : 3600,
           tags: ["music"],
         },
       }
@@ -116,23 +112,20 @@ export async function getMusic(): Promise<Music[]> {
     console.error("Error fetching music:", error);
     return [];
   }
-}
+});
 
-export async function getRadio(): Promise<Radio[]> {
+const fetchRadio = cache(async (): Promise<Radio[]> => {
   try {
-    // Skip Sanity calls during build if no project ID is configured
-    if (
-      !process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ||
-      process.env.NEXT_PUBLIC_SANITY_PROJECT_ID === "dummy-project-id"
-    ) {
+    if (!hasSanityConfiguration()) {
       return [];
     }
+
     return await sanityClient.fetch(
       radioQuery,
       {},
       {
         next: {
-          revalidate: process.env.NODE_ENV === "development" ? 0 : 3600, // No cache in dev, 1 hour in prod with webhook revalidation
+          revalidate: process.env.NODE_ENV === "development" ? 0 : 3600,
           tags: ["radio"],
         },
       }
@@ -141,30 +134,46 @@ export async function getRadio(): Promise<Radio[]> {
     console.error("Error fetching radio:", error);
     return [];
   }
-}
+});
 
-export async function getGallery(id: string): Promise<Gallery | null> {
+const fetchGallery = cache(async (id: string): Promise<Gallery | null> => {
   try {
-    // Skip Sanity calls during build if no project ID is configured
-    if (
-      !process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ||
-      process.env.NEXT_PUBLIC_SANITY_PROJECT_ID === "dummy-project-id"
-    ) {
+    if (!hasSanityConfiguration()) {
       return null;
     }
-    const result = await sanityClient.fetch(
+
+    return await sanityClient.fetch(
       galleryQuery,
       { id },
       {
         next: {
-          revalidate: process.env.NODE_ENV === "development" ? 0 : 3600, // No cache in dev, 1 hour in prod with webhook revalidation
-          tags: ["gallery", `gallery-${id}`], // Specific tag for this gallery
+          revalidate: process.env.NODE_ENV === "development" ? 0 : 3600,
+          tags: ["gallery", `gallery-${id}`],
         },
       }
     );
-    return result;
   } catch (error) {
     console.error("Error fetching gallery:", error);
     return null;
   }
+});
+
+export async function getPictures(): Promise<Pictures[]> {
+  return fetchPictures();
+}
+
+export async function getVideos(): Promise<Video[]> {
+  return fetchVideos();
+}
+
+export async function getMusic(): Promise<Music[]> {
+  return fetchMusic();
+}
+
+export async function getRadio(): Promise<Radio[]> {
+  return fetchRadio();
+}
+
+export async function getGallery(id: string): Promise<Gallery | null> {
+  return fetchGallery(id);
 }

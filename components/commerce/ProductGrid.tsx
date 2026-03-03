@@ -1,5 +1,3 @@
-"use client";
-
 import { ProductCard } from "./ProductCard";
 import type { Product } from "@/types/commerce";
 
@@ -27,4 +25,3 @@ export function ProductGrid({ products, className }: ProductGridProps) {
     </div>
   );
 }
-

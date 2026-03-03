@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { getVisibleNavItems } from "@/lib/constants";
-import NewsletterForm from "@/components/NewsletterForm";
+import LazyNewsletterForm from "@/components/LazyNewsletterForm";
 
 export default function Footer() {
   const navItems = getVisibleNavItems();
@@ -74,7 +74,7 @@ export default function Footer() {
           {/* Form Actions */}
           <div className="content-stretch flex flex-col gap-2 items-start justify-start relative shrink-0 w-full">
             {/* Newsletter Form */}
-            <NewsletterForm />
+            <LazyNewsletterForm />
 
             {/* Privacy Policy Text */}
             <div className="w-full text-center lg:text-left">
