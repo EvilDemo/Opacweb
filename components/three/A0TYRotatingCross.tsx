@@ -1,6 +1,6 @@
 "use client";
 
-import { Canvas, useFrame } from "@react-three/fiber";
+import { addAfterEffect, Canvas, useFrame } from "@react-three/fiber";
 import { Environment, PerspectiveCamera, useGLTF } from "@react-three/drei";
 import { useRef, useState, useEffect } from "react";
 import * as THREE from "three";
@@ -50,12 +50,21 @@ const CONFIG = {
 };
 
 // Rotating Cross Component
-function RotatingCross() {
+function RotatingCross({ onReady }: { onReady?: () => void }) {
   const { scene } = useGLTF("/cross.glb");
   const groupRef = useRef<THREE.Group>(null);
   const [isDragging, setIsDragging] = useState(false);
   const rotationSpeedRef = useRef(CONFIG.rotation.baseSpeed);
   const lastMouseY = useRef(0);
+
+  useEffect(() => {
+    // Keep the poster until the loaded scene has completed its first render.
+    const unsubscribe = addAfterEffect(() => {
+      unsubscribe();
+      onReady?.();
+    });
+    return unsubscribe;
+  }, [onReady]);
 
   // Animation loop - rotate on Y axis (horizontal)
   useFrame(() => {
@@ -132,11 +141,8 @@ function RotatingCross() {
   );
 }
 
-// Preload the model
-useGLTF.preload("/cross.glb");
-
 // Scene Content
-function SceneContent() {
+function SceneContent({ onReady }: { onReady?: () => void }) {
   return (
     <>
       {/* Lighting */}
@@ -150,7 +156,7 @@ function SceneContent() {
       <Environment preset="studio" resolution={128} />
 
       {/* Rotating Cross */}
-      <RotatingCross />
+      <RotatingCross onReady={onReady} />
 
       {/* Post-Processing Effects */}
       <EffectComposer multisampling={0}>
@@ -166,7 +172,7 @@ function SceneContent() {
 }
 
 // Main Component
-export function A0TYRotatingCross() {
+export function A0TYRotatingCross({ active = true, onReady }: { active?: boolean; onReady?: () => void }) {
   return (
     <div className="absolute inset-0">
       <Canvas
@@ -181,11 +187,11 @@ export function A0TYRotatingCross() {
         }}
         dpr={[1, 1.5]}
         performance={{ min: 0.5 }}
-        frameloop="always"
+        frameloop={active ? "always" : "never"}
         style={{ background: "transparent" }} // Ensure transparent background
       >
         <PerspectiveCamera makeDefault position={CONFIG.camera.position} fov={CONFIG.camera.fov} />
-        <SceneContent />
+        <SceneContent onReady={onReady} />
       </Canvas>
     </div>
   );

@@ -98,7 +98,7 @@ export default function RootLayout({
   const appContent = (
     <>
       <Navbar />
-      <RouteLoader minimumLoadTime={3000}>
+      <RouteLoader>
         <main id="main-content">{children}</main>
         <Footer />
       </RouteLoader>

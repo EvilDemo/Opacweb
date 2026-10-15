@@ -1,6 +1,8 @@
 "use client";
 
-import { A0TYRotatingCross } from "@/components/three/A0TYRotatingCross";
+import ViewportVideo from "@/components/ViewportVideo";
+
+import AotyCross from "@/components/AotyCross";
 import { motion } from "motion/react";
 import { useRef, useEffect } from "react";
 import Image from "next/image";
@@ -89,7 +91,7 @@ export default function AotyHero({ isMuted = false, onMuteChange }: AotyHeroProp
             className="object-cover"
           />
           <div className="absolute inset-0">
-            <A0TYRotatingCross />
+            <AotyCross />
           </div>
         </motion.div>
 
@@ -100,10 +102,10 @@ export default function AotyHero({ isMuted = false, onMuteChange }: AotyHeroProp
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
-          <video
+          <ViewportVideo
             key="aoty-video"
             src="/aoty-video.mp4?v=2"
-            autoPlay
+            poster="/aoty-video-poster.webp"
             loop
             muted
             playsInline

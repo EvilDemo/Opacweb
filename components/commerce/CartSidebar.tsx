@@ -1,23 +1,19 @@
 "use client";
 
-import React, { useState, useOptimistic } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetClose } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Price } from "./Price";
 import { useCartData, useCartUI } from "./CartContext";
-import { updateCartLineAction } from "@/lib/shopify/actions";
-import { toast } from "sonner";
-import type { Cart } from "@/types/commerce";
-import { useCartMutations } from "./useCartMutations";
 
 interface CartSidebarProps {
   children?: React.ReactNode;
 }
 
 export function CartSidebar({ children }: CartSidebarProps) {
-  const { cart, isLoading, updateCart, refreshCart } = useCartData();
+  const { cart: optimisticCart, isLoading, isPending, updateQuantity, removeItem } = useCartData();
   const { setOpenCartSidebar } = useCartUI();
   const [open, setOpen] = useState(false);
 
@@ -26,129 +22,6 @@ export function CartSidebar({ children }: CartSidebarProps) {
     setOpenCartSidebar(() => setOpen(true));
     return () => setOpenCartSidebar(null);
   }, [setOpenCartSidebar]);
-
-  // Optimistic cart state for instant UI updates
-  const [optimisticCart, setOptimisticCart] = useOptimistic(
-    cart,
-    (state: Cart | null, update: { type: string; lineId: string; quantity?: number }) => {
-      if (!state) return state;
-
-      if (update.type === "update") {
-        return {
-          ...state,
-          lines: state.lines.map((line) =>
-            line.id === update.lineId ? { ...line, quantity: update.quantity || line.quantity } : line
-          ),
-        };
-      }
-
-      if (update.type === "remove") {
-        return {
-          ...state,
-          lines: state.lines.filter((line) => line.id !== update.lineId),
-          totalQuantity: Math.max(0, state.totalQuantity - 1),
-        };
-      }
-
-      return state;
-    }
-  );
-
-  // Helper to parse Shopify errors
-  const getErrorMessage = (error: string): string => {
-    const lowerError = error.toLowerCase();
-
-    if (
-      lowerError.includes("not available") ||
-      lowerError.includes("sold out") ||
-      lowerError.includes("out of stock") ||
-      lowerError.includes("insufficient inventory") ||
-      lowerError.includes("unavailable")
-    ) {
-      return "This item is out of stock in the requested quantity.";
-    }
-
-    if (
-      lowerError.includes("quantity") ||
-      lowerError.includes("exceed") ||
-      lowerError.includes("maximum") ||
-      lowerError.includes("limit")
-    ) {
-      return "Unable to update to this quantity. Please check available stock.";
-    }
-
-    return error || "Unable to update cart. Please try again.";
-  };
-
-  const { isPending, startTransition, removeItem } = useCartMutations({
-    updateCart,
-    refreshCart,
-    setOptimisticCart,
-    onError: (message) => {
-      setTimeout(() => {
-        toast.error(getErrorMessage(message));
-      }, 0);
-    },
-  });
-
-  const updateQuantity = async (lineId: string, quantity: number) => {
-    if (quantity < 1) return;
-
-    // Get current quantity before updating to detect if it actually changed
-    const currentLine = cart?.lines.find((line) => line.id === lineId);
-    const quantityBefore = currentLine?.quantity || 0;
-
-    // Optimistic update (must be in transition)
-    startTransition(() => {
-      setOptimisticCart({ type: "update", lineId, quantity });
-    });
-
-    try {
-      const result = await updateCartLineAction(lineId, quantity);
-
-      if (result.error) {
-        setTimeout(() => {
-          toast.error(getErrorMessage(result.error || "Failed to update cart"));
-        }, 0);
-        // Refresh cart to get correct state after error
-        await refreshCart();
-      } else if (result.cart) {
-        // Check if quantity actually changed
-        const updatedLine = result.cart.lines.find((line) => line.id === lineId);
-        const quantityAfter = updatedLine?.quantity || 0;
-        const quantityIncrease = quantityAfter - quantityBefore;
-
-        if (quantityIncrease < quantity - quantityBefore) {
-          // Quantity didn't increase by what we requested
-          if (quantityIncrease === 0 && quantity > quantityBefore) {
-            // Tried to increase but quantity stayed the same - stock limit
-            setTimeout(() => {
-              toast.error("Unable to increase quantity. Stock limit reached.");
-            }, 0);
-            await refreshCart();
-          } else if (quantityAfter < quantity) {
-            // Quantity is less than requested
-            setTimeout(() => {
-              toast.error(`Only ${quantityAfter} item(s) available. Cart updated.`);
-            }, 0);
-            updateCart(result.cart);
-          } else {
-            // Cart updated successfully
-            updateCart(result.cart);
-          }
-        } else {
-          // Successfully updated
-          updateCart(result.cart);
-        }
-      }
-    } catch (error) {
-      console.error("Error updating quantity:", error);
-      setTimeout(() => {
-        toast.error("Failed to update quantity. Please try again.");
-      }, 0);
-      await refreshCart();
-    }
-  };
 
   const cartItemCount = optimisticCart?.totalQuantity || 0;
 
@@ -289,7 +162,7 @@ export function CartSidebar({ children }: CartSidebarProps) {
                       window.location.href = optimisticCart.checkoutUrl;
                     }
                   }}
-                  disabled={!optimisticCart?.checkoutUrl}
+                  disabled={isPending || !optimisticCart?.checkoutUrl}
                   aria-label="Proceed to checkout"
                 >
                   Checkout

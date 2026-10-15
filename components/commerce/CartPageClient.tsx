@@ -1,49 +1,13 @@
 "use client";
 
-import { useOptimistic } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Price } from "./Price";
 import { useCartData } from "./CartContext";
-import type { Cart } from "@/types/commerce";
-import { useCartMutations } from "./useCartMutations";
 
 export function CartPageClient() {
-  const { cart, isLoading, updateCart, refreshCart } = useCartData();
-
-  // Optimistic cart state for instant UI updates
-  const [optimisticCart, setOptimisticCart] = useOptimistic(
-    cart,
-    (state: Cart | null, update: { type: string; lineId: string; quantity?: number }) => {
-      if (!state) return state;
-
-      if (update.type === "update") {
-        return {
-          ...state,
-          lines: state.lines.map((line) =>
-            line.id === update.lineId ? { ...line, quantity: update.quantity || line.quantity } : line
-          ),
-        };
-      }
-
-      if (update.type === "remove") {
-        return {
-          ...state,
-          lines: state.lines.filter((line) => line.id !== update.lineId),
-          totalQuantity: Math.max(0, state.totalQuantity - 1),
-        };
-      }
-
-      return state;
-    }
-  );
-
-  const { isPending, updateQuantity, removeItem } = useCartMutations({
-    updateCart,
-    refreshCart,
-    setOptimisticCart,
-  });
+  const { cart: optimisticCart, isLoading, isPending, updateQuantity, removeItem } = useCartData();
 
   if (isLoading) {
     return (
@@ -172,7 +136,7 @@ export function CartPageClient() {
                     window.location.href = optimisticCart.checkoutUrl;
                   }
                 }}
-                disabled={!optimisticCart?.checkoutUrl}
+                disabled={isPending || !optimisticCart?.checkoutUrl}
                 aria-label="Proceed to checkout"
               >
                 Proceed to Checkout

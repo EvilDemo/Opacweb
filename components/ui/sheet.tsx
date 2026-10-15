@@ -5,6 +5,7 @@ import * as SheetPrimitive from "@radix-ui/react-dialog";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { useDialogFocusReturn } from "@/hooks/useDialogFocusReturn";
 
 function Sheet({ ...props }: React.ComponentProps<typeof SheetPrimitive.Root>) {
   return <SheetPrimitive.Root data-slot="sheet" {...props} />;
@@ -45,6 +46,7 @@ function SheetContent({
   side?: "top" | "right" | "bottom" | "left";
   hideDefaultClose?: boolean;
 }) {
+  const focusReturn = useDialogFocusReturn();
   return (
     <SheetPortal>
       <SheetOverlay />
@@ -62,6 +64,7 @@ function SheetContent({
             "data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom inset-x-0 bottom-0 h-auto border-t border-white/50",
           className
         )}
+        {...focusReturn}
         {...props}
       >
         {children}

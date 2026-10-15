@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { createContext, useContext, useSyncExternalStore, ReactNode } from "react";
 
 interface LoaderContextType {
   showInitialLoader: boolean;
@@ -10,17 +10,39 @@ interface LoaderContextType {
 const LoaderContext = createContext<LoaderContextType | undefined>(undefined);
 
 const INITIAL_LOAD_KEY = "opac_hasSeenInitialLoad";
+const LOADER_CHANGE_EVENT = "opac:loader-change";
+
+function getLoaderSnapshot() {
+  try {
+    return sessionStorage.getItem(INITIAL_LOAD_KEY) !== "true";
+  } catch {
+    return false;
+  }
+}
+
+function subscribeToLoader(onChange: () => void) {
+  window.addEventListener(LOADER_CHANGE_EVENT, onChange);
+  window.addEventListener("storage", onChange);
+  return () => {
+    window.removeEventListener(LOADER_CHANGE_EVENT, onChange);
+    window.removeEventListener("storage", onChange);
+  };
+}
+
+function setShowInitialLoader(show: boolean) {
+  try {
+    if (show) sessionStorage.removeItem(INITIAL_LOAD_KEY);
+    else sessionStorage.setItem(INITIAL_LOAD_KEY, "true");
+    window.dispatchEvent(new Event(LOADER_CHANGE_EVENT));
+  } catch {
+    // Skip the session loader when browser storage is unavailable.
+  }
+}
+
+const getServerSnapshot = () => false;
 
 export function LoaderProvider({ children }: { children: ReactNode }) {
-  const [showInitialLoader, setShowInitialLoader] = useState(false);
-
-  useEffect(() => {
-    const hasSeenInitialLoad = sessionStorage.getItem(INITIAL_LOAD_KEY);
-    if (!hasSeenInitialLoad) {
-      sessionStorage.setItem(INITIAL_LOAD_KEY, "true");
-      setShowInitialLoader(true);
-    }
-  }, []);
+  const showInitialLoader = useSyncExternalStore(subscribeToLoader, getLoaderSnapshot, getServerSnapshot);
 
   return (
     <LoaderContext.Provider value={{ showInitialLoader, setShowInitialLoader }}>{children}</LoaderContext.Provider>

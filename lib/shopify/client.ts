@@ -21,13 +21,3 @@ export function getShopifyClient(): StorefrontApiClient {
 
   return _shopifyClient;
 }
-
-// Export for backwards compatibility
-export const shopifyClient = new Proxy({} as StorefrontApiClient, {
-  get() {
-    return getShopifyClient();
-  },
-});
-
-
-

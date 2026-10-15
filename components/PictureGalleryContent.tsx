@@ -63,6 +63,8 @@ const ImageCard = ({
       }}
     >
       {isVisible && (
+        // Sanity provides optimized URLs and responsive srcSet directly.
+        // eslint-disable-next-line @next/next/no-img-element
         <img
           {...getResponsiveImageProps(imageUrl, "gallery")}
           alt={`${pictureTitle} - Image ${index + 1} of ${imageCount}`}
@@ -90,13 +92,11 @@ export default function PictureGalleryContent({ picture, gallery }: PictureGalle
   const openLightbox = useCallback((index: number) => {
     setSelectedImageIndex(index);
     setIsLightboxOpen(true);
-    document.body.style.overflow = "hidden";
   }, []);
 
   const closeLightbox = useCallback(() => {
     setSelectedImageIndex(null);
     setIsLightboxOpen(false);
-    document.body.style.overflow = "unset";
   }, []);
 
   const navigateImage = useCallback(
@@ -111,32 +111,6 @@ export default function PictureGalleryContent({ picture, gallery }: PictureGalle
     },
     [selectedImageIndex, allImages.length]
   );
-
-  // Keyboard navigation
-  const handleKeyDown = useCallback(
-    (event: KeyboardEvent) => {
-      if (!isLightboxOpen) return;
-
-      switch (event.key) {
-        case "Escape":
-          closeLightbox();
-          break;
-        case "ArrowLeft":
-          navigateImage("prev");
-          break;
-        case "ArrowRight":
-          navigateImage("next");
-          break;
-      }
-    },
-    [isLightboxOpen, closeLightbox, navigateImage]
-  );
-
-  // Add keyboard event listener
-  useEffect(() => {
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [handleKeyDown]);
 
   // Prefetch previous and next images when lightbox is open
   useEffect(() => {
@@ -177,8 +151,7 @@ export default function PictureGalleryContent({ picture, gallery }: PictureGalle
   // Cleanup on unmount
   useEffect(() => {
     return () => {
-      document.body.style.overflow = "unset";
-    };
+      };
   }, []);
 
   return (

@@ -1,4 +1,4 @@
-import React from "react";
+import ViewportVideo from "@/components/ViewportVideo";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -13,32 +13,16 @@ export default function Footer() {
     <div className="box-border flex flex-col gap-8 md:gap-20 items-start justify-start padding-global py-8 relative w-full min-h-fits mt-30 overflow-hidden">
       {/* WebM Video Background */}
       <div className="absolute inset-0 z-0">
-        <video
-          autoPlay
+        <ViewportVideo
+          src="/opac-world.webm"
+          poster="/opac-world-poster.webp"
           loop
           muted
           playsInline
           aria-label="OPAC world background animation"
           className="w-full h-full object-cover object-center animate-[pulse_2s_ease-in-out_infinite]"
-          style={{
-            objectPosition: "center bottom",
-          }}
-        >
-          <source src="/opac-world.webm" type="video/webm" />
-          {/* Fallback to WebP for browsers that don't support WebM */}
-          <Image
-            src="/opac-word-short.webp"
-            alt="Opac background"
-            fill
-            style={{
-              objectPosition: "center bottom",
-              objectFit: "cover",
-            }}
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 100vw"
-            priority={false}
-            quality={60}
-          />
-        </video>
+          style={{ objectPosition: "center bottom" }}
+        />
       </div>
 
       {/* Main Content Section */}

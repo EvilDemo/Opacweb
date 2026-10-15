@@ -1,5 +1,9 @@
 import { Metadata } from "next";
-import { CheckoutForm } from "@/components/commerce/CheckoutForm";
+import { redirect } from "next/navigation";
+import { getCartAction } from "@/lib/shopify/actions";
+
+// Checkout depends on the visitor's cart cookie and must be resolved per request.
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Checkout | Opac Shop",
@@ -10,11 +14,10 @@ export const metadata: Metadata = {
   },
 };
 
-export default function CheckoutPage() {
-  return (
-    <section className="bg-black text-white min-h-[calc(100vh-6rem)]">
-      <CheckoutForm />
-    </section>
-  );
+export default async function CheckoutPage() {
+  const { cart, error } = await getCartAction();
+  if (error) redirect("/cart");
+  if (!cart || cart.lines.length === 0 || !cart.checkoutUrl) redirect("/shop");
+  redirect(cart.checkoutUrl);
 }
 

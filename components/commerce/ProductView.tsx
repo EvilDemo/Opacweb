@@ -1,5 +1,7 @@
 "use client";
 
+import ViewportVideo from "@/components/ViewportVideo";
+
 import { useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -135,15 +137,14 @@ export function ProductView({ product }: ProductViewProps) {
               {selectedMedia ? (
                 <div className="relative w-full overflow-hidden rounded-lg h-[clamp(28vh,36vw,45vh)]">
                   {selectedMedia.kind === "video" ? (
-                    <video
+                    <ViewportVideo
                       key={selectedMedia.video.url}
                       src={selectedMedia.video.url}
                       poster={selectedMedia.video.previewImage?.url}
                       muted
                       loop
                       playsInline
-                      autoPlay
-                      preload="metadata"
+
                       aria-label={`${product.title} preview`}
                       className="h-full w-full object-contain"
                     />

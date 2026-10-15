@@ -75,6 +75,7 @@ function Button({
         {children}
       </span>
       <span
+        aria-hidden="true"
         className={`absolute top-full left-0 w-full h-full flex items-center justify-center gap-2 transition-all duration-300 ease-in-out group-hover:-translate-y-full group-hover:opacity-100 opacity-0 blur-sm group-hover:blur-none ${
           variant === "secondary"
             ? "group-hover:bg-white group-hover:text-black group-hover:border-white group-hover:border"

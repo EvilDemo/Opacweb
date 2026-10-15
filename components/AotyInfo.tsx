@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import { useRef } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -33,7 +33,7 @@ export default function AotyInfo() {
         <div className=" mx-auto">
           <div className="flex flex-col lg:flex-row gap-12 lg:gap-10">
             {/* Left Column - Album Info */}
-            <div className="flex flex-col gap-6 flex-1 max-w-2/3">
+            <div className="flex flex-col gap-6 flex-1 lg:max-w-2/3">
               <div className="flex flex-col gap-5">
                 <div>
                   <h1 className="heading-1 !font-semibold !tracking-tight">A0TY</h1>
@@ -71,7 +71,7 @@ export default function AotyInfo() {
             </div>
 
             {/* Right Column - Metadata */}
-            <div className="flex flex-row gap-8 lg:gap-20 w-full max-w-1/3 2xl:max-w-1/2">
+            <div className="flex flex-row gap-8 lg:gap-20 w-full lg:max-w-1/3 2xl:max-w-1/2">
               <div className="flex flex-col gap-8">
                 <div className="flex flex-col gap-2 ">
                   <p className="body-text-sm !font-bold text-muted uppercase">Artists</p>

@@ -1,3 +1,4 @@
+import ViewportVideo from "@/components/ViewportVideo";
 import Image from "next/image";
 import Link from "next/link";
 import type { Product } from "@/types/commerce";
@@ -35,14 +36,13 @@ export function ProductCard({ product }: ProductCardProps) {
           }`}
         >
           {featuredMedia.kind === "video" ? (
-            <video
+            <ViewportVideo
               src={featuredMedia.video.url}
               poster={product.images[0]?.url || featuredMedia.video.previewImage?.url}
               muted
               loop
               playsInline
-              autoPlay
-              preload="metadata"
+
               aria-label={`${product.title} preview`}
               className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
             />

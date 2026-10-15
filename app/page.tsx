@@ -1,7 +1,6 @@
 import HeroSection from "@/components/HeroSection";
 import { LatestReleases } from "@/components/LatestReleases";
 import { getPictures, getVideos, getMusic } from "@/lib/mediaData";
-import React from "react";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {

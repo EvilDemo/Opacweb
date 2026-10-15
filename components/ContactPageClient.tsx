@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import { X } from "lucide-react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion } from "motion/react";
 import Form from "@/components/Form";
 import { ContactCard } from "@/components/ContactCard";
 import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetClose } from "@/components/ui/sheet";
 
 export default function ContactPageClient() {
   const [isOverlayOpen, setIsOverlayOpen] = useState(false);
@@ -14,11 +15,6 @@ export default function ContactPageClient() {
   const handleButtonClick = (type: string) => {
     setFormType(type);
     setIsOverlayOpen(true);
-  };
-
-  const handleCloseOverlay = () => {
-    setIsOverlayOpen(false);
-    setFormType("");
   };
 
   return (
@@ -126,62 +122,23 @@ export default function ContactPageClient() {
         </div>
       </motion.section>
 
-      {/* Form Overlay */}
-      <AnimatePresence mode="wait">
-        {isOverlayOpen && (
-          <>
-            {/* Backdrop - covers entire screen immediately */}
-            <motion.div
-              className="fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm"
-              onClick={handleCloseOverlay}
-              aria-label="Close form"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
-            />
-
-            {/* Form Panel - slides in from right */}
-            <motion.div
-              className="fixed top-0 right-0 h-full w-full lg:w-1/2 xl:w-2/5 bg-black border-l border-neutral-800 p-8 overflow-y-auto z-[100]"
-              role="dialog"
-              aria-modal="true"
-              aria-labelledby="form-title"
-              initial={{ opacity: 0, x: "100%" }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: "100%" }}
-              transition={{ duration: 0.4, ease: "easeOut" }}
-            >
-              <motion.div
-                className="flex justify-between items-center mb-8"
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: 0.2, ease: "easeOut" }}
-              >
-                <h2 id="form-title" className="heading-3 text-white">
-                  {formType}
-                </h2>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleCloseOverlay}
-                  className="text-white hover:bg-neutral-800 p-2"
-                  aria-label="Close form"
-                >
-                  <X className="w-5 h-5" aria-hidden="true" />
-                </Button>
-              </motion.div>
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: 0.3, ease: "easeOut" }}
-              >
-                <Form />
-              </motion.div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+      <Sheet open={isOverlayOpen} onOpenChange={setIsOverlayOpen}>
+        <SheetContent
+          className="w-full sm:max-w-none lg:w-1/2 xl:w-2/5 border-l border-neutral-800 p-8 overflow-y-auto"
+          aria-describedby={undefined}
+          hideDefaultClose
+        >
+          <SheetHeader className="flex-row items-center justify-between p-0 mb-8">
+            <SheetTitle className="heading-3">{formType}</SheetTitle>
+            <SheetClose asChild>
+              <Button variant="ghost" size="sm" aria-label="Close form">
+                <X aria-hidden="true" />
+              </Button>
+            </SheetClose>
+          </SheetHeader>
+          <Form />
+        </SheetContent>
+      </Sheet>
     </main>
   );
 }

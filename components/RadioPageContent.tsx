@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useRef, useCallback, useEffect } from "react";
-import { motion, useScroll, useTransform, AnimatePresence } from "motion/react";
+import { useHorizontalScroll } from "@/hooks/useHorizontalScroll";
+import { motion, AnimatePresence } from "motion/react";
 import { type Radio } from "@/lib/mediaData";
 import { RadioCard } from "@/components/RadioCard";
 
@@ -11,7 +11,7 @@ interface RadioPageContentProps {
 
 export function RadioPageContent({ initialData }: RadioPageContentProps) {
   // Sort by updated date (newest first)
-  const displayData: Radio[] = initialData.sort(
+  const displayData: Radio[] = [...initialData].sort(
     (a, b) =>
       new Date(b._updatedAt).getTime() - new Date(a._updatedAt).getTime()
   );
@@ -26,107 +26,7 @@ interface RadioScrollContentProps {
 
 // Separate component for scroll content that only renders on client
 function RadioScrollContent({ displayData }: RadioScrollContentProps) {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
-  const [dimensions, setDimensions] = useState({
-    contentWidth: 0,
-    viewportWidth: 0,
-    scrollDistance: 0,
-    sectionHeight: 0,
-  });
-  const [isLargeScreen, setIsLargeScreen] = useState(false);
-
-  // Set up scroll tracking with sticky container
-  const { scrollYProgress } = useScroll({
-    target: scrollRef,
-    offset: ["start start", "end start"],
-  });
-
-  // Calculate dimensions and scroll distance
-  const calculateDimensions = useCallback(() => {
-    if (!contentRef.current || !scrollRef.current) return;
-
-    const contentWidth = contentRef.current.scrollWidth;
-    const viewportWidth = scrollRef.current.offsetWidth;
-    const isLargeScreenCheck = window.innerWidth >= 1024; // lg breakpoint
-    setIsLargeScreen(isLargeScreenCheck);
-
-    // Only apply horizontal scroll calculations on large screens
-    if (isLargeScreenCheck) {
-      // Calculate expected width based on card count and dimensions
-      const cardWidth = 320; // lg:w-80 = 320px
-      const cardGap = 48; // lg:gap-12 = 48px
-      const titleSectionWidth = Math.min(viewportWidth * 0.4, 600); // 40vw max 600px
-      const expectedContentWidth =
-        titleSectionWidth +
-        displayData.length * cardWidth +
-        (displayData.length - 1) * cardGap;
-
-      // Use the larger of actual scrollWidth or expected width
-      const finalContentWidth = Math.max(contentWidth, expectedContentWidth);
-
-      // Add extra padding to ensure we can scroll past the last card
-      const extraPadding = 500; // Additional pixels to scroll past the last card
-      const scrollDistance = Math.max(
-        0,
-        finalContentWidth - viewportWidth + extraPadding
-      );
-      const viewportHeight = window.innerHeight;
-      const sectionHeight = viewportHeight + scrollDistance;
-
-      // Debug logging
-      console.log("Scroll calculation (large screen):", {
-        contentWidth,
-        expectedContentWidth,
-        finalContentWidth,
-        viewportWidth,
-        scrollDistance,
-        extraPadding,
-        cardCount: displayData.length,
-        titleSectionWidth,
-        cardWidth,
-        cardGap,
-      });
-
-      setDimensions({
-        contentWidth: finalContentWidth,
-        viewportWidth,
-        scrollDistance,
-        sectionHeight,
-      });
-    } else {
-      // On smaller screens, use auto height to adapt to content
-      setDimensions({
-        contentWidth,
-        viewportWidth,
-        scrollDistance: 0,
-        sectionHeight: 0, // 0 means auto height
-      });
-    }
-  }, [displayData]);
-
-  // Recalculate dimensions when data changes or window resizes
-  useEffect(() => {
-    calculateDimensions();
-
-    const handleResize = () => calculateDimensions();
-    window.addEventListener("resize", handleResize);
-
-    return () => window.removeEventListener("resize", handleResize);
-  }, [calculateDimensions]);
-
-  // Transform horizontal scroll from 0 to -scrollDistance
-  // Complete the horizontal scroll by 80% of the vertical scroll
-  // Only apply on large screens (lg and above)
-  const xTransform = useTransform(
-    scrollYProgress,
-    [0, 0.8, 1],
-    [
-      0,
-      isLargeScreen ? -dimensions.scrollDistance : 0,
-      isLargeScreen ? -dimensions.scrollDistance : 0,
-    ]
-  );
+  const { scrollRef, contentRef, dimensions, isLargeScreen, xTransform } = useHorizontalScroll(displayData);
 
   return (
     <div className="min-h-[calc(100vh-6rem)]">

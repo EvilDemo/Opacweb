@@ -2,11 +2,16 @@
 
 import { createContext, useContext, useEffect, useState, useCallback, useRef, ReactNode } from "react";
 import { getCartAction } from "@/lib/shopify/actions";
+import { useCartMutations } from "./useCartMutations";
 import type { Cart } from "@/types/commerce";
 
 interface CartDataContextType {
   cart: Cart | null;
   isLoading: boolean;
+  isPending: boolean;
+  updateQuantity: (lineId: string, quantity: number) => void;
+  removeItem: (lineId: string) => void;
+  addItem: (variantId: string, quantity: number) => void;
   error: string | null;
   refreshCart: () => Promise<void>;
   updateCart: (newCart: Cart | null) => void;
@@ -68,9 +73,17 @@ export function CartProvider({ children }: { children: ReactNode }) {
     refreshCart();
   }, [refreshCart]);
 
+  const { optimisticCart, isPending, updateQuantity, removeItem, addItem } = useCartMutations({
+    cart, updateCart, refreshCart, onItemAdded: openCartSidebar,
+  });
+
   const dataValue: CartDataContextType = {
-    cart,
+    cart: optimisticCart,
     isLoading,
+    isPending,
+    updateQuantity,
+    removeItem,
+    addItem,
     error,
     refreshCart,
     updateCart,

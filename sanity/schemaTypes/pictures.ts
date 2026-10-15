@@ -1,5 +1,9 @@
 import { defineField, defineType } from "sanity";
 
+type ImageWithDimensions = {
+  asset?: { _ref?: string; metadata?: { dimensions?: { width: number; height: number } } };
+};
+
 export default defineType({
   name: "pictures",
   title: "Pictures",
@@ -25,7 +29,7 @@ export default defineType({
         hotspot: true,
       },
       validation: (Rule) =>
-        Rule.required().custom((image: any) => {
+        Rule.required().custom((image: ImageWithDimensions | undefined) => {
           if (!image) return true;
           // Recommend optimal dimensions
           const width = image.asset?.metadata?.dimensions?.width;
@@ -61,7 +65,7 @@ export default defineType({
         },
       ],
       validation: (Rule) =>
-        Rule.custom((gallery: any) => {
+        Rule.custom((gallery: ImageWithDimensions[] | undefined) => {
           if (!gallery || gallery.length === 0) return true;
 
           // Check each image in the gallery

@@ -1,5 +1,7 @@
 "use client";
 
+import ViewportVideo from "@/components/ViewportVideo";
+
 interface InlineSphereLoaderProps {
   label?: string;
 }
@@ -15,7 +17,7 @@ export function InlineSphereLoader({ label = "Loading A0TY experience" }: Inline
       aria-label={label}
     >
       <div className="relative h-28 w-28 overflow-hidden rounded-full sm:h-36 sm:w-36 md:h-44 md:w-44">
-        <video src={sphereVideo} autoPlay loop muted playsInline className="h-full w-full object-contain" />
+        <ViewportVideo src={sphereVideo} poster="/sphere-poster.webp" loop muted playsInline className="h-full w-full object-contain" />
       </div>
       <span className="sr-only">{label}</span>
     </div>

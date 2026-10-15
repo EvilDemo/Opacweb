@@ -1,6 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import ViewportVideo from "@/components/ViewportVideo";
+
+import { useState } from "react";
 import dynamic from "next/dynamic";
 import { motion } from "motion/react";
 import { Switch } from "@/components/ui/switch";
@@ -132,9 +134,9 @@ export default function HeroSection() {
                 animate={{ opacity: 1, scale: 1, rotateY: 0 }}
                 transition={{ duration: 1.2, ease: "easeOut", delay: 0.3 }}
               >
-                <video
+                <ViewportVideo
                   src={sphereVideo}
-                  autoPlay
+                  poster="/sphere-poster.webp"
                   loop
                   muted
                   playsInline
