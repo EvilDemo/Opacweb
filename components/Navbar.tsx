@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "motion/react";
-import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
@@ -243,6 +243,9 @@ const MobileMenu = ({ setIsOpen }: { setIsOpen: (open: boolean) => void }) => {
   return (
     <SheetContent side="right" className="w-full h-full bg-black border-none sm:max-w-none z-[100]">
       <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
+      <SheetDescription className="sr-only">
+        Explore OPAC pages and find our social channels.
+      </SheetDescription>
       <div className="flex flex-col h-full padding-global">
         {/* Mobile navigation */}
         <nav className="flex-1 flex flex-col justify-center">
