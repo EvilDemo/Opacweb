@@ -1,33 +1,58 @@
-import { MetadataRoute } from "next";
+import type { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://weareopac.com";
-  const currentDate = new Date();
+  const baseUrl = "https://opacweb.pt";
 
   return [
     {
       url: baseUrl,
-      lastModified: currentDate,
       changeFrequency: "monthly",
       priority: 1.0,
     },
     {
-      url: `${baseUrl}/about`,
-      lastModified: currentDate,
+      url: `${baseUrl}/about/us`,
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/about/you`,
       changeFrequency: "monthly",
       priority: 0.8,
     },
     {
       url: `${baseUrl}/media`,
-      lastModified: currentDate,
       changeFrequency: "weekly", // Media content updates more frequently
       priority: 0.9,
     },
     {
+      url: `${baseUrl}/radio`,
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
+    {
       url: `${baseUrl}/contact`,
-      lastModified: currentDate,
       changeFrequency: "yearly", // Contact info changes rarely
       priority: 0.6,
+    },
+    {
+      url: `${baseUrl}/a0ty`,
+      changeFrequency: "yearly",
+      priority: 0.6,
+    },
+    {
+      url: `${baseUrl}/cross`,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/privacy-policy`,
+      changeFrequency: "yearly",
+      priority: 0.3,
+    },
+    {
+      url: `${baseUrl}/terms-of-service`,
+      changeFrequency: "yearly",
+      priority: 0.3,
     },
     // Note: We don't include /studio as it's disallowed in robots.txt
     // Note: We don't include 404 pages or error pages in sitemap

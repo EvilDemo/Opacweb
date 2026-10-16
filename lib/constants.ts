@@ -25,7 +25,7 @@ export const SHOP_CONFIG = {
     },
     {
       label: "About",
-      href: "/about",
+      href: "/about/us",
       icon: "/menu-about.gif",
       requiresShop: false,
       subItems: [
@@ -50,12 +50,6 @@ export const SHOP_CONFIG = {
       requiresShop: false,
     },
   ],
-
-  // Shopify configuration (only loaded when shop is enabled)
-  SHOPIFY: {
-    STORE_DOMAIN: process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN,
-    STOREFRONT_ACCESS_TOKEN: process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN,
-  },
 };
 
 // Helper function to get visible navigation items (excluding shop)

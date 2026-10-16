@@ -174,4 +174,4 @@ export function MediaCard({ item, index = 0 }: MediaCardProps) {
 }
 
 // Export types for use in other components
-export type { MediaItem, PictureItem, VideoItem, MusicItem };
+export type { MediaItem };

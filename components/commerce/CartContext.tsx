@@ -22,8 +22,6 @@ interface CartUIContextType {
   setOpenCartSidebar: (open: (() => void) | null) => void;
 }
 
-interface CartContextType extends CartDataContextType, CartUIContextType {}
-
 const CartDataContext = createContext<CartDataContextType | null>(null);
 const CartUIContext = createContext<CartUIContextType | null>(null);
 
@@ -41,14 +39,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
       if (result.error) {
         setError(result.error);
-        setCart(null);
       } else {
         setCart(result.cart);
       }
     } catch (err) {
       console.error("Error refreshing cart:", err);
       setError("Failed to load cart");
-      setCart(null);
     } finally {
       setIsLoading(false);
     }
@@ -115,12 +111,6 @@ export function useCartUI() {
     throw new Error("useCartUI must be used within CartProvider");
   }
   return context;
-}
-
-export function useCart(): CartContextType {
-  const data = useCartData();
-  const ui = useCartUI();
-  return { ...data, ...ui };
 }
 
 // Hook for getting cart item count

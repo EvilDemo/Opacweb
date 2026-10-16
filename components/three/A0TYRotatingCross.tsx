@@ -2,7 +2,7 @@
 
 import { addAfterEffect, Canvas, useFrame } from "@react-three/fiber";
 import { Environment, PerspectiveCamera, useGLTF } from "@react-three/drei";
-import { useRef, useState, useEffect } from "react";
+import { useCallback, useRef, useState, useEffect } from "react";
 import * as THREE from "three";
 import type { ThreeEvent } from "@react-three/fiber";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
@@ -172,19 +172,30 @@ function SceneContent({ onReady }: { onReady?: () => void }) {
 }
 
 // Main Component
-export function A0TYRotatingCross({ active = true, onReady }: { active?: boolean; onReady?: () => void }) {
+export function A0TYRotatingCross({ active = true, onReady, onError }: { active?: boolean; onReady?: () => void; onError?: () => void }) {
+  const createRenderer = useCallback((defaults: THREE.WebGLRendererParameters) => {
+    try {
+      return new THREE.WebGLRenderer({
+        ...defaults,
+        alpha: true,
+        antialias: false,
+        powerPreference: "high-performance",
+        preserveDrawingBuffer: false,
+        failIfMajorPerformanceCaveat: false,
+        stencil: false,
+        depth: true,
+      });
+    } catch (error) {
+      // Canvas initializes asynchronously, outside the scene's React error boundary.
+      onError?.();
+      throw error;
+    }
+  }, [onError]);
+
   return (
     <div className="absolute inset-0">
       <Canvas
-        gl={{
-          alpha: true, // Transparent background
-          antialias: false,
-          powerPreference: "high-performance",
-          preserveDrawingBuffer: false,
-          failIfMajorPerformanceCaveat: false,
-          stencil: false,
-          depth: true,
-        }}
+        gl={createRenderer}
         dpr={[1, 1.5]}
         performance={{ min: 0.5 }}
         frameloop={active ? "always" : "never"}

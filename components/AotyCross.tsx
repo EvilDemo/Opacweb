@@ -41,9 +41,9 @@ export default function AotyCross() {
 
   return (
     <div ref={ref} className="absolute inset-0">
-      {live && (
+      {live && !failed && (
         <CrossFallback onError={onError}>
-          <LiveCross active={visible && tabVisible} onReady={onReady} />
+          <LiveCross active={visible && tabVisible} onReady={onReady} onError={onError} />
         </CrossFallback>
       )}
       <picture>

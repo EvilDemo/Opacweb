@@ -148,7 +148,7 @@ const fetchGallery = cache(async (id: string): Promise<Gallery | null> => {
       {
         next: {
           revalidate: process.env.NODE_ENV === "development" ? 0 : 3600,
-          tags: ["gallery", `gallery-${id}`],
+          tags: ["pictures", "gallery", `gallery-${id}`],
         },
       }
     );

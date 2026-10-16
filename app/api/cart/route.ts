@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { createCart, addToCart, getCart, updateCartLines, removeFromCart } from "@/lib/shopify/index";
-
-const CART_COOKIE = "cart_id";
-const CART_COOKIE_MAX_AGE = 60 * 60 * 24 * 30; // 30 days
+import { getCart, updateCartLines, removeFromCart } from "@/lib/shopify/index";
+import { addItemToCart } from "@/lib/shopify/cart-operations";
+import { CART_COOKIE, getCartCookieOptions } from "@/lib/shopify/constants";
 
 // GET - Retrieve cart
 export async function GET() {
@@ -41,30 +40,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "variantId is required" }, { status: 400 });
     }
 
-    let cart;
     const existingCartId = cartId || cookieStore.get(CART_COOKIE)?.value;
-
-    if (existingCartId) {
-      // Add to existing cart
-      try {
-        cart = await addToCart(existingCartId, variantId, quantity);
-      } catch {
-        // If cart is invalid, create a new one
-        cart = await createCart(variantId, quantity);
-      }
-    } else {
-      // Create new cart
-      cart = await createCart(variantId, quantity);
-    }
+    const cart = await addItemToCart(existingCartId, variantId, quantity);
 
     // Set cart cookie
-    cookieStore.set(CART_COOKIE, cart.id, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: CART_COOKIE_MAX_AGE,
-      path: "/",
-    });
+    cookieStore.set(CART_COOKIE, cart.id, getCartCookieOptions());
 
     return NextResponse.json({ cart });
   } catch (error) {

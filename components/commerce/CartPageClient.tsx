@@ -7,11 +7,24 @@ import { Price } from "./Price";
 import { useCartData } from "./CartContext";
 
 export function CartPageClient() {
-  const { cart: optimisticCart, isLoading, isPending, updateQuantity, removeItem } = useCartData();
+  const { cart: optimisticCart, isLoading, isPending, updateQuantity, removeItem, error, refreshCart } = useCartData();
+  const refreshError = error ? (
+    <div role="alert" className="flex flex-col items-start gap-3">
+      <p className="body-text-sm text-neutral-400">
+        {optimisticCart
+          ? "We couldn't refresh your cart. Your items may be out of date."
+          : "We couldn't load your cart. Please try again."}
+      </p>
+      <Button type="button" variant="secondary" size="sm" onClick={refreshCart} disabled={isLoading}>
+        Retry
+      </Button>
+    </div>
+  ) : null;
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-[400px] padding-global py-16">
+      <div className="flex flex-col gap-6 items-center justify-center min-h-[400px] padding-global py-16">
+        {refreshError}
         <p className="body-text text-neutral-400">Loading cart...</p>
       </div>
     );
@@ -21,10 +34,14 @@ export function CartPageClient() {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px] padding-global py-16 space-y-6">
         <h1 className="heading-1">Shopping Cart</h1>
-        <p className="body-text-lg text-neutral-400">Your cart is empty</p>
-        <Button variant="default" asChild>
-          <Link href="/shop" aria-label="Continue shopping">Continue Shopping</Link>
-        </Button>
+        {error ? refreshError : (
+          <>
+            <p className="body-text-lg text-neutral-400">Your cart is empty</p>
+            <Button variant="default" asChild>
+              <Link href="/shop" aria-label="Continue shopping">Continue Shopping</Link>
+            </Button>
+          </>
+        )}
       </div>
     );
   }
@@ -32,6 +49,7 @@ export function CartPageClient() {
   return (
     <div className="padding-global py-16">
       <h1 className="heading-1 mb-12">Shopping Cart</h1>
+      {refreshError && <div className="mb-8">{refreshError}</div>}
 
       <div className="max-w-5xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">

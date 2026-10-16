@@ -98,13 +98,3 @@ export interface CartLine {
   merchandise: ProductVariant;
   productTitle: string;
 }
-
-export interface ShopifyError {
-  message: string;
-  locations?: Array<{ line: number; column: number }>;
-  path?: Array<string | number>;
-  extensions?: {
-    code?: string;
-    type?: string;
-  };
-}

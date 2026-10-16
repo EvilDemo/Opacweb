@@ -48,9 +48,7 @@ interface CartLinesRemoveResponse {
 }
 
 interface CartQueryResponse {
-  data: {
-    cart: unknown | null;
-  };
+  cart?: unknown;
 }
 
 function getFirstUserErrorMessage(errors?: CartMutationUserError[]): string | null {
@@ -125,12 +123,24 @@ export async function getCart(cartId: string): Promise<Cart | null> {
 
   try {
     const client = getShopifyClient();
-    const response = (await client.request(GET_CART_QUERY, {
+    const response = await client.request<CartQueryResponse>(GET_CART_QUERY, {
       variables: { id: cartId },
-    })) as CartQueryResponse;
+    });
 
-    if (!response.data.cart) {
+    // An SDK error or incomplete envelope cannot establish that a cart expired.
+    if (response.errors !== undefined) {
+      throw new Error("Shopify cart query failed");
+    }
+    if (!response.data || typeof response.data !== "object" || Array.isArray(response.data) || !Object.hasOwn(response.data, "cart")) {
+      throw new Error("Shopify returned an invalid cart response");
+    }
+
+    if (response.data.cart === null) {
       return null;
+    }
+
+    if (!response.data.cart || typeof response.data.cart !== "object" || Array.isArray(response.data.cart)) {
+      throw new Error("Shopify returned an invalid cart response");
     }
 
     return transformCart(response.data.cart as TransformCartInput);

@@ -2,8 +2,9 @@
 
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
-import { createCart, addToCart, getCart, updateCartLines, removeFromCart } from "./cart";
-import { CART_COOKIE, CART_COOKIE_MAX_AGE } from "./constants";
+import { getCart, updateCartLines, removeFromCart } from "./cart";
+import { addItemToCart } from "./cart-operations";
+import { CART_COOKIE, getCartCookieOptions } from "./constants";
 import type { Cart } from "@/types/commerce";
 
 export interface ActionResult {
@@ -20,35 +21,10 @@ export async function addToCartAction(variantId: string, quantity: number = 1): 
     const cookieStore = await cookies();
     const existingCartId = cookieStore.get(CART_COOKIE)?.value;
 
-    let cart: Cart;
-
-    if (existingCartId) {
-      try {
-        // Try to add to existing cart
-        cart = await addToCart(existingCartId, variantId, quantity);
-      } catch (error) {
-        // Cart is invalid, create a new one
-        // But if createCart also fails, we want to throw that error
-        try {
-          cart = await createCart(variantId, quantity);
-        } catch {
-          // Both failed, throw the original addToCart error (more relevant)
-          throw error;
-        }
-      }
-    } else {
-      // Create new cart
-      cart = await createCart(variantId, quantity);
-    }
+    const cart = await addItemToCart(existingCartId, variantId, quantity);
 
     // Set or update cart cookie
-    cookieStore.set(CART_COOKIE, cart.id, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: CART_COOKIE_MAX_AGE,
-      path: "/",
-    });
+    cookieStore.set(CART_COOKIE, cart.id, getCartCookieOptions());
 
     revalidatePath("/shop");
     revalidatePath("/cart");
@@ -155,27 +131,6 @@ export async function removeFromCartAction(lineIds: string[]): Promise<ActionRes
     return {
       cart: null,
       error: error instanceof Error ? error.message : "Failed to remove item from cart",
-    };
-  }
-}
-
-/**
- * Server action to clear the entire cart
- */
-export async function clearCartAction(): Promise<ActionResult> {
-  try {
-    const cookieStore = await cookies();
-    cookieStore.delete(CART_COOKIE);
-
-    revalidatePath("/cart");
-    revalidatePath("/shop");
-
-    return { cart: null, error: null };
-  } catch (error) {
-    console.error("Error in clearCartAction:", error);
-    return {
-      cart: null,
-      error: error instanceof Error ? error.message : "Failed to clear cart",
     };
   }
 }

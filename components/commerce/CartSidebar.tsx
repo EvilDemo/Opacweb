@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetClose } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetTrigger, SheetClose } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Price } from "./Price";
 import { useCartData, useCartUI } from "./CartContext";
@@ -13,7 +13,7 @@ interface CartSidebarProps {
 }
 
 export function CartSidebar({ children }: CartSidebarProps) {
-  const { cart: optimisticCart, isLoading, isPending, updateQuantity, removeItem } = useCartData();
+  const { cart: optimisticCart, isLoading, isPending, updateQuantity, removeItem, error, refreshCart } = useCartData();
   const { setOpenCartSidebar } = useCartUI();
   const [open, setOpen] = useState(false);
 
@@ -53,6 +53,9 @@ export function CartSidebar({ children }: CartSidebarProps) {
       >
         <SheetHeader className="px-4  py-4 flex flex-row items-center justify-between gap-0 flex-shrink-0">
           <SheetTitle className="heading-4">Your Cart</SheetTitle>
+          <SheetDescription className="sr-only">
+            Review your items, adjust quantities, or continue to checkout.
+          </SheetDescription>
           <SheetClose asChild>
             <Button variant="secondary" size="sm" aria-label="Close cart">
               CLOSE
@@ -61,17 +64,31 @@ export function CartSidebar({ children }: CartSidebarProps) {
         </SheetHeader>
 
         <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
+          {error && (
+            <div role="alert" className="flex flex-col items-start gap-3 px-4 py-4 flex-shrink-0">
+              <p className="body-text-sm text-neutral-400">
+                {optimisticCart
+                  ? "We couldn't refresh your cart. Your items may be out of date."
+                  : "We couldn't load your cart. Please try again."}
+              </p>
+              <Button type="button" variant="secondary" size="sm" onClick={refreshCart} disabled={isLoading}>
+                Retry
+              </Button>
+            </div>
+          )}
           {isLoading ? (
             <div className="flex-1 flex items-center justify-center ">
               <p className="body-text text-neutral-400">Loading cart...</p>
             </div>
           ) : !optimisticCart || optimisticCart.lines.length === 0 ? (
-            <div className="flex-1 flex flex-col items-center justify-center text-center space-y-2 ">
-              <p className="body-text-sm text-neutral-400">Your cart is empty</p>
-              <Button variant="link" onClick={() => setOpen(false)} asChild>
-                <Link href="/shop" aria-label="Continue shopping">Continue Shopping</Link>
-              </Button>
-            </div>
+            !error && (
+              <div className="flex-1 flex flex-col items-center justify-center text-center space-y-2 ">
+                <p className="body-text-sm text-neutral-400">Your cart is empty</p>
+                <Button variant="link" onClick={() => setOpen(false)} asChild>
+                  <Link href="/shop" aria-label="Continue shopping">Continue Shopping</Link>
+                </Button>
+              </div>
+            )
           ) : (
             <>
               <div className="flex-1 min-h-0 overflow-y-auto space-y-6 py-6 px-4">

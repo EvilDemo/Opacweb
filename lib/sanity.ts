@@ -1,6 +1,6 @@
 import { createClient } from "next-sanity";
 
-export const config = {
+const config = {
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || "production",
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || "dummy-project-id",
   apiVersion: process.env.NEXT_PUBLIC_SANITY_API_VERSION || "2025-08-28",
@@ -15,8 +15,6 @@ export const config = {
 };
 
 export const sanityClient = createClient(config);
-
-// Note: Use imagePresets from @/sanity/lib/image instead of this urlFor function
 
 // GROQ queries for fetching content - return raw URLs for client-side optimization
 export const picturesQuery = `

@@ -141,26 +141,6 @@ function CardDescription({ className, children, ...props }: HTMLMotionProps<"div
   );
 }
 
-function CardAction({ className, children, ...props }: HTMLMotionProps<"div"> & { children?: React.ReactNode }) {
-  return (
-    <motion.div
-      data-slot="card-action"
-      className={cn("col-start-2 row-span-2 row-start-1 self-start justify-self-end", className)}
-      initial={{ scale: 0, opacity: 0 }}
-      animate={{ scale: 1, opacity: 1 }}
-      transition={{
-        delay: 0.7,
-        duration: 0.5,
-        type: "spring",
-        stiffness: 200,
-      }}
-      {...props}
-    >
-      {children}
-    </motion.div>
-  );
-}
-
 function CardContent({ className, children, ...props }: HTMLMotionProps<"div"> & { children?: React.ReactNode }) {
   return (
     <motion.div
@@ -176,19 +156,4 @@ function CardContent({ className, children, ...props }: HTMLMotionProps<"div"> &
   );
 }
 
-function CardFooter({ className, children, ...props }: HTMLMotionProps<"div"> & { children?: React.ReactNode }) {
-  return (
-    <motion.div
-      data-slot="card-footer"
-      className={cn("flex items-center [.border-t]:pt-6", className)}
-      initial={{ y: 20, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ delay: 0.6, duration: 0.6 }}
-      {...props}
-    >
-      {children}
-    </motion.div>
-  );
-}
-
-export { Card, CardHeader, CardFooter, CardTitle, CardAction, CardDescription, CardContent };
+export { Card, CardHeader, CardTitle, CardDescription, CardContent };

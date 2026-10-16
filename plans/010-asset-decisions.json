@@ -1,0 +1,245 @@
+{
+  "schemaVersion": 1,
+  "plannedAt": {
+    "commit": "17af3a2",
+    "date": "2026-10-15"
+  },
+  "totalCandidateBytes": 15901818,
+  "note": "All 18 candidates retained after local/CMS review; external request/embed history remains unknown. No deletion or public URL retirement is approved.",
+  "assets": [
+    {
+      "path": "public/aoty-cover-back.webp",
+      "url": "/aoty-cover-back.webp",
+      "bytes": 6104296,
+      "sha256": "b288bb77fbd684843041c8df96c7b74364322733f8d4f1bd4fc29b1d71553938",
+      "state": "retain",
+      "reason": "No current local reference, but external public-URL consumers are unresolved; retain rather than infer disuse from absence.",
+      "evidence": [
+        "2026-10-16 local audit: tracked baseline size/SHA-256 match 17af3a2; zero literal references; dynamic constructions manually reviewed in plans/010-asset-verification.md.",
+        "2026-10-16 CMS aggregate: zero filename matches across 14 published records of the four checked-in media schemas, including known text/link fields and dereferenced current assets; drafts/unknown schemas not cleared.",
+        "External request history and embedding evidence unavailable; no exact-path owner risk acceptance. Public URL retained unchanged."
+      ]
+    },
+    {
+      "path": "public/aoty-mode-home.mp4",
+      "url": "/aoty-mode-home.mp4",
+      "bytes": 213918,
+      "sha256": "1e9dd083bae10a4e3998f48979224aa971f9a43496221c13e1ab1faca5dc644a",
+      "state": "retain",
+      "reason": "No current local reference, but external public-URL consumers are unresolved; retain rather than infer disuse from absence.",
+      "evidence": [
+        "2026-10-16 local audit: tracked baseline size/SHA-256 match 17af3a2; zero literal references; dynamic constructions manually reviewed in plans/010-asset-verification.md.",
+        "2026-10-16 CMS aggregate: zero filename matches across 14 published records of the four checked-in media schemas, including known text/link fields and dereferenced current assets; drafts/unknown schemas not cleared.",
+        "External request history and embedding evidence unavailable; no exact-path owner risk acceptance. Public URL retained unchanged."
+      ]
+    },
+    {
+      "path": "public/cart.svg",
+      "url": "/cart.svg",
+      "bytes": 418,
+      "sha256": "cccbd15fce33f321edd8c3c01a726d0d1b8107862fb5511fbed3343cb596bac2",
+      "state": "retain",
+      "reason": "No current local reference, but external public-URL consumers are unresolved; retain rather than infer disuse from absence.",
+      "evidence": [
+        "2026-10-16 local audit: tracked baseline size/SHA-256 match 17af3a2; zero literal references; dynamic constructions manually reviewed in plans/010-asset-verification.md.",
+        "2026-10-16 CMS aggregate: zero filename matches across 14 published records of the four checked-in media schemas, including known text/link fields and dereferenced current assets; drafts/unknown schemas not cleared.",
+        "External request history and embedding evidence unavailable; no exact-path owner risk acceptance. Public URL retained unchanged."
+      ]
+    },
+    {
+      "path": "public/close.svg",
+      "url": "/close.svg",
+      "bytes": 392,
+      "sha256": "b162f5928ee714d1803a865694954233d3d74e0f077aff233a9e28a84a604c54",
+      "state": "retain",
+      "reason": "No current local reference, but external public-URL consumers are unresolved; retain rather than infer disuse from absence.",
+      "evidence": [
+        "2026-10-16 local audit: tracked baseline size/SHA-256 match 17af3a2; zero literal references; dynamic constructions manually reviewed in plans/010-asset-verification.md.",
+        "2026-10-16 CMS aggregate: zero filename matches across 14 published records of the four checked-in media schemas, including known text/link fields and dereferenced current assets; drafts/unknown schemas not cleared.",
+        "External request history and embedding evidence unavailable; no exact-path owner risk acceptance. Public URL retained unchanged."
+      ]
+    },
+    {
+      "path": "public/esfera3D.gif",
+      "url": "/esfera3D.gif",
+      "bytes": 3297658,
+      "sha256": "81ae7bfbdd7d39582122f33124344d33ac4861c7a74c4121a80912967db2db20",
+      "state": "retain",
+      "reason": "No current local reference, but external public-URL consumers are unresolved; retain rather than infer disuse from absence.",
+      "evidence": [
+        "2026-10-16 local audit: tracked baseline size/SHA-256 match 17af3a2; zero literal references; dynamic constructions manually reviewed in plans/010-asset-verification.md.",
+        "2026-10-16 CMS aggregate: zero filename matches across 14 published records of the four checked-in media schemas, including known text/link fields and dereferenced current assets; drafts/unknown schemas not cleared.",
+        "External request history and embedding evidence unavailable; no exact-path owner risk acceptance. Public URL retained unchanged."
+      ]
+    },
+    {
+      "path": "public/esfera3D.mp4",
+      "url": "/esfera3D.mp4",
+      "bytes": 1219401,
+      "sha256": "3473e765ba4639f930dc2b3659c069ff409be46c427f140bca91a600d0c27fc7",
+      "state": "retain",
+      "reason": "No current local reference, but external public-URL consumers are unresolved; retain rather than infer disuse from absence.",
+      "evidence": [
+        "2026-10-16 local audit: tracked baseline size/SHA-256 match 17af3a2; zero literal references; dynamic constructions manually reviewed in plans/010-asset-verification.md.",
+        "2026-10-16 CMS aggregate: zero filename matches across 14 published records of the four checked-in media schemas, including known text/link fields and dereferenced current assets; drafts/unknown schemas not cleared.",
+        "External request history and embedding evidence unavailable; no exact-path owner risk acceptance. Public URL retained unchanged."
+      ]
+    },
+    {
+      "path": "public/esfera3D.webm",
+      "url": "/esfera3D.webm",
+      "bytes": 1274751,
+      "sha256": "e584398dcf0b6a2b666e415cd0eb160d4a2667338b9a207e152d2b4b5c3c368b",
+      "state": "retain",
+      "reason": "No current local reference, but external public-URL consumers are unresolved; retain rather than infer disuse from absence.",
+      "evidence": [
+        "2026-10-16 local audit: tracked baseline size/SHA-256 match 17af3a2; zero literal references; dynamic constructions manually reviewed in plans/010-asset-verification.md.",
+        "2026-10-16 CMS aggregate: zero filename matches across 14 published records of the four checked-in media schemas, including known text/link fields and dereferenced current assets; drafts/unknown schemas not cleared.",
+        "External request history and embedding evidence unavailable; no exact-path owner risk acceptance. Public URL retained unchanged."
+      ]
+    },
+    {
+      "path": "public/file.svg",
+      "url": "/file.svg",
+      "bytes": 391,
+      "sha256": "2b67812c325c199a02536cdbeea0c593a72f707d323b72ee3e08dbab06753bd4",
+      "state": "retain",
+      "reason": "No current local reference, but external public-URL consumers are unresolved; retain rather than infer disuse from absence.",
+      "evidence": [
+        "2026-10-16 local audit: tracked baseline size/SHA-256 match 17af3a2; zero literal references; dynamic constructions manually reviewed in plans/010-asset-verification.md.",
+        "2026-10-16 CMS aggregate: zero filename matches across 14 published records of the four checked-in media schemas, including known text/link fields and dereferenced current assets; drafts/unknown schemas not cleared.",
+        "External request history and embedding evidence unavailable; no exact-path owner risk acceptance. Public URL retained unchanged."
+      ]
+    },
+    {
+      "path": "public/globe.svg",
+      "url": "/globe.svg",
+      "bytes": 1035,
+      "sha256": "b614b9bf183925957661ac851498fe1d8029fd43a62fbfed86f9e2624a57e7cf",
+      "state": "retain",
+      "reason": "No current local reference, but external public-URL consumers are unresolved; retain rather than infer disuse from absence.",
+      "evidence": [
+        "2026-10-16 local audit: tracked baseline size/SHA-256 match 17af3a2; zero literal references; dynamic constructions manually reviewed in plans/010-asset-verification.md.",
+        "2026-10-16 CMS aggregate: zero filename matches across 14 published records of the four checked-in media schemas, including known text/link fields and dereferenced current assets; drafts/unknown schemas not cleared.",
+        "External request history and embedding evidence unavailable; no exact-path owner risk acceptance. Public URL retained unchanged."
+      ]
+    },
+    {
+      "path": "public/menu.svg",
+      "url": "/menu.svg",
+      "bytes": 295,
+      "sha256": "7d3cf045229b8da4181eaff3022025635859185fc1451a43f7427a829be6811b",
+      "state": "retain",
+      "reason": "No current local reference, but external public-URL consumers are unresolved; retain rather than infer disuse from absence.",
+      "evidence": [
+        "2026-10-16 local audit: tracked baseline size/SHA-256 match 17af3a2; zero literal references; dynamic constructions manually reviewed in plans/010-asset-verification.md.",
+        "2026-10-16 CMS aggregate: zero filename matches across 14 published records of the four checked-in media schemas, including known text/link fields and dereferenced current assets; drafts/unknown schemas not cleared.",
+        "External request history and embedding evidence unavailable; no exact-path owner risk acceptance. Public URL retained unchanged."
+      ]
+    },
+    {
+      "path": "public/opac-world.mp4",
+      "url": "/opac-world.mp4",
+      "bytes": 1384225,
+      "sha256": "45d1ec14fea2a06a1207754b6df1eabc0697e6040c1717c317bcb28340e38e4f",
+      "state": "retain",
+      "reason": "No current local reference, but external public-URL consumers are unresolved; retain rather than infer disuse from absence.",
+      "evidence": [
+        "2026-10-16 local audit: tracked baseline size/SHA-256 match 17af3a2; zero literal references; dynamic constructions manually reviewed in plans/010-asset-verification.md.",
+        "2026-10-16 CMS aggregate: zero filename matches across 14 published records of the four checked-in media schemas, including known text/link fields and dereferenced current assets; drafts/unknown schemas not cleared.",
+        "External request history and embedding evidence unavailable; no exact-path owner risk acceptance. Public URL retained unchanged."
+      ]
+    },
+    {
+      "path": "public/social-instagram.svg",
+      "url": "/social-instagram.svg",
+      "bytes": 768,
+      "sha256": "dd33228d5f271d4347cf90508396fae263cd78ddf70e79fce0641379176bc8cc",
+      "state": "retain",
+      "reason": "No current local reference, but external public-URL consumers are unresolved; retain rather than infer disuse from absence.",
+      "evidence": [
+        "2026-10-16 local audit: tracked baseline size/SHA-256 match 17af3a2; zero literal references; dynamic constructions manually reviewed in plans/010-asset-verification.md.",
+        "2026-10-16 CMS aggregate: zero filename matches across 14 published records of the four checked-in media schemas, including known text/link fields and dereferenced current assets; drafts/unknown schemas not cleared.",
+        "External request history and embedding evidence unavailable; no exact-path owner risk acceptance. Public URL retained unchanged."
+      ]
+    },
+    {
+      "path": "public/social-youtube.svg",
+      "url": "/social-youtube.svg",
+      "bytes": 488,
+      "sha256": "58ec43965b78d7372f7d2e48465dbb727943ec0d4f7e23ccfd1988c56618635b",
+      "state": "retain",
+      "reason": "No current local reference, but external public-URL consumers are unresolved; retain rather than infer disuse from absence.",
+      "evidence": [
+        "2026-10-16 local audit: tracked baseline size/SHA-256 match 17af3a2; zero literal references; dynamic constructions manually reviewed in plans/010-asset-verification.md.",
+        "2026-10-16 CMS aggregate: zero filename matches across 14 published records of the four checked-in media schemas, including known text/link fields and dereferenced current assets; drafts/unknown schemas not cleared.",
+        "External request history and embedding evidence unavailable; no exact-path owner risk acceptance. Public URL retained unchanged."
+      ]
+    },
+    {
+      "path": "public/sphere-lowheight.mp4",
+      "url": "/sphere-lowheight.mp4",
+      "bytes": 445795,
+      "sha256": "bf63086d2dbb24978727c3dea9ce032ac926e7742c06d8a0e921d300e01fe49f",
+      "state": "retain",
+      "reason": "No current local reference, but external public-URL consumers are unresolved; retain rather than infer disuse from absence.",
+      "evidence": [
+        "2026-10-16 local audit: tracked baseline size/SHA-256 match 17af3a2; zero literal references; dynamic constructions manually reviewed in plans/010-asset-verification.md.",
+        "2026-10-16 CMS aggregate: zero filename matches across 14 published records of the four checked-in media schemas, including known text/link fields and dereferenced current assets; drafts/unknown schemas not cleared.",
+        "External request history and embedding evidence unavailable; no exact-path owner risk acceptance. Public URL retained unchanged."
+      ]
+    },
+    {
+      "path": "public/sphere-lowheight2.mp4",
+      "url": "/sphere-lowheight2.mp4",
+      "bytes": 424879,
+      "sha256": "987885e18d8ab0e35751af14728e1795f7f714f0e5610c5c3416403643acca36",
+      "state": "retain",
+      "reason": "No current local reference, but external public-URL consumers are unresolved; retain rather than infer disuse from absence.",
+      "evidence": [
+        "2026-10-16 local audit: tracked baseline size/SHA-256 match 17af3a2; zero literal references; dynamic constructions manually reviewed in plans/010-asset-verification.md.",
+        "2026-10-16 CMS aggregate: zero filename matches across 14 published records of the four checked-in media schemas, including known text/link fields and dereferenced current assets; drafts/unknown schemas not cleared.",
+        "External request history and embedding evidence unavailable; no exact-path owner risk acceptance. Public URL retained unchanged."
+      ]
+    },
+    {
+      "path": "public/sphere-lowheight2_small.webm",
+      "url": "/sphere-lowheight2_small.webm",
+      "bytes": 71815,
+      "sha256": "28928459593ce50272e51a466c88a59185eff125af82d732dda9032636a49245",
+      "state": "retain",
+      "reason": "No current local reference, but external public-URL consumers are unresolved; retain rather than infer disuse from absence.",
+      "evidence": [
+        "2026-10-16 local audit: tracked baseline size/SHA-256 match 17af3a2; zero literal references; dynamic constructions manually reviewed in plans/010-asset-verification.md.",
+        "2026-10-16 CMS aggregate: zero filename matches across 14 published records of the four checked-in media schemas, including known text/link fields and dereferenced current assets; drafts/unknown schemas not cleared.",
+        "External request history and embedding evidence unavailable; no exact-path owner risk acceptance. Public URL retained unchanged."
+      ]
+    },
+    {
+      "path": "public/temp_reverse_q80.webp",
+      "url": "/temp_reverse_q80.webp",
+      "bytes": 1460908,
+      "sha256": "0c466713e04924b11dfca75b15d6baa5ca0359e57a2ddc86053342a4f2451b37",
+      "state": "retain",
+      "reason": "No current local reference, but external public-URL consumers are unresolved; retain rather than infer disuse from absence.",
+      "evidence": [
+        "2026-10-16 local audit: tracked baseline size/SHA-256 match 17af3a2; zero literal references; dynamic constructions manually reviewed in plans/010-asset-verification.md.",
+        "2026-10-16 CMS aggregate: zero filename matches across 14 published records of the four checked-in media schemas, including known text/link fields and dereferenced current assets; drafts/unknown schemas not cleared.",
+        "External request history and embedding evidence unavailable; no exact-path owner risk acceptance. Public URL retained unchanged."
+      ]
+    },
+    {
+      "path": "public/window.svg",
+      "url": "/window.svg",
+      "bytes": 385,
+      "sha256": "644768c4aaeb4767bce293344eeb0c125fb804a94d801440424072202d85e3a1",
+      "state": "retain",
+      "reason": "No current local reference, but external public-URL consumers are unresolved; retain rather than infer disuse from absence.",
+      "evidence": [
+        "2026-10-16 local audit: tracked baseline size/SHA-256 match 17af3a2; zero literal references; dynamic constructions manually reviewed in plans/010-asset-verification.md.",
+        "2026-10-16 CMS aggregate: zero filename matches across 14 published records of the four checked-in media schemas, including known text/link fields and dereferenced current assets; drafts/unknown schemas not cleared.",
+        "External request history and embedding evidence unavailable; no exact-path owner risk acceptance. Public URL retained unchanged."
+      ]
+    }
+  ]
+}

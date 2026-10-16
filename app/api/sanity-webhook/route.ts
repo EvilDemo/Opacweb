@@ -1,5 +1,6 @@
 import { revalidateTag } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
+import { isValidSignature, SIGNATURE_HEADER_NAME } from "@sanity/webhook";
 
 const isDevelopment = process.env.NODE_ENV !== "production";
 
@@ -7,6 +8,16 @@ function debugLog(message: string, metadata?: Record<string, unknown>) {
   if (isDevelopment) {
     console.debug(message, metadata ?? {});
   }
+}
+
+function isWebhookPayload(value: unknown): value is { _type?: string; _id?: string } {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    !Array.isArray(value) &&
+    (!("_type" in value) || typeof value._type === "string") &&
+    (!("_id" in value) || typeof value._id === "string")
+  );
 }
 
 // Test endpoint to verify webhook is reachable
@@ -19,14 +30,34 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
+    const secret = process.env.SANITY_WEBHOOK_SECRET?.trim();
+    if (!secret) {
+      console.error("Sanity webhook signing secret is not configured");
+      return NextResponse.json({ message: "Error processing webhook" }, { status: 500 });
+    }
 
-    // Verify this is a valid Sanity webhook
-    const signature = request.headers.get("sanity-webhook-signature");
+    const signature = request.headers.get(SIGNATURE_HEADER_NAME);
 
     if (!signature) {
       console.warn("Sanity webhook rejected: missing signature");
       return NextResponse.json({ message: "Missing webhook signature" }, { status: 401 });
+    }
+
+    // Authenticate the original body before parsing or normalizing any bytes.
+    const rawBody = await request.text();
+    if ((await isValidSignature(rawBody, signature, secret)) !== true) {
+      return NextResponse.json({ message: "Invalid webhook signature" }, { status: 401 });
+    }
+
+    let body: unknown;
+    try {
+      body = JSON.parse(rawBody);
+    } catch {
+      return NextResponse.json({ message: "Malformed JSON payload" }, { status: 400 });
+    }
+
+    if (!isWebhookPayload(body)) {
+      return NextResponse.json({ message: "Invalid webhook payload" }, { status: 400 });
     }
 
     // Get the document type from the webhook payload
@@ -38,7 +69,7 @@ export async function POST(request: NextRequest) {
       // Revalidate all content types for delete operations
       const allTags = ["pictures", "videos", "music", "radio"];
       allTags.forEach((tag) => {
-        revalidateTag(tag, "page");
+        revalidateTag(tag, { expire: 0 });
       });
 
       return NextResponse.json({
@@ -62,11 +93,11 @@ export async function POST(request: NextRequest) {
       radio: "radio",
     };
 
-    const tag = tagMap[_type];
+    const tag = Object.hasOwn(tagMap, _type) ? tagMap[_type] : undefined;
 
     if (tag) {
       // Revalidate the specific tag
-      revalidateTag(tag, "page");
+      revalidateTag(tag, { expire: 0 });
       debugLog("Sanity tag revalidated", { tag, documentType: _type, documentId: _id });
 
       return NextResponse.json({
@@ -82,8 +113,8 @@ export async function POST(request: NextRequest) {
       message: "No revalidation needed for this document type",
       documentType: _type,
     });
-  } catch (err) {
-    console.error("Error processing Sanity webhook:", err);
+  } catch {
+    console.error("Error processing Sanity webhook");
     return NextResponse.json({ message: "Error processing webhook" }, { status: 500 });
   }
 }

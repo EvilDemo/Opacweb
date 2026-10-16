@@ -23,7 +23,7 @@ Allow: /*.svg$
 Allow: /*.webp$
 
 # Sitemap location
-Sitemap: https://weareopac.com/sitemap.xml
+Sitemap: https://opacweb.pt/sitemap.xml
 
 # Crawl delay (optional - be respectful to servers)
 # Crawl-delay: 1
