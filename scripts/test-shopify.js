@@ -104,6 +104,6 @@ if (envVars.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN && envVars.NEXT_PUBLIC_SHOPIFY_STOR
     });
 } else {
   console.log('✅ Configuration looks good!');
-  console.log('   Start the dev server: pnpm dev\n');
+  console.log('   Start the dev server: bun run dev\n');
 }
 

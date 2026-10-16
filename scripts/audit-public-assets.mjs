@@ -46,7 +46,7 @@ function scanReferences(files, assets) {
   let scannedFiles = 0;
   for (const path of files) {
     if (/^(?:plans|\.git|node_modules|\.next|\.codex|\.agents)\//.test(path) ||
-        /(?:^|\/)\.env(?:\.|$)/.test(path) || path === "pnpm-lock.yaml" ||
+        /(?:^|\/)\.env(?:\.|$)/.test(path) || ["pnpm-lock.yaml", "bun.lock"].includes(path) ||
         path === "scripts/audit-public-assets.mjs" ||
         !/\.(?:[cm]?[jt]sx?|json|css|scss|sass|html|md|txt|ya?ml|svg)$/.test(path)) continue;
     const bytes = fileOrNull(path);
